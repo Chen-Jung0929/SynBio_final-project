@@ -1,0 +1,69 @@
+% Shared report style for Revised PDAC Biosensor Report
+% To be included via \input{../shared/report_style_revised.tex}
+
+% Page geometry - optimized for double-column layout
+\usepackage[a4paper, margin=1.8cm, columnsep=0.6cm]{geometry}
+
+% Typography
+\usepackage{fontspec}
+\usepackage{setspace}
+\setstretch{1.15} % Better line spacing for double columns
+
+% Graphics
+\usepackage{graphicx}
+\graphicspath{{../shared/figures/}}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Tables
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+
+% Math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{siunitx}
+
+% Colors and links
+\usepackage{xcolor}
+\usepackage[colorlinks=true, linkcolor=blue!60!black, citecolor=green!50!black, urlcolor=blue!70!black]{hyperref}
+
+% Lists
+\usepackage{enumitem}
+
+% Quotes
+\usepackage{csquotes}
+
+% Author affiliations
+\usepackage{authblk}
+
+% Header/Footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\leftmark}
+\fancyhead[R]{\small PDAC AND-Gate Biosensor (Revised)}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Section formatting
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\small\bfseries}{\thesubsubsection.}{0.5em}{}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+  basicstyle=\small\ttfamily,
+  breaklines=true,
+  frame=single,
+  backgroundcolor=\color{gray!5},
+  keywordstyle=\color{blue!70!black},
+  commentstyle=\color{green!50!black},
+  stringstyle=\color{red!60!black},
+}

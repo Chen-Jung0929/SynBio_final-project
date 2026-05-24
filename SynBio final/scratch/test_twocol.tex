@@ -1,0 +1,18 @@
+\documentclass[10pt, a4paper, twocolumn]{article}
+\usepackage{authblk}
+\title{Test Title}
+\author[1]{Author A}
+\affil[1]{Affiliation A}
+\begin{document}
+\twocolumn[
+  \begin{@twocolumnfalse}
+    \maketitle
+    \begin{abstract}
+      This is a test abstract that should span both columns of the page.
+    \end{abstract}
+    \vspace{1.5em}
+  \end{@twocolumnfalse}
+]
+\section{Section 1}
+This is some text in section 1.
+\end{document}

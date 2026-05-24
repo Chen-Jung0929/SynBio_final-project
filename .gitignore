@@ -1,9 +1,7 @@
 # Large data files (too big for GitHub)
-data/raw/TcgaTargetGtex_rsem_gene_tpm.gz
-data/raw/GSE62452_series_matrix.txt.gz
-data/raw/GPL6244.annot.gz
-data/raw/gencode.v23.annotation.gene.probemap
-data/processed/expression_matrix.csv.gz
+data/
+**/data/
+SynBio final/data/
 
 # Python
 __pycache__/

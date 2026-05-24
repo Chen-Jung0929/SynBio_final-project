@@ -60,7 +60,7 @@ def interactive_handler(title, instructions, prompt_list):
     for prompt, show in prompt_list:
         p_text = prompt.lower()
         if "login method" in p_text or "2fa login method" in p_text:
-            responses.append("1")  # Auto-respond 1 for Mobile APP OTP
+            responses.append("3")  # Auto-respond 2fa login method
         elif "password" in p_text:
             responses.append(nchc_config["password"])
         elif "otp" in p_text or "verification" in p_text or "code" in p_text or "passcode" in p_text:

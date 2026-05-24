@@ -1,0 +1,9 @@
+[0] Config.pm:328> INFO - This is Biber 2.21
+[0] Config.pm:331> INFO - Logfile is 'pdac_biosensor_report_en_revised.blg'
+[24] biber-darwin:342> INFO - === Mon May 25, 2026, 01:27:15
+[30] Biber.pm:421> INFO - Reading 'pdac_biosensor_report_en_revised.bcf'
+[64] Biber.pm:1002> INFO - Found 0 citekeys in bib section 0
+[71] bbl.pm:676> INFO - Writing 'pdac_biosensor_report_en_revised.bbl' with encoding 'UTF-8'
+[71] bbl.pm:779> INFO - Output to pdac_biosensor_report_en_revised.bbl
+[71] Biber.pm:132> WARN - The file 'pdac_biosensor_report_en_revised.bcf' does not contain any citations!
+[71] Biber.pm:134> INFO - WARNINGS: 1

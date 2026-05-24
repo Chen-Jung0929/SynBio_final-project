@@ -1,0 +1,15 @@
+=== Font Verification Output ===
+Times New Roman:
+/System/Library/Fonts/Supplemental/Times New Roman Italic.ttf: Times New Roman:style=Italic
+/System/Library/Fonts/Supplemental/Times New Roman Bold Italic.ttf: Times New Roman:style=Bold Italic
+/System/Library/Fonts/Supplemental/Times New Roman.ttf: Times New Roman:style=Regular
+/System/Library/Fonts/Supplemental/Times New Roman Bold.ttf: Times New Roman:style=Bold
+
+DFKai-SB (標楷體):
+/Users/Janet/Library/Fonts/Kaiu.ttf: DFKai-SB,標楷體:style=Regular
+
+Arial:
+Available on macOS system (default)
+
+Courier New:
+Available on macOS system (default)
