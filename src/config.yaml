@@ -1,0 +1,29 @@
+data:
+  raw_dir: "data/raw"
+  interim_dir: "data/interim"
+  processed_dir: "data/processed"
+  phenotype_url: "https://toil.xenahubs.net/download/TcgaTargetGTEX_phenotype.txt.gz"
+  expression_url: "https://toil.xenahubs.net/download/TcgaTargetGtex_rsem_gene_tpm.gz"
+  external_url: "https://raw.githubusercontent.com/jyyuan/PDAC_biosensor_data/main/GSE62452_processed.csv" # Alternate placeholder if GEO direct download is complex, wait, we can also write a downloader for GSE62452 or use a curated one. Let's make sure it is robust.
+
+results:
+  tables_dir: "results/tables"
+  figures_dir: "results/figures"
+  models_dir: "results/models"
+
+de_analysis:
+  log2fc_threshold: 1.0
+  fdr_threshold: 0.05
+  auc_threshold: 0.8
+
+ml_model:
+  cv_folds: 5
+  random_state: 42
+  train_size: 0.8
+
+and_gate:
+  hill_coefficients: [1, 2, 4, 8]
+  leakiness_levels: [0.0, 0.01, 0.05, 0.1]
+  v_max: 1.0
+  p_basal: 0.01
+  n_hill: 2

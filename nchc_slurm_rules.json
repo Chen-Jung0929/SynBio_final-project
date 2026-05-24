@@ -1,0 +1,27 @@
+{
+  "partitions": {
+    "ngs224core": {
+      "nodes": 4,
+      "cores_per_node": 56
+    },
+    "ngs448core": {
+      "nodes": 8,
+      "cores_per_node": 56
+    },
+    "ct56": {
+      "cores": 56,
+      "mem_gb": 184,
+      "gpus": 0
+    },
+    "ct224": {
+      "cores": 56,
+      "mem_gb": 184,
+      "gpus": 0
+    },
+    "ctest": {
+      "cores": 56,
+      "mem_gb": 184,
+      "gpus": 0
+    }
+  }
+}

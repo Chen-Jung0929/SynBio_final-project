@@ -1,0 +1,4 @@
+Model,Test_AUC,Test_Accuracy,Test_Precision,Test_Recall,Test_F1,TN,FP,FN,TP
+Logistic_Regression_L1,1.0,1.0,1.0,1.0,1.0,33,0,0,36
+Random_Forest,0.9983164983164984,0.9855072463768116,1.0,0.9722222222222222,0.9859154929577465,33,0,1,35
+XGBoost,1.0,1.0,1.0,1.0,1.0,33,0,0,36
