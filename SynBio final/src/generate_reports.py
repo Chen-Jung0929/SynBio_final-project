@@ -700,6 +700,7 @@ Here, we present the formal model parameters optimized to capture this logic.
 {en_sections['Conclusion']}
 
 \\newpage
+\\nocite{{*}}
 \\printbibliography[title={{References}}]
 
 {supp_prefix}\\section{{Supplementary Tables and Figures}}
@@ -934,6 +935,7 @@ def generate_latex_zh(is_revised=False):
 {zh_sections['Conclusion']}
 
 \\newpage
+\\nocite{{*}}
 \\printbibliography[title={{參考文獻}}]
 
 {supp_prefix}\\section{{補充表格與圖}}

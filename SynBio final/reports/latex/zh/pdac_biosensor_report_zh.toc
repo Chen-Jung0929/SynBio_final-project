@@ -15,7 +15,7 @@
 \contentsline {section}{\numberline {15}研究限制}{12}{section.15}%
 \contentsline {section}{\numberline {16}後續濕實驗驗證規劃}{12}{section.16}%
 \contentsline {section}{\numberline {17}結論}{13}{section.17}%
-\contentsline {section}{\numberline {18}補充表格與圖}{14}{section.18}%
-\contentsline {subsection}{\numberline {18.1}補充表格 1：參數掃描結果}{14}{subsection.18.1}%
-\contentsline {subsection}{\numberline {18.2}補充表格 2：K 參數微擾對分類效能影響之敏感度分析}{14}{subsection.18.2}%
-\contentsline {subsection}{\numberline {18.3}補充圖}{15}{subsection.18.3}%
+\contentsline {section}{\numberline {18}補充表格與圖}{16}{section.18}%
+\contentsline {subsection}{\numberline {18.1}補充表格 1：參數掃描結果}{16}{subsection.18.1}%
+\contentsline {subsection}{\numberline {18.2}補充表格 2：K 參數微擾對分類效能影響之敏感度分析}{16}{subsection.18.2}%
+\contentsline {subsection}{\numberline {18.3}補充圖}{17}{subsection.18.3}%

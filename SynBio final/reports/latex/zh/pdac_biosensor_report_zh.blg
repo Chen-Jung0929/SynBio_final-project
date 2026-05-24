@@ -1,9 +1,19 @@
 [0] Config.pm:328> INFO - This is Biber 2.21
 [0] Config.pm:331> INFO - Logfile is 'pdac_biosensor_report_zh.blg'
-[25] biber-darwin:342> INFO - === Mon May 25, 2026, 01:27:20
+[24] biber-darwin:342> INFO - === Mon May 25, 2026, 03:26:23
 [30] Biber.pm:421> INFO - Reading 'pdac_biosensor_report_zh.bcf'
-[65] Biber.pm:1002> INFO - Found 0 citekeys in bib section 0
-[72] bbl.pm:676> INFO - Writing 'pdac_biosensor_report_zh.bbl' with encoding 'UTF-8'
-[72] bbl.pm:779> INFO - Output to pdac_biosensor_report_zh.bbl
-[72] Biber.pm:132> WARN - The file 'pdac_biosensor_report_zh.bcf' does not contain any citations!
-[72] Biber.pm:134> INFO - WARNINGS: 1
+[64] Biber.pm:999> INFO - Using all citekeys in bib section 0
+[71] Biber.pm:4487> INFO - Processing section 0
+[74] Biber.pm:4678> INFO - Looking for bibtex file 'references_zh.bib' for section 0
+[75] bibtex.pm:1713> INFO - LaTeX decoding ...
+[81] bibtex.pm:1519> INFO - Found BibTeX data source 'references_zh.bib'
+[142] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[142] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[142] Biber.pm:4307> INFO - Sorting list 'apa/apasortcite//global/global/global' of type 'entry' with template 'apa' and locale 'en-US'
+[142] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
+[160] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[160] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[160] Biber.pm:4307> INFO - Sorting list 'apa/global//global/global/global' of type 'entry' with template 'apa' and locale 'en-US'
+[160] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
+[169] bbl.pm:676> INFO - Writing 'pdac_biosensor_report_zh.bbl' with encoding 'UTF-8'
+[177] bbl.pm:779> INFO - Output to pdac_biosensor_report_zh.bbl
