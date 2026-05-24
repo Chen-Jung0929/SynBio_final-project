@@ -1,4 +1,4 @@
-% Shared report style for Revised PDAC Biosensor Report
+% Shared report style for Revised PDAC Biosensor Report (v2)
 % To be included via \input{../shared/report_style_revised.tex}
 
 % Page geometry - optimized for double-column layout
@@ -7,7 +7,7 @@
 % Typography
 \usepackage{fontspec}
 \usepackage{setspace}
-\setstretch{1.15} % Better line spacing for double columns
+\setstretch{1.15}
 
 % Graphics
 \usepackage{graphicx}
@@ -15,6 +15,9 @@
 \usepackage{float}
 \usepackage{caption}
 \usepackage{subcaption}
+
+% Caption font size = 10pt
+\captionsetup{font=small, labelfont=bf}
 
 % Tables
 \usepackage{booktabs}
@@ -41,20 +44,29 @@
 % Author affiliations
 \usepackage{authblk}
 
-% Header/Footer
+% Header/Footer - CLEAN: page number only, NO text, NO rules
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\leftmark}
-\fancyhead[R]{\small PDAC AND-Gate Biosensor (Revised)}
 \fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
 
-% Section formatting
+% Also clean the plain page style (used on first page, TOC pages, etc.)
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+
+% Section formatting - Roman numerals
 \usepackage{titlesec}
+\renewcommand{\thesection}{\Roman{section}}
+\renewcommand{\thesubsection}{\Roman{section}.\arabic{subsection}}
 \titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
-\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection.}{0.5em}{}
-\titleformat{\subsubsection}{\small\bfseries}{\thesubsubsection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\small\bfseries}{}{0em}{}
 
 % Code listings
 \usepackage{listings}

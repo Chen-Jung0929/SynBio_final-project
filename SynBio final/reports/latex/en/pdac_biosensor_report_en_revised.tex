@@ -12,9 +12,8 @@
 \addbibresource{references_en.bib}
 
 \title{Data-Driven Design of a Logic-Gated Biosensor via Unbiased Transcriptomic Profiling of Pancreatic Tumor Microenvironment}
-\author[1]{Chen-Jung Shih, Hsuan-Yu Liao, De-Fang Su, Chia-Yi Lin}
-\affil[1]{Department of Synthetic Biology and Bioinformatics
-National Center for High-Performance Computing (NCHC), Taiwan}
+\author{SHIH, Chen-Jung$^1$, SU, Te-Fang$^1$, LIAO, Xuan-You$^2$, LIN, Chia-I$^2$}
+\affil{$^1$Department of Life Science, National Taiwan University\\$^2$Department of Biochemical Science and Technology, National Taiwan University}
 \date{May 2026}
 
 \begin{document}
@@ -30,8 +29,6 @@ National Center for High-Performance Computing (NCHC), Taiwan}
   \end{@twocolumnfalse}
 ]
 
-\tableofcontents
-\newpage
 
 \section{Introduction}
 Pancreatic ductal adenocarcinoma (PDAC) is characterized by a silent progression, aggressive metastatic potential, and a dense desmoplastic tumor microenvironment (TME) that acts as a physical and immunological barrier. Consequently, traditional systemic chemotherapies and emerging targeted immunotherapies, such as chimeric antigen receptor (CAR) T-cell therapy, face severe limitations. One of the main hurdles is the lack of single antigens that are uniquely expressed on cancer cells without causing off-target toxicity in healthy organs. Synthetic biology provides a powerful paradigm to address this challenge by engineering logic-gated genetic circuits. An AND-gate biosensor requires the simultaneous presence of two inputs to trigger a downstream reporter or therapeutic output. By selecting two orthogonal biomarkers, we can dramatically increase the safety and specificity of targeted therapies, ensuring activation only within the tumor microenvironment. This study develops a computational framework for the design of such logic-gated circuits using unbiased, genome-wide transcriptomic profiling.
@@ -45,6 +42,7 @@ To establish a robust discovery cohort, we integrated transcriptomic data from t
 \begin{table}[H]
 \centering
 \caption{Data Cohorts and Sample Size Distribution}\label{tab:datasets}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Dataset / Cohort} & \textbf{Platform / Type} & \textbf{Tumor Samples} & \textbf{Normal Samples} & \textbf{Total Samples} \\
@@ -55,6 +53,7 @@ Discovery Cohort (Combined) & RNA-seq (RSEM TPM) & 178 & 167 & 345 \\
 GSE62452 (External Validation) & Microarray (Affymetrix GPL6244) & 69 & 61 & 130 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 
@@ -67,7 +66,7 @@ Quality control (QC) was performed on the raw TOIL TPM matrix. Out of 60,498 ann
 \section{Differential Expression Analysis}
 We performed differential expression (DE) analysis comparing the 178 PDAC tumor samples against the 167 normal pancreas samples. For each of the 58,581 genes, we computed the log2 fold change (log2FC) and Welch's t-test p-value, applying Benjamini-Hochberg False Discovery Rate (FDR) correction. Additionally, a single-gene ROC-AUC score was calculated for each feature. Tumor-high genes were defined using the thresholds: log2FC >= 1.0 and FDR < 0.05, identifying 19,399 candidate genes. To prioritize genes, we calculated a specificity score defined as AUC * log2FC. The volcano plot highlights UBE2S and CCR6 among the highly significant upregulated candidates.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{volcano_discovery.png}
 \caption{Volcano plot highlighting significantly differentially expressed genes in the discovery cohort (TCGA-PAAD vs GTEx Normal Pancreas). UBE2S and CCR6 are annotated as significant upregulated candidates.}
@@ -77,6 +76,7 @@ We performed differential expression (DE) analysis comparing the 178 PDAC tumor 
 \begin{table*}[t]
 \centering
 \caption{Top 10 Differentially Expressed Genes Sorted by Specificity Score}\label{tab:top_de}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{lcccccc}
 \toprule
 \textbf{Gene} & \textbf{Mean Tumor (log2 TPM)} & \textbf{Mean Normal (log2 TPM)} & \textbf{log2FC} & \textbf{FDR} & \textbf{ROC-AUC} & \textbf{Specificity Score} \\
@@ -93,6 +93,7 @@ ANXA2 & 10.566 & 6.667 & 3.899 & 6.29e-52 & 0.979 & 1.000 \\
 PPIA & 10.525 & 8.267 & 2.258 & 1.96e-53 & 0.988 & 1.000 \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 
@@ -102,6 +103,7 @@ To identify the most predictive and sparse gene signature, we trained three clas
 \begin{table*}[t]
 \centering
 \caption{Machine Learning Classifier Performance and Cross-Validation Summary}\label{tab:ml_perf}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{lcccccc}
 \toprule
 \textbf{Classifier Model} & \textbf{Mean 5-Fold CV AUC} & \textbf{Test AUC} & \textbf{Test Accuracy} & \textbf{Sensitivity} & \textbf{Specificity} & \textbf{F1 Score} \\
@@ -111,13 +113,14 @@ Random Forest & 1.000 & 0.998 & 98.6\% & 0.972 & 1.000 & 0.986 \\
 XGBoost & 0.996 & 1.000 & 100.0\% & 1.000 & 1.000 & 1.000 \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 
 \section{SHAP-Based Explainable AI Analysis}
 We applied SHAP (SHapley Additive exPlanations) to interpret the selected L1 Logistic Regression classifier. The SHAP summary plot shows the top 15 features driving the classifier. Non-coding transcripts such as RP11-40C6.2 and AC009065.4 had the highest mean absolute SHAP values. Crucially, we analyzed SHAP dependence plots for the top 100 genes to infer biological activation thresholds. The threshold was defined as the expression level where the SHAP value transitions from negative (normal-associated) to positive (tumor-associated). Confidence intervals (95\%) were calculated via 200 bootstrap iterations. This data-driven thresholding replaces arbitrary statistical cutoffs (e.g., median expression) with functional, classifier-derived inflection points.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{shap_summary.png}
 \caption{SHAP summary plot showing feature importances for the top-ranked genes driving the L1 Logistic Regression classifier.}
@@ -127,6 +130,7 @@ We applied SHAP (SHapley Additive exPlanations) to interpret the selected L1 Log
 \begin{table*}[t]
 \centering
 \caption{Top 10 SHAP Feature Importance and Inferred Expression Thresholds}\label{tab:shap_thresh}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Rank} & \textbf{Gene Symbol} & \textbf{Mean Absolute SHAP Value} & \textbf{Inferred Threshold (log2 TPM)} & \textbf{95\% Confidence Interval} \\
@@ -143,6 +147,7 @@ We applied SHAP (SHapley Additive exPlanations) to interpret the selected L1 Log
 10 & FTH1P7 & 0.0000 & 3.001 & [1.578, 3.822] \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 
@@ -152,6 +157,7 @@ To select the optimal input pair from the top 100 SHAP features, we computed a c
 \begin{table*}[t]
 \centering
 \caption{Detailed Molecular Profile of Selected Candidate Pair}\label{tab:candidate_pair}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{lccc}
 \toprule
 \textbf{Property} & \textbf{Gene A (UBE2S)} & \textbf{Gene B (CCR6)} & \textbf{Composite AND Gate} \\
@@ -164,13 +170,14 @@ Tumor AND Activation Rate & 93.3\% & — & 93.3\% \\
 Normal AND Activation Rate & 0.6\% & — & 0.6\% \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 
 \section{Orthogonality Assessment}
 A key design requirement for AND-gate sensors is that the two inputs must be orthogonal. UBE2S and CCR6 have a Pearson correlation of r = 0.714, which is higher than the ideal threshold of |r| <= 0.4. Despite this statistical correlation in bulk RNA-seq data, the pair was selected because it achieved the highest overall score and exhibits strong pathway independence. UBE2S is a cell cycle regulator involved in the ubiquitin-proteasome pathway, whereas CCR6 is a chemokine receptor mediating immune cell trafficking. Because they are regulated by distinct upstream biological processes (mitotic machinery vs immune signaling), they represent a functionally orthogonal pair. In a clinical biosensor, this pathway independence minimizes the risk of dual-activation in non-tumor tissues undergoing single-pathway activation (e.g., local inflammation).
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{gene_pair_scatter_final.png}
 \caption{Scatter plot of UBE2S vs CCR6 rescaled expression in discovery cohort, demonstrating decision boundary quadrants and sample clustering.}
@@ -188,12 +195,11 @@ Output = P_{\text{basal}} + V_{\max} \left( \frac{[A]^n}{K_A^n + [A]^n} \right) 
 \]
 
 where [A] and [B] are the min-max scaled expressions of UBE2S and CCR6, $K_A$ and $K_B$ are the activation thresholds, $n$ is the Hill coefficient (steepness), and $P_{\text{basal}}$ is the leakiness. Parameter optimization via grid search determined the optimal settings: $n = 1$, $P_{\text{basal}} = 0.0$, $K_A = 0.760$ (for UBE2S), and $K_B = 0.464$ (for CCR6). The optimal output decision threshold was set to 0.25 to maximize AUC and classification accuracy.
-Here, we present the formal model parameters optimized to capture this logic.
 
 \section{In Silico Validation}
 Simulating the optimized Hill equation AND gate on the 345-sample discovery cohort yielded outstanding classification performance. The AND-gate output achieved a ROC-AUC of 0.9986, an overall accuracy of 98.55\%, a sensitivity of 97.75\%, and a specificity of 99.40\%. The model correctly classified 174 of 178 tumors as positive and 166 of 167 normal pancreas tissues as negative, yielding only 1 false positive and 4 false negatives. This performance matches or exceeds that of single-gene classifiers while offering a superior safety margin.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{and_gate_heatmap_final.png}
 \caption{2D Contour heatmap demonstrating simulation output of UBE2S AND CCR6 logical AND gate, with rescaled expression and tumor/normal sample overlays.}
@@ -203,6 +209,7 @@ Simulating the optimized Hill equation AND gate on the 345-sample discovery coho
 \begin{table}[H]
 \centering
 \caption{AND Gate Simulation Performance Summary in Discovery Cohort}\label{tab:and_perf}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lcc}
 \toprule
 \textbf{Metric} & \textbf{Formula / Definition} & \textbf{Value} \\
@@ -214,10 +221,11 @@ Specificity & TN / (TN + FP) & 99.40\% \\
 Decision Threshold & Hill output threshold for ON state & 0.25 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{roc_curves.png}
 \caption{ROC curves comparing individual inputs (UBE2S, CCR6) against the combined logic gate output.}
@@ -227,6 +235,7 @@ Decision Threshold & Hill output threshold for ON state & 0.25 \\
 \begin{table*}[t]
 \centering
 \caption{External Validation Results on GSE62452 Dataset}\label{tab:ext_val}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{lccc}
 \toprule
 \textbf{Metric} & \textbf{Value in Discovery (TCGA+GTEx)} & \textbf{Value in Validation (GSE62452)} & \textbf{Interpretation} \\
@@ -238,6 +247,7 @@ Sensitivity & 97.8\% & 4.3\% & Significant drop (platform scale mismatch) \\
 Specificity & 99.4\% & 98.4\% & Highly conserved (retains safety profile) \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 
@@ -245,20 +255,10 @@ Specificity & 99.4\% & 98.4\% & Highly conserved (retains safety profile) \\
 We performed two negative controls to validate the UBE2S + CCR6 AND gate. First, we ran the simulation on 1,000 randomly selected gene pairs, which yielded a mean AUC of 0.594. The selected pair's AUC (0.999) is significantly higher than the random distribution (empirical p < 0.0001). Second, we perturbed the thresholds $K_A$ and $K_B$ by up to +-50\% and observed that the AUC remained exceedingly high (>0.994), indicating that the classification capability is highly robust to variations in sensor binding affinities.
 
 \section{Limitations}
-\begin{enumerate}
-\item This is an in silico proof-of-concept; biochemical kinetics may differ.
-\item SHAP-inferred thresholds are statistical inflection points and do not map directly to biochemical dissociation constants.
-\item Bulk RNA-seq data reflects average cell populations and is highly influenced by stromal density and immune infiltration.
-\item The comparison between TCGA (tumor) and GTEx (normal) may contain subtle batch effects despite TOIL harmonization.
-\item External validation cohort demonstrated extremely low sensitivity (4.3%), indicating significant challenge in threshold transfer.
-\item The selected candidate pair (UBE2S + CCR6) is not strictly statistically orthogonal, exhibiting a correlation of 0.714.
-\item Transcriptomic abundance differences do not guarantee equivalent sensor accessibility or protein translation.
-\item The final candidates require promoter engineering or RNA sensor design, which introduces additional complexity.
-\item Any diagnostic or therapeutic application requires extensive wet-lab validation and safety testing in model organisms.
-\end{enumerate}
+Several critical limitations must be acknowledged. First, this study constitutes an in silico proof-of-concept, and actual biochemically engineered circuits may display fundamentally different kinetics. Second, the SHAP-inferred thresholds represent statistical inflection points derived from classifier behavior and do not directly map to physical biochemical dissociation constants. Third, bulk RNA-seq data reflects averaged cell populations and is heavily influenced by tumor purity, stromal density, and immune cell infiltration, potentially masking cell-type-specific expression patterns. Fourth, despite TOIL harmonization, the comparison between TCGA tumor samples and GTEx normal tissues may still harbor residual batch effects. Fifth, the external validation cohort demonstrated extremely low sensitivity (4.3\%), highlighting a significant challenge in cross-platform threshold transfer from RNA-seq to microarray data. Sixth, the selected candidate pair (UBE2S + CCR6) is not strictly statistically orthogonal, exhibiting a Spearman correlation of 0.714 in bulk data. Seventh, transcriptomic abundance does not guarantee equivalent sensor accessibility or protein-level expression. Eighth, translating these candidates into a functional synthetic circuit requires promoter engineering or RNA-based sensor design, each introducing additional layers of design complexity. Finally, any diagnostic or therapeutic application will require extensive wet-lab validation and safety testing in appropriate model organisms before clinical translation can be considered.
 
-\section{Proposed Wet-Lab Validation}
-To validate this AND-gate biosensor in vitro, we propose a synthetic notch (synNotch) or synthetic promoter construct. The promoter regions driving UBE2S and CCR6 will be cloned upstream of two orthogonal transcription factors (e.g., tTA and LhG4). These factors will cooperatively drive a split-transactivator system, activating a green fluorescent protein (GFP) reporter or therapeutic payload (e.g., Diphtheria toxin A) only when both promoters are active. Testing should be performed on PDAC cell lines (e.g., PANC-1, MIA PaCa-2) as positive controls and normal human pancreatic duct epithelial cells (HPDE) as negative controls, followed by in vivo validation in tumor xenograft mouse models.
+\section{Future Experimental Directions}
+Several experimental avenues merit exploration to translate the computational findings of this study into functional synthetic biology constructs. One promising direction involves the engineering of synthetic promoter systems, wherein the upstream regulatory regions of UBE2S and CCR6 would be cloned to drive orthogonal transcription factors (e.g., tTA and LhG4) in a split-transactivator configuration, enabling AND-gate logic at the transcriptional level. An alternative approach would employ synthetic Notch (synNotch) receptor circuits, in which cell-surface recognition of tumor-associated ligands triggers intracellular release of custom transcription factors. Additionally, RNA-based sensor designs using toehold switches or ribocomputing devices could detect endogenous mRNA levels of the target genes without requiring promoter engineering. Functional validation should be conducted in PDAC cell lines (e.g., PANC-1, MIA PaCa-2) as positive controls and normal human pancreatic duct epithelial cells (HPDE) as negative controls, followed by dose-response characterization in co-culture systems. Longer-term directions include in vivo validation using patient-derived xenograft (PDX) mouse models, assessment of circuit stability under metabolic stress, and exploration of multi-input logic gates (e.g., three-input AND or AND-NOT) to further improve tumor specificity and reduce off-target activation.
 
 \section{Conclusion}
 In conclusion, we have developed a data-driven computational framework for the selection of input gene pairs for a synthetic biology AND-gate biosensor in pancreatic cancer. By combining differential expression, machine learning, explainable AI, and mathematical modeling, we selected UBE2S and CCR6 as the optimal pair. This combination achieves excellent classification performance and robustness in silico, while capturing distinct biological hallmarks of PDAC (mitotic progression and microenvironmental inflammation). The pipeline is fully reproducible and can be adapted to other cancers or complex logic gates.
@@ -276,6 +276,7 @@ Supplementary Table 1: Parameter sweep results. The sweep evaluated Hill coeffic
 \begin{table*}[t]
 \centering
 \caption{Hill Equation Grid Search Parameter Sweep Performance}\label{tab:supp_sweep}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{lccccc}
 \toprule
 \textbf{Hill Coefficient (n)} & \textbf{Basal Leakiness (P\_basal)} & \textbf{ROC-AUC} & \textbf{Accuracy} & \textbf{Sensitivity} & \textbf{Specificity} \\
@@ -288,6 +289,7 @@ Supplementary Table 1: Parameter sweep results. The sweep evaluated Hill coeffic
 2.0 & 0.01 & 0.9985 & 98.6\\% & 98.3\\% & 98.8\\% \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 
@@ -295,6 +297,7 @@ Supplementary Table 1: Parameter sweep results. The sweep evaluated Hill coeffic
 \begin{table*}[t]
 \centering
 \caption{Sensitivity Analysis of K Parameter Perturbations}\label{tab:supp_sensitivity}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{lccccc}
 \toprule
 \textbf{UBE2S Threshold (K\_A)} & \textbf{CCR6 Threshold (K\_B)} & \textbf{ROC-AUC} & \textbf{Accuracy} & \textbf{Sensitivity} & \textbf{Specificity} \\
@@ -306,6 +309,7 @@ Supplementary Table 1: Parameter sweep results. The sweep evaluated Hill coeffic
 1.140 (+50\%) & 0.696 (+50\%) & 0.9985 & 53.6\% & N/A & N/A \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 

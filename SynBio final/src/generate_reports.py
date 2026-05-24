@@ -178,9 +178,8 @@ en_sections = {'Abstract': 'Pancreatic ductal adenocarcinoma (PDAC) remains a hi
              'dataset (n=130) showed moderate AUC (0.648) with high specificity (98.4%) but low sensitivity (4.3%), '
              'reflecting cross-platform transferability challenges. Our pipeline provides a robust framework for '
              'logic-gated synthetic sensor design, bridging the gap between bioinformatics and wet-lab implementation.',
- 'Affiliation': 'Department of Synthetic Biology and Bioinformatics\n'
-                'National Center for High-Performance Computing (NCHC), Taiwan',
- 'Author': 'Chen-Jung Shih, Hsuan-Yu Liao, De-Fang Su, Chia-Yi Lin',
+ 'Affiliation': '$^1$Department of Life Science, National Taiwan University\\\\$^2$Department of Biochemical Science and Technology, National Taiwan University',
+ 'Author': 'SHIH, Chen-Jung$^1$, SU, Te-Fang$^1$, LIAO, Xuan-You$^2$, LIN, Chia-I$^2$',
  'Conclusion': 'In conclusion, we have developed a data-driven computational framework for the selection of input gene '
                'pairs for a synthetic biology AND-gate biosensor in pancreatic cancer. By combining differential '
                'expression, machine learning, explainable AI, and mathematical modeling, we selected UBE2S and CCR6 as '
@@ -235,17 +234,21 @@ en_sections = {'Abstract': 'Pancreatic ductal adenocarcinoma (PDAC) remains a hi
                  'and specificity of targeted therapies, ensuring activation only within the tumor microenvironment. '
                  'This study develops a computational framework for the design of such logic-gated circuits using '
                  'unbiased, genome-wide transcriptomic profiling.',
- 'Limitations': 'We must acknowledge several critical limitations of this study. First, this is an in silico '
-                'proof-of-concept; actual biochemically engineered circuits may display different kinetics. Second, '
-                'the SHAP-inferred thresholds are statistical inflection points and do not directly map to physical '
-                'biochemical dissociation constants. Third, bulk RNA-seq data reflects average cell populations and is '
-                'highly influenced by tumor purity, stromal density, and immune cell infiltration. Fourth, although '
-                'harmonized, the comparison between TCGA (tumor) and GTEx (normal) may still contain subtle batch '
-                'effects. Fifth, transcriptomic abundance does not guarantee sensor accessibility or protein '
-                'translation. Sixth, translating these targets into a synthetic construct requires engineering '
-                'promoter regions or post-transcriptional RNA sensors, which introduces additional design complexity. '
-                'Seventh, any clinical or diagnostic application requires extensive wet-lab validation and safety '
-                'testing in model organisms.',
+ 'Limitations': 'Several critical limitations must be acknowledged. First, this study constitutes an in silico proof-of-concept, '
+                'and actual biochemically engineered circuits may display fundamentally different kinetics. Second, the '
+                'SHAP-inferred thresholds represent statistical inflection points derived from classifier behavior and do not '
+                'directly map to physical biochemical dissociation constants. Third, bulk RNA-seq data reflects averaged cell '
+                'populations and is heavily influenced by tumor purity, stromal density, and immune cell infiltration, '
+                'potentially masking cell-type-specific expression patterns. Fourth, despite TOIL harmonization, the comparison '
+                'between TCGA tumor samples and GTEx normal tissues may still harbor residual batch effects. Fifth, the external '
+                'validation cohort demonstrated extremely low sensitivity (4.3%), highlighting a significant challenge in '
+                'cross-platform threshold transfer from RNA-seq to microarray data. Sixth, the selected candidate pair '
+                '(UBE2S + CCR6) is not strictly statistically orthogonal, exhibiting a Spearman correlation of 0.714 in bulk '
+                'data. Seventh, transcriptomic abundance does not guarantee equivalent sensor accessibility or protein-level '
+                'expression. Eighth, translating these candidates into a functional synthetic circuit requires promoter '
+                'engineering or RNA-based sensor design, each introducing additional layers of design complexity. Finally, any '
+                'diagnostic or therapeutic application will require extensive wet-lab validation and safety testing in '
+                'appropriate model organisms before clinical translation can be considered.',
  'ML': 'To identify the most predictive and sparse gene signature, we trained three classifiers on a stratified 80/20 '
        'train-test split of the discovery cohort: L1-regularized Logistic Regression (Lasso), Random Forest (100 '
        'estimators), and XGBoost. The L1 Logistic Regression classifier achieved perfect classification performance '
@@ -334,13 +337,20 @@ en_sections = {'Abstract': 'Pancreatic ductal adenocarcinoma (PDAC) remains a hi
                   'accessibility.',
  'Title': 'Data-Driven Design of a Logic-Gated Biosensor via Unbiased Transcriptomic Profiling of Pancreatic Tumor '
           'Microenvironment',
- 'WetLab': 'To validate this AND-gate biosensor in vitro, we propose a synthetic notch (synNotch) or synthetic '
-           'promoter construct. The promoter regions driving UBE2S and CCR6 will be cloned upstream of two orthogonal '
-           'transcription factors (e.g., tTA and LhG4). These factors will cooperatively drive a split-transactivator '
-           'system, activating a green fluorescent protein (GFP) reporter or therapeutic payload (e.g., Diphtheria '
-           'toxin A) only when both promoters are active. Testing should be performed on PDAC cell lines (e.g., '
-           'PANC-1, MIA PaCa-2) as positive controls and normal human pancreatic duct epithelial cells (HPDE) as '
-           'negative controls, followed by in vivo validation in tumor xenograft mouse models.'}
+ 'WetLab': 'Several experimental avenues merit exploration to translate the computational findings of this study into '
+           'functional synthetic biology constructs. One promising direction involves the engineering of synthetic '
+           'promoter systems, wherein the upstream regulatory regions of UBE2S and CCR6 would be cloned to drive '
+           'orthogonal transcription factors (e.g., tTA and LhG4) in a split-transactivator configuration, enabling '
+           'AND-gate logic at the transcriptional level. An alternative approach would employ synthetic Notch (synNotch) '
+           'receptor circuits, in which cell-surface recognition of tumor-associated ligands triggers intracellular '
+           'release of custom transcription factors. Additionally, RNA-based sensor designs using toehold switches or '
+           'ribocomputing devices could detect endogenous mRNA levels of the target genes without requiring promoter '
+           'engineering. Functional validation should be conducted in PDAC cell lines (e.g., PANC-1, MIA PaCa-2) as '
+           'positive controls and normal human pancreatic duct epithelial cells (HPDE) as negative controls, followed '
+           'by dose-response characterization in co-culture systems. Longer-term directions include in vivo validation '
+           'using patient-derived xenograft (PDX) mouse models, assessment of circuit stability under metabolic stress, '
+           'and exploration of multi-input logic gates (e.g., three-input AND or AND-NOT) to further improve tumor '
+           'specificity and reduce off-target activation.'}
 
 zh_sections = {'Abstract': '胰臟導管腺癌 (pancreatic ductal adenocarcinoma, PDAC) '
              '仍然是致死率極高的惡性腫瘤，五年存活率低於12%，主要原因在於診斷較晚且缺乏具特異性的腫瘤生物標記。本研究提出一個無偏差、數據驅動的運算分析管線，旨在篩選最適合用於合成生物學 logic-gated 及閘 '
@@ -353,8 +363,8 @@ zh_sections = {'Abstract': '胰臟導管腺癌 (pancreatic ductal adenocarcinoma
              '(Specificity) 為 99.4% (輸出活化閾值設為 0.25)。經由 1,000 次隨機基因組合的排列測試 (permutation test)，證實此結果具有極顯著的統計學意義 (p < '
              '0.0001)。在外在驗證世代 (GSE62452 微陣列數據，n=130) 中，該及閘維持了極高的特異度 (98.4%)，但敏感度降至 4.3%，顯示跨平台轉換 (RNA-seq vs '
              'Microarray) 在閾值轉移上仍具挑戰。本研究建立的分析管線為合成生物感測器的邏輯閘設計提供了一套穩健且具可重現性的運算框架。',
- 'Affiliation': '國家高速網路與計算中心 (NCHC) 生物醫學計算節點\n中華民國 台灣',
- 'Author': '施貞蓉、廖軒佑、宿淂芳、林家誼',
+ 'Affiliation': '$^1$國立臺灣大學 生命科學系\\\\$^2$國立臺灣大學 生化科技學系',
+ 'Author': '施貞蓉$^1$、宿淂芳$^1$、廖軒佑$^2$、林家誼$^2$',
  'Conclusion': '總結而言，本研究成功建立了一套數據驅動的運算框架，用於篩選胰臟癌及閘生物感測器的最優輸入基因對。透過結合差異表達、機器學習、可解釋型人工智慧與數學模擬，選定 UBE2S 與 CCR6 '
                '作為雙輸入特徵。此組合不僅在電腦模擬中表現出極高的分類準確度與特異度，更代表了胰臟癌的兩個核心特徵：細胞週期失控與腫瘤微環境發炎。本分析管線具備高度的可重現性與擴展性，可推廣至其他癌症類型或多輸入邏輯閘的設計中。',
  'DE': "我們對 178 個胰臟癌樣本與 167 個正常組織進行了差異表現分析。針對 58,581 個基因，計算其 log2 fold change (log2FC) 與 Welch's t-test p-value (以 "
@@ -387,11 +397,7 @@ zh_sections = {'Abstract': '胰臟導管腺癌 (pancreatic ductal adenocarcinoma
                  '電路，只有在兩種輸入訊號 (Input A 與 Input B) 同時高於特定閾值時，才會觸發 downstream '
                  '報導基因或治療性載荷的釋放。這種雙輸入設計能呈指數級地提升對腫瘤細胞的辨識特異度，降低正常組織的假陽性活化率。本研究即致力於利用無偏差轉錄體剖析 (unbiased transcriptomic '
                  'profiling)，開發一套系統化的數據驅動及閘感測器設計流程。',
- 'Limitations': '本研究存在以下幾項關鍵的研究限制：第一，本研究為電腦模擬概念驗證 (in silico proof-of-concept)，實際生物體內建構之電路動力學可能有所不同；第二，SHAP '
-                '推估之閾值為統計學上的拐點，並非實際的生化解離常數 (dissociation constants)；第三，組織轉錄體 (bulk RNA-seq) '
-                '容易受到細胞組成、腫瘤純度、基質豐度及免疫浸潤的干擾；第四，儘管經過 TOIL 標準化，TCGA 與 GTEx '
-                '的對比仍可能包含未完全消除的批次效應；第五，轉錄本表達量不代表最終的蛋白質翻譯量與感測器可及性；第六，最終候選基因組合的開發，仍需經過合成啟動子設計或 RNA '
-                '轉錄調節器設計等濕實驗工程驗證；第七，任何臨床診斷或治療應用，均須經過動物模型與安全性的嚴格檢驗。',
+ 'Limitations': '本研究存在若干關鍵限制，在此必須加以說明。其一，本研究僅為電腦模擬層面的概念驗證，實際生物化學工程建構之合成電路可能展現截然不同的反應動力學。其二，SHAP 推估之活化閾值為分類器行為的統計拐點，並非實驗量測之生化解離常數。其三，組織層級的 bulk RNA-seq 數據反映的是細胞群體的平均表現，極易受到腫瘤純度、基質密度與免疫細胞浸潤的影響，可能掩蓋了細胞類型特異性的表達模式。其四，儘管已透過 TOIL 管線進行數據標準化，TCGA 腫瘤樣本與 GTEx 正常組織的比較仍可能存在殘餘的批次效應。其五，外部驗證世代顯示極低的敏感度（4.3%），凸顯了從 RNA-seq 到微陣列的跨平台閾值轉移具有重大挑戰。其六，選定的候選基因對（UBE2S + CCR6）在統計上並非嚴格正交，其在 bulk 數據中的 Spearman 相關係數達 0.714。其七，轉錄本豐度並不保證感測器在蛋白質層級的可及性或等量的蛋白質翻譯。其八，將這些候選基因轉化為功能性合成電路，需要啟動子工程或 RNA 感測器設計，各自引入額外的設計複雜度。最後，任何診斷或治療性的臨床應用，都需要在適當的模式生物中進行廣泛的濕實驗驗證與安全性測試，方能考慮臨床轉譯。',
  'ML': '為獲得最稀疏且最具預測力的基因特徵，我們將數據按 80/20 比例劃分訓練集與測試集，訓練了三種機器學習模型：L1 正則化邏輯斯迴歸、隨機森林 (Random Forest) 以及 XGBoost。結果顯示，L1 '
        '邏輯斯迴歸在測試集上取得了 1.000 的完美 AUC 以及 100.0% 的準確度，其五折交叉驗證 (5-fold CV) 的 AUC 亦為 1.000 +- 0.000。隨機森林測試集 AUC 為 '
        '0.9983，XGBoost 則為 1.000。基於 L1 正則化能將無效權重歸零的稀疏性特徵，以及優異的分類效能，我們選擇 L1 邏輯斯迴歸模型作為後續 SHAP 解釋分析的基礎。',
@@ -441,10 +447,7 @@ zh_sections = {'Abstract': '胰臟導管腺癌 (pancreatic ductal adenocarcinoma
  'Supplementary': '補充表格 1：參數掃描結果。此掃描評估了希爾係數 n 從 1 到 4，以及基底洩漏量從 0.0 到 0.1 的影響，最優值為 n=1, P_basal=0.0。\n'
                   '補充表格 2：前 100 個 SHAP 候選基因及其推估閾值。雖然許多非編碼基因排在前列，但考量到啟動子設計的可行性，我們優先挑選了 UBE2S 與 CCR6 等蛋白編碼基因。',
  'Title': '以無偏差轉錄體剖析進行胰臟腫瘤微環境之邏輯閘生物感測器的數據驅動設計',
- 'WetLab': '為驗證此及閘感測器，我們規劃了合成啟動子 (synthetic promoters) 與合成 Notch (synNotch) 受體系統。將 UBE2S 與 CCR6 '
-           '的上游特異性啟動子區段分別克隆至控制兩個正交轉錄因子 (如 tTA 與 LhG4) 的載體中。這兩個轉錄因子將共同驅動一個 split-transactivator '
-           '系統，只有當兩者同時表達時，才能組裝成完整的活化因子，進而啟動 GFP 報導基因或殺傷性載荷 (如 Diphtheria toxin A)。實驗將在 PANC-1、MIA PaCa-2 等胰臟癌細胞株與 HPDE '
-           '正常上皮細胞株進行活化特異性篩選，並在小鼠異種移植瘤模型 (xenograft mouse models) 中進行體內安全性與有效性驗證。'}
+ 'WetLab': '為將本研究的運算結果轉化為功能性合成生物線路，未來有數個實驗方向值得深入探索。首先，可嘗試建構合成啟動子系統，將 UBE2S 與 CCR6 的上游調控區段分別克隆至驅動正交轉錄因子（如 tTA 與 LhG4）的載體中，以 split-transactivator 架構實現轉錄層級的 AND 閘邏輯。其次，可利用合成 Notch（synNotch）受體線路，藉由細胞表面對腫瘤相關配體的辨識，觸發細胞內部客製化轉錄因子的釋放。此外，基於 RNA 的感測器設計（如 toehold switches 或 ribocomputing devices），可直接偵測目標基因的內源性 mRNA 濃度，無需啟動子工程。功能驗證應先以胰臟癌細胞株（如 PANC-1、MIA PaCa-2）做為陽性對照，人類正常胰管上皮細胞（HPDE）做為陰性對照，進行劑量反應特性分析。中長期方向則包含在患者來源異種移植（PDX）小鼠模型中進行體內驗證、評估電路在代謝壓力下的穩定性，以及探索多輸入邏輯閘（如三輸入 AND 閘或 AND-NOT 閘）以進一步提升腫瘤特異度與降低脫靶活化風險。'}
 
 # ----------------- LATEX GENERATORS -----------------
 
@@ -477,7 +480,7 @@ def clean_math_for_word(text):
         eq = eq.replace("_", "")
         return f"\n{eq}\n"
     
-    text = re.sub(r"\\\\[(.*?)\\\\]", repl_display, text, flags=re.DOTALL)
+    text = re.sub(r"\\\[(.*?)\\\]", repl_display, text, flags=re.DOTALL)
     
     # Replace inline equations $ ... $ with simplified text
     def repl_inline(m):
@@ -492,17 +495,15 @@ def clean_math_for_word(text):
         eq = eq.replace(r"\rangle", ">")
         eq = eq.replace(r"\infty", "∞")
         eq = eq.replace(r"\{", "{").replace(r"\}", "}")
-        eq = eq.replace(r"\\", "")
-        eq = re.sub(r"\\[a-zA-Z]+\{([^{}]+)\}", r"\1", eq)
         eq = eq.replace("\\", "")
         return eq
         
     text = re.sub(r"\$(.*?)\$", repl_inline, text)
     
     text = text.replace(r"\pm", "±")
-    text = text.replace(r"\\&", "&")
-    text = text.replace(r"\\%", "%")
-    text = text.replace(r"\\_", "_")
+    text = text.replace(r"\&", "&")
+    text = text.replace(r"\%", "%")
+    text = text.replace(r"\_", "_")
     return text
 
 def generate_latex_en(is_revised=False):
@@ -510,7 +511,7 @@ def generate_latex_en(is_revised=False):
     filepath = os.path.join(LATEX_DIR, "en", filename)
     
     en_sections_esc = {k: (escape_text_for_latex(v) if isinstance(v, str) else v) for k, v in globals()['en_sections'].items()}
-    en_sections = en_sections_esc
+    en_secs = en_sections_esc
 
     def make_latex_table(headers, data, caption, label, spec=None, span_columns=False):
         actual_span = span_columns and is_revised
@@ -520,18 +521,23 @@ def generate_latex_en(is_revised=False):
         pos = "[t]" if actual_span else "[H]"
         latex = f"\\begin{{{env}}}{pos}\n\\centering\n"
         latex += f"\\caption{{{caption}}}\\label{{{label}}}\n"
+        if actual_span:
+            latex += f"\\resizebox{{\\textwidth}}{{!}}{{\n"
+        else:
+            latex += f"\\resizebox{{\\linewidth}}{{!}}{{\n"
         latex += f"\\begin{{tabular}}{{{spec}}}\n\\toprule\n"
         escaped_headers = [h.replace("%", "\\%").replace("_", "\\_") for h in headers]
         latex += " & ".join([f"\\textbf{{{h}}}" for h in escaped_headers]) + " \\\\\n\\midrule\n"
         for row in data:
             escaped_row = [str(x).replace("%", "\\%").replace("_", "\\_").replace("&", "\\&").replace("+-", "$\\pm$") for x in row]
             latex += " & ".join(escaped_row) + " \\\\\n"
-        latex += f"\\bottomrule\n\\end{{tabular}}\n\\end{{{env}}}\n"
+        latex += f"\\bottomrule\n\\end{{tabular}}\n}}\n\\end{{{env}}}\n"
         return latex
 
     doc_class = "\\documentclass[10pt, a4paper, twocolumn]{article}" if is_revised else "\\documentclass[12pt, a4paper]{article}"
     style_file = "report_style_revised.tex" if is_revised else "report_style.tex"
     fig_width = "0.95\\linewidth" if is_revised else "0.7\\textwidth"
+    fig_placement = "[htbp]" if is_revised else "[H]"
     
     if is_revised:
         title_block = f"""
@@ -539,7 +545,7 @@ def generate_latex_en(is_revised=False):
   \\begin{{@twocolumnfalse}}
     \\maketitle
     \\begin{{abstract}}
-      {en_sections['Abstract']}
+      {en_secs['Abstract']}
     \\end{{abstract}}
     \\vspace{{1.5em}}
   \\end{{@twocolumnfalse}}
@@ -551,7 +557,7 @@ def generate_latex_en(is_revised=False):
 \\newpage
 
 \\begin{{abstract}}
-{en_sections['Abstract']}
+{en_secs['Abstract']}
 \\end{{abstract}}
 \\newpage
 """
@@ -569,38 +575,36 @@ def generate_latex_en(is_revised=False):
 \\usepackage[style=apa,backend=biber]{{biblatex}}
 \\addbibresource{{references_en.bib}}
 
-\\title{{{en_sections['Title']}}}
-\\author[1]{{{en_sections['Author']}}}
-\\affil[1]{{{en_sections['Affiliation']}}}
-\\date{{{en_sections['Date']}}}
+\\title{{{en_secs['Title']}}}
+\\author{{{en_secs['Author']}}}
+\\affil{{{en_secs['Affiliation']}}}
+\\date{{{en_secs['Date']}}}
 
 \\begin{{document}}
 
 {title_block}
-\\tableofcontents
-\\newpage
 
 \\section{{Introduction}}
-{en_sections['Introduction']}
+{en_secs['Introduction']}
 
 \\section{{Scientific Rationale and Unmet Need}}
-{en_sections['Rationale']}
+{en_secs['Rationale']}
 
 \\section{{Data Sources}}
-{en_sections['DataSources']}
+{en_secs['DataSources']}
 
 {make_latex_table(t1_headers, t1_data, "Data Cohorts and Sample Size Distribution", "tab:datasets", span_columns=False)}
 
 \\section{{Computational Pipeline}}
-{en_sections['Pipeline']}
+{en_secs['Pipeline']}
 
 \\section{{Quality Control and Batch-Effect Assessment}}
-{en_sections['QC']}
+{en_secs['QC']}
 
 \\section{{Differential Expression Analysis}}
-{en_sections['DE']}
+{en_secs['DE']}
 
-\\begin{{figure}}[H]
+\\begin{{figure}}{fig_placement}
 \\centering
 \\includegraphics[width={fig_width}]{{volcano_discovery.png}}
 \\caption{{Volcano plot highlighting significantly differentially expressed genes in the discovery cohort (TCGA-PAAD vs GTEx Normal Pancreas). UBE2S and CCR6 are annotated as significant upregulated candidates.}}
@@ -610,14 +614,14 @@ def generate_latex_en(is_revised=False):
 {make_latex_table(t2_headers, t2_data, "Top 10 Differentially Expressed Genes Sorted by Specificity Score", "tab:top_de", span_columns=True)}
 
 \\section{{Machine Learning Classifier Performance}}
-{en_sections['ML']}
+{en_secs['ML']}
 
 {make_latex_table(t3_headers, t3_data, "Machine Learning Classifier Performance and Cross-Validation Summary", "tab:ml_perf", span_columns=True)}
 
 \\section{{SHAP-Based Explainable AI Analysis}}
-{en_sections['SHAP']}
+{en_secs['SHAP']}
 
-\\begin{{figure}}[H]
+\\begin{{figure}}{fig_placement}
 \\centering
 \\includegraphics[width={fig_width}]{{shap_summary.png}}
 \\caption{{SHAP summary plot showing feature importances for the top-ranked genes driving the L1 Logistic Regression classifier.}}
@@ -627,14 +631,14 @@ def generate_latex_en(is_revised=False):
 {make_latex_table(t4_headers, t4_data, "Top 10 SHAP Feature Importance and Inferred Expression Thresholds", "tab:shap_thresh", span_columns=True)}
 
 \\section{{Candidate Gene Pair Selection}}
-{en_sections['PairSelection']}
+{en_secs['PairSelection']}
 
 {make_latex_table(t5_headers, t5_data, "Detailed Molecular Profile of Selected Candidate Pair", "tab:candidate_pair", span_columns=True)}
 
 \\section{{Orthogonality Assessment}}
-{en_sections['Orthogonality']}
+{en_secs['Orthogonality']}
 
-\\begin{{figure}}[H]
+\\begin{{figure}}{fig_placement}
 \\centering
 \\includegraphics[width={fig_width}]{{gene_pair_scatter_final.png}}
 \\caption{{Scatter plot of UBE2S vs CCR6 rescaled expression in discovery cohort, demonstrating decision boundary quadrants and sample clustering.}}
@@ -642,16 +646,15 @@ def generate_latex_en(is_revised=False):
 \\end{{figure}}
 
 \\section{{Need for Single-Cell and Spatial Validation}}
-{en_sections['SingleCell']}
+{en_secs['SingleCell']}
 
 \\section{{Hill-Equation-Based AND Gate Modeling}}
-{en_sections['HillModeling']}
-Here, we present the formal model parameters optimized to capture this logic.
+{en_secs['HillModeling']}
 
 \\section{{In Silico Validation}}
-{en_sections['InSilico']}
+{en_secs['InSilico']}
 
-\\begin{{figure}}[H]
+\\begin{{figure}}{fig_placement}
 \\centering
 \\includegraphics[width={fig_width}]{{and_gate_heatmap_final.png}}
 \\caption{{2D Contour heatmap demonstrating simulation output of UBE2S AND CCR6 logical AND gate, with rescaled expression and tumor/normal sample overlays.}}
@@ -660,7 +663,7 @@ Here, we present the formal model parameters optimized to capture this logic.
 
 {make_latex_table(t6_headers, t6_data, "AND Gate Simulation Performance Summary in Discovery Cohort", "tab:and_perf", span_columns=False)}
 
-\\begin{{figure}}[H]
+\\begin{{figure}}{fig_placement}
 \\centering
 \\includegraphics[width={fig_width}]{{roc_curves.png}}
 \\caption{{ROC curves comparing individual inputs (UBE2S, CCR6) against the combined logic gate output.}}
@@ -670,41 +673,26 @@ Here, we present the formal model parameters optimized to capture this logic.
 {make_latex_table(t7_headers, t7_data, "External Validation Results on GSE62452 Dataset", "tab:ext_val", span_columns=True)}
 
 \\section{{Robustness and Negative Controls}}
-{en_sections['Robustness']}
+{en_secs['Robustness']}
 
 \\section{{Limitations}}
-\\begin{{enumerate}}
-"""
-    limitations_list = [
-        "This is an in silico proof-of-concept; biochemical kinetics may differ.",
-        "SHAP-inferred thresholds are statistical inflection points and do not map directly to biochemical dissociation constants.",
-        "Bulk RNA-seq data reflects average cell populations and is highly influenced by stromal density and immune infiltration.",
-        "The comparison between TCGA (tumor) and GTEx (normal) may contain subtle batch effects despite TOIL harmonization.",
-        "External validation cohort demonstrated extremely low sensitivity (4.3%), indicating significant challenge in threshold transfer.",
-        "The selected candidate pair (UBE2S + CCR6) is not strictly statistically orthogonal, exhibiting a correlation of 0.714.",
-        "Transcriptomic abundance differences do not guarantee equivalent sensor accessibility or protein translation.",
-        "The final candidates require promoter engineering or RNA sensor design, which introduces additional complexity.",
-        "Any diagnostic or therapeutic application requires extensive wet-lab validation and safety testing in model organisms."
-    ]
-    for lim in limitations_list:
-        content += f"\\item {lim}\n"
-        
-    supp_prefix = "\\newpage\n\\onecolumn\n" if is_revised else "\\newpage\n"
-    
-    content += f"""\\end{{enumerate}}
+{en_secs['Limitations']}
 
-\\section{{Proposed Wet-Lab Validation}}
-{en_sections['WetLab']}
+\\section{{Future Experimental Directions}}
+{en_secs['WetLab']}
 
 \\section{{Conclusion}}
-{en_sections['Conclusion']}
+{en_secs['Conclusion']}
 
 \\newpage
 \\nocite{{*}}
 \\printbibliography[title={{References}}]
 
-{supp_prefix}\\section{{Supplementary Tables and Figures}}
-{en_sections['Supplementary']}
+"""
+    supp_prefix = "\\newpage\n\\onecolumn\n" if is_revised else "\\newpage\n"
+    
+    content += f"""{supp_prefix}\\section{{Supplementary Tables and Figures}}
+{en_secs['Supplementary']}
 
 \\subsection{{Supplementary Table 1: Parameter Sweep}}
 {make_latex_table(["Hill Coefficient (n)", "Basal Leakiness (P_basal)", "ROC-AUC", "Accuracy", "Sensitivity", "Specificity"], 
@@ -743,48 +731,38 @@ def generate_latex_zh(is_revised=False):
     filepath = os.path.join(LATEX_DIR, "zh", filename)
     
     zh_sections_esc = {k: (escape_text_for_latex(v) if isinstance(v, str) else v) for k, v in globals()['zh_sections'].items()}
-    zh_sections = zh_sections_esc
+    zh_secs = zh_sections_esc
 
     def make_latex_table(headers, data, caption, label, spec=None, span_columns=False):
-        actual_span = span_columns and is_revised
+        actual_span = False  # Chinese is always single-column, no table* needed
         if spec is None:
             spec = "l" + "c"*(len(headers)-1)
-        env = "table*" if actual_span else "table"
-        pos = "[t]" if actual_span else "[H]"
+        env = "table"
+        pos = "[H]"
         latex = f"\\begin{{{env}}}{pos}\n\\centering\n"
         latex += f"\\caption{{{caption}}}\\label{{{label}}}\n"
+        latex += f"\\resizebox{{\\linewidth}}{{!}}{{\n"
         latex += f"\\begin{{tabular}}{{{spec}}}\n\\toprule\n"
         escaped_headers = [h.replace("%", "\\%").replace("_", "\\_") for h in headers]
         latex += " & ".join([f"\\textbf{{{h}}}" for h in escaped_headers]) + " \\\\\n\\midrule\n"
         for row in data:
             escaped_row = [str(x).replace("%", "\\%").replace("_", "\\_").replace("&", "\\&").replace("+-", "$\\pm$") for x in row]
             latex += " & ".join(escaped_row) + " \\\\\n"
-        latex += f"\\bottomrule\n\\end{{tabular}}\n\\end{{{env}}}\n"
+        latex += f"\\bottomrule\n\\end{{tabular}}\n}}\n\\end{{{env}}}\n"
         return latex
 
-    doc_class = "\\documentclass[10pt, a4paper, twocolumn]{article}" if is_revised else "\\documentclass[12pt, a4paper]{article}"
-    style_file = "report_style_revised.tex" if is_revised else "report_style.tex"
-    fig_width = "0.95\\linewidth" if is_revised else "0.7\\textwidth"
+    # Chinese: always single-column for both revised and non-revised
+    doc_class = "\\documentclass[12pt, a4paper]{article}"
+    style_file = "report_style.tex"
+    fig_width = "0.7\\textwidth"
 
-    if is_revised:
-        title_block = f"""
-\\twocolumn[
-  \\begin{{@twocolumnfalse}}
-    \\maketitle
-    \\begin{{abstract}}
-      {zh_sections['Abstract']}
-    \\end{{abstract}}
-    \\vspace{{1.5em}}
-  \\end{{@twocolumnfalse}}
-]
-"""
-    else:
-        title_block = f"""
+    # Both revised and non-revised Chinese use single-column title block
+    title_block = f"""
 \\maketitle
 \\newpage
 
 \\begin{{abstract}}
-{zh_sections['Abstract']}
+{zh_secs['Abstract']}
 \\end{{abstract}}
 \\newpage
 """
@@ -805,36 +783,34 @@ def generate_latex_zh(is_revised=False):
 \\usepackage[style=apa,backend=biber]{{biblatex}}
 \\addbibresource{{references_zh.bib}}
 
-\\title{{\\Large \\bfseries {zh_sections['Title']} \\\\ \\vspace{{0.5em}} \\large {zh_sections['Subtitle']}}}
-\\author{{{zh_sections['Author']}}}
-\\affil{{{zh_sections['Affiliation']}}}
-\\date{{{zh_sections['Date']}}}
+\\title{{{zh_secs['Title']}}}
+\\author{{{zh_secs['Author']}}}
+\\affil{{{zh_secs['Affiliation']}}}
+\\date{{{zh_secs['Date']}}}
 
 \\begin{{document}}
 
 {title_block}
-\\tableofcontents
-\\newpage
 
 \\section{{前言}}
-{zh_sections['Introduction']}
+{zh_secs['Introduction']}
 
 \\section{{科學背景與未滿足之臨床需求}}
-{zh_sections['Rationale']}
+{zh_secs['Rationale']}
 
 \\section{{資料來源}}
-{zh_sections['DataSources']}
+{zh_secs['DataSources']}
 
 {make_latex_table(t1_headers, t1_data, "數據世代與樣本量分布", "tab:datasets_zh", span_columns=False)}
 
 \\section{{運算分析管線}}
-{zh_sections['Pipeline']}
+{zh_secs['Pipeline']}
 
 \\section{{品質控制與批次效應評估}}
-{zh_sections['QC']}
+{zh_secs['QC']}
 
 \\section{{差異表現分析}}
-{zh_sections['DE']}
+{zh_secs['DE']}
 
 \\begin{{figure}}[H]
 \\centering
@@ -846,12 +822,12 @@ def generate_latex_zh(is_revised=False):
 {make_latex_table(t2_headers, t2_data, "前 10 個差異表現基因 (按特異性得分排序)", "tab:top_de_zh", span_columns=True)}
 
 \\section{{機器學習分類器表現}}
-{zh_sections['ML']}
+{zh_secs['ML']}
 
 {make_latex_table(t3_headers, t3_data, "機器學習分類器表現與五折交叉驗證結果摘要", "tab:ml_perf_zh", span_columns=True)}
 
 \\section{{基於 SHAP 的可解釋型人工智慧分析}}
-{zh_sections['SHAP']}
+{zh_secs['SHAP']}
 
 \\begin{{figure}}[H]
 \\centering
@@ -863,12 +839,12 @@ def generate_latex_zh(is_revised=False):
 {make_latex_table(t4_headers, t4_data, "前 10 個 SHAP 特徵重要性與模型推估表達閾值", "tab:shap_thresh_zh", span_columns=True)}
 
 \\section{{候選基因組合篩選}}
-{zh_sections['PairSelection']}
+{zh_secs['PairSelection']}
 
 {make_latex_table(t5_headers, t5_data, "選定候選基因組合的詳細分子譜描述", "tab:candidate_pair_zh", span_columns=True)}
 
 \\section{{正交性評估}}
-{zh_sections['Orthogonality']}
+{zh_secs['Orthogonality']}
 
 \\begin{{figure}}[H]
 \\centering
@@ -878,13 +854,13 @@ def generate_latex_zh(is_revised=False):
 \\end{{figure}}
 
 \\section{{單細胞與空間轉錄體驗證之必要性}}
-{zh_sections['SingleCell']}
+{zh_secs['SingleCell']}
 
 \\section{{基於希爾方程式的 AND gate 建模}}
-{zh_sections['HillModeling']}
+{zh_secs['HillModeling']}
 
 \\section{{電腦模擬驗證}}
-{zh_sections['InSilico']}
+{zh_secs['InSilico']}
 
 \\begin{{figure}}[H]
 \\centering
@@ -905,41 +881,24 @@ def generate_latex_zh(is_revised=False):
 {make_latex_table(t7_headers, t7_data, "GSE62452 外部驗證結果摘要", "tab:ext_val_zh", span_columns=True)}
 
 \\section{{穩健性分析與負控制}}
-{zh_sections['Robustness']}
+{zh_secs['Robustness']}
 
 \\section{{研究限制}}
-\\begin{{enumerate}}
-"""
-    limitations_list_zh = [
-        "本研究僅為電腦模擬之概念驗證，實際生化反應之動力學可能有所不同。",
-        "SHAP 推估之表達閾值為統計學之拐點，無法直接對應至物理學上的生化解離常數。",
-        "組織轉錄體 (Bulk RNA-seq) 表達數據易受到細胞組成、腫瘤純度及免疫細胞浸潤之干擾。",
-        "儘管經過 TOIL 管線標準化，TCGA (腫瘤) 與 GTEx (健康) 的比較可能仍存在部分批次效應。",
-        "外部驗證世代中顯示極低的敏感度 (4.3%)，顯示跨平台定量尺度的不匹配是閾值轉移的重大挑戰。",
-        "選定的候選基因對 (UBE2S + CCR6) 統計上並非嚴格正交，在 bulk RNA-seq 中的相關係數達 0.714。",
-        "轉錄體層級之豐度差異不代表合成感測器之可及性，亦不保證有同等程度的蛋白質翻譯表現。",
-        "將此候選組合轉譯為合成基因線路，仍需進行啟動子工程或 RNA 轉錄調節器設計，程序較為複雜。",
-        "任何診斷或治療性之臨床應用，皆須經過細胞、動物與安全性的嚴格檢驗。"
-    ]
-    for lim in limitations_list_zh:
-        content += f"\\item {lim}\n"
-        
-    supp_prefix = "\\newpage\n\\onecolumn\n" if is_revised else "\\newpage\n"
+{zh_secs['Limitations']}
 
-    content += f"""\\end{{enumerate}}
-
-\\section{{後續濕實驗驗證規劃}}
-{zh_sections['WetLab']}
+\\section{{未來實驗方向}}
+{zh_secs['WetLab']}
 
 \\section{{結論}}
-{zh_sections['Conclusion']}
+{zh_secs['Conclusion']}
 
 \\newpage
 \\nocite{{*}}
 \\printbibliography[title={{參考文獻}}]
 
-{supp_prefix}\\section{{補充表格與圖}}
-{zh_sections['Supplementary']}
+\\newpage
+\\section{{補充表格與圖}}
+{zh_secs['Supplementary']}
 
 \\subsection{{補充表格 1：參數掃描結果}}
 {make_latex_table(["Hill 係數 (n)", "基底洩漏量 (P_basal)", "ROC-AUC", "準確度", "敏感度", "特異度"], 
@@ -1088,17 +1047,20 @@ def generate_word_en(is_revised=False):
     run_title.font.name = 'Arial'
     run_title.font.size = Pt(20)
     
+    en_word_author = 'SHIH, Chen-Jung\u00b9, SU, Te-Fang\u00b9, LIAO, Xuan-You\u00b2, LIN, Chia-I\u00b2'
+    en_word_affiliation = '\u00b9Department of Life Science, National Taiwan University\n\u00b2Department of Biochemical Science and Technology, National Taiwan University'
+    
     p_author = doc.add_paragraph()
     p_author.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_author.paragraph_format.space_after = Pt(6)
-    run_author = p_author.add_run(clean_math_for_word(en_sections["Author"]))
+    run_author = p_author.add_run(en_word_author)
     run_author.font.name = 'Times New Roman'
     run_author.font.size = Pt(12)
     
     p_aff = doc.add_paragraph()
     p_aff.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_aff.paragraph_format.space_after = Pt(18)
-    run_aff = p_aff.add_run(clean_math_for_word(en_sections["Affiliation"]))
+    run_aff = p_aff.add_run(en_word_affiliation)
     run_aff.font.name = 'Times New Roman'
     run_aff.font.size = Pt(10)
     
@@ -1124,71 +1086,78 @@ def generate_word_en(is_revised=False):
     else:
         doc.add_page_break()
         main_fig_width = Inches(5.0)
+    
+    en_limitations_paragraph = (
+        "Several critical limitations must be acknowledged. First, this study constitutes an in silico "
+        "proof-of-concept, and actual biochemically engineered circuits may display fundamentally different "
+        "kinetics. Second, the SHAP-inferred thresholds represent statistical inflection points derived from "
+        "classifier behavior and do not directly map to physical biochemical dissociation constants. Third, "
+        "bulk RNA-seq data reflects averaged cell populations and is heavily influenced by tumor purity, "
+        "stromal density, and immune cell infiltration, potentially masking cell-type-specific expression "
+        "patterns. Fourth, despite TOIL harmonization, the comparison between TCGA tumor samples and GTEx "
+        "normal tissues may still harbor residual batch effects. Fifth, the external validation cohort "
+        "demonstrated extremely low sensitivity (4.3%), highlighting a significant challenge in cross-platform "
+        "threshold transfer from RNA-seq to microarray data. Sixth, the selected candidate pair (UBE2S + CCR6) "
+        "is not strictly statistically orthogonal, exhibiting a Spearman correlation of 0.714 in bulk data. "
+        "Seventh, transcriptomic abundance does not guarantee equivalent sensor accessibility or protein-level "
+        "expression. Eighth, translating these candidates into a functional synthetic circuit requires promoter "
+        "engineering or RNA-based sensor design, each introducing additional layers of design complexity. "
+        "Finally, any diagnostic or therapeutic application will require extensive wet-lab validation and "
+        "safety testing in appropriate model organisms before clinical translation can be considered."
+    )
         
     sections_order = [
-        ("1. Introduction", en_sections["Introduction"]),
-        ("2. Scientific Rationale and Unmet Need", en_sections["Rationale"]),
-        ("3. Data Sources", en_sections["DataSources"]),
-        ("4. Computational Pipeline", en_sections["Pipeline"]),
-        ("5. Quality Control and Batch-Effect Assessment", en_sections["QC"]),
-        ("6. Differential Expression Analysis", en_sections["DE"]),
-        ("7. Machine Learning Classifier Performance", en_sections["ML"]),
-        ("8. SHAP-Based Explainable AI Analysis", en_sections["SHAP"]),
-        ("9. Candidate Gene Pair Selection", en_sections["PairSelection"]),
-        ("10. Orthogonality Assessment", en_sections["Orthogonality"]),
-        ("11. Need for Single-Cell and Spatial Validation", en_sections["SingleCell"]),
-        ("12. Hill-Equation-Based AND Gate Modeling", en_sections["HillModeling"]),
-        ("13. In Silico Validation", en_sections["InSilico"]),
-        ("14. Robustness and Controls", en_sections["Robustness"])
+        ("I. Introduction", en_sections["Introduction"]),
+        ("II. Scientific Rationale and Unmet Need", en_sections["Rationale"]),
+        ("III. Data Sources", en_sections["DataSources"]),
+        ("IV. Computational Pipeline", en_sections["Pipeline"]),
+        ("V. Quality Control and Batch-Effect Assessment", en_sections["QC"]),
+        ("VI. Differential Expression Analysis", en_sections["DE"]),
+        ("VII. Machine Learning Classifier Performance", en_sections["ML"]),
+        ("VIII. SHAP-Based Explainable AI Analysis", en_sections["SHAP"]),
+        ("IX. Candidate Gene Pair Selection", en_sections["PairSelection"]),
+        ("X. Orthogonality Assessment", en_sections["Orthogonality"]),
+        ("XI. Need for Single-Cell and Spatial Validation", en_sections["SingleCell"]),
+        ("XII. Hill-Equation-Based AND Gate Modeling", en_sections["HillModeling"]),
+        ("XIII. In Silico Validation", en_sections["InSilico"]),
+        ("XIV. Robustness and Controls", en_sections["Robustness"])
     ]
     
     for title, text in sections_order:
         add_word_heading(doc, title, 1)
         add_word_paragraph(doc, text)
         
-        if "3. Data Sources" in title:
+        if "III. Data Sources" in title:
             add_word_table(doc, t1_headers, t1_data)
-        elif "6. Differential Expression" in title:
+        elif "VI. Differential Expression" in title:
             add_word_image(doc, os.path.join(FIGURES_DIR, "volcano_discovery.png"), "Volcano plot of discovery cohort", width=main_fig_width)
             add_word_table(doc, t2_headers, t2_data)
-        elif "7. Machine Learning" in title:
+        elif "VII. Machine Learning" in title:
             add_word_table(doc, t3_headers, t3_data)
-        elif "8. SHAP-Based" in title:
+        elif "VIII. SHAP-Based" in title:
             add_word_image(doc, os.path.join(FIGURES_DIR, "shap_summary.png"), "SHAP Feature Importance Summary Bar Plot", width=main_fig_width)
             add_word_table(doc, t4_headers, t4_data)
-        elif "9. Candidate Gene" in title:
+        elif "IX. Candidate Gene" in title:
             add_word_table(doc, t5_headers, t5_data)
-        elif "10. Orthogonality" in title:
+        elif "X. Orthogonality" in title:
             add_word_image(doc, os.path.join(FIGURES_DIR, "gene_pair_scatter_final.png"), "UBE2S vs CCR6 rescaled expression scatter plot", width=main_fig_width)
-        elif "13. In Silico Validation" in title:
+        elif "XIII. In Silico Validation" in title:
             add_word_image(doc, os.path.join(FIGURES_DIR, "and_gate_heatmap_final.png"), "AND gate logical activation surface heatmap", width=main_fig_width)
             add_word_table(doc, t6_headers, t6_data)
             add_word_image(doc, os.path.join(FIGURES_DIR, "roc_curves.png"), "ROC curves comparison: single vs logical combination", width=main_fig_width)
             add_word_heading(doc, "Table 7: External Validation Results (GSE62452)", 2)
             add_word_table(doc, t7_headers, t7_data)
             
-    add_word_heading(doc, "15. Limitations", 1)
-    limitations_list = [
-        "This is an in silico proof-of-concept; biochemical kinetics may differ.",
-        "SHAP-inferred thresholds are statistical inflection points and do not map directly to biochemical dissociation constants.",
-        "Bulk RNA-seq data reflects average cell populations and is highly influenced by stromal density and immune infiltration.",
-        "The comparison between TCGA (tumor) and GTEx (normal) may contain subtle batch effects despite TOIL harmonization.",
-        "External validation cohort demonstrated extremely low sensitivity (4.3%), indicating significant challenge in threshold transfer.",
-        "The selected candidate pair (UBE2S + CCR6) is not strictly statistically orthogonal, exhibiting a correlation of 0.714.",
-        "Transcriptomic abundance differences do not guarantee equivalent sensor accessibility or protein translation.",
-        "The final candidates require promoter engineering or RNA sensor design, which introduces additional complexity.",
-        "Any diagnostic or therapeutic application requires extensive wet-lab validation and safety testing in model organisms."
-    ]
-    for lim in limitations_list:
-        add_word_paragraph(doc, f"- {lim}", space_after=4)
+    add_word_heading(doc, "XV. Limitations", 1)
+    add_word_paragraph(doc, en_limitations_paragraph)
         
-    add_word_heading(doc, "16. Proposed Wet-Lab Validation", 1)
+    add_word_heading(doc, "XVI. Future Experimental Directions", 1)
     add_word_paragraph(doc, en_sections["WetLab"])
     
-    add_word_heading(doc, "17. Conclusion", 1)
+    add_word_heading(doc, "XVII. Conclusion", 1)
     add_word_paragraph(doc, en_sections["Conclusion"])
     
-    add_word_heading(doc, "18. References", 1)
+    add_word_heading(doc, "XVIII. References", 1)
     refs = en_sections["References"].split("\n")
     for ref in refs:
         add_word_paragraph(doc, ref, space_after=4)
@@ -1203,7 +1172,7 @@ def generate_word_en(is_revised=False):
     else:
         doc.add_page_break()
         
-    add_word_heading(doc, "19. Supplementary Tables and Figures", 1)
+    add_word_heading(doc, "XIX. Supplementary Tables and Figures", 1)
     add_word_paragraph(doc, en_sections["Supplementary"])
     
     add_word_heading(doc, "Supplementary Table 1: Grid Search Sweep", 2)
@@ -1248,10 +1217,13 @@ def generate_word_zh(is_revised=False):
     run_sub.font.name = 'Times New Roman'
     run_sub.font.size = Pt(12)
     
+    zh_word_author = '施貞蓉\u00b9、宿淂芳\u00b9、廖軒佑\u00b2、林家誼\u00b2'
+    zh_word_affiliation = '\u00b9國立臺灣大學 生命科學系\n\u00b2國立臺灣大學 生化科技學系'
+    
     p_author = doc.add_paragraph()
     p_author.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_author.paragraph_format.space_after = Pt(6)
-    run_author = p_author.add_run(clean_math_for_word(zh_sections["Author"]))
+    run_author = p_author.add_run(zh_word_author)
     run_author.font.name = 'DFKai-SB'
     run_author.font.size = Pt(12)
     run_author._r.get_or_add_rPr().get_or_add_rFonts().set(qn('w:eastAsia'), 'DFKai-SB')
@@ -1259,7 +1231,7 @@ def generate_word_zh(is_revised=False):
     p_aff = doc.add_paragraph()
     p_aff.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_aff.paragraph_format.space_after = Pt(18)
-    run_aff = p_aff.add_run(clean_math_for_word(zh_sections["Affiliation"]))
+    run_aff = p_aff.add_run(zh_word_affiliation)
     run_aff.font.name = 'DFKai-SB'
     run_aff.font.size = Pt(10)
     run_aff._r.get_or_add_rPr().get_or_add_rFonts().set(qn('w:eastAsia'), 'DFKai-SB')
@@ -1276,17 +1248,21 @@ def generate_word_zh(is_revised=False):
     add_word_heading(doc, "摘要", 1, is_chinese=True)
     add_word_paragraph(doc, zh_sections["Abstract"], is_chinese=True, font_name='DFKai-SB')
     
-    if is_revised:
-        sec2 = doc.add_section(start_type=WD_SECTION.NEW_PAGE)
-        set_section_columns(sec2, 2, col_space=720)
-        sec2.top_margin = Inches(0.7)
-        sec2.bottom_margin = Inches(0.7)
-        sec2.left_margin = Inches(0.7)
-        sec2.right_margin = Inches(0.7)
-        main_fig_width = Inches(3.0)
-    else:
-        doc.add_page_break()
-        main_fig_width = Inches(5.0)
+    # Chinese Word: always single-column for both revised and non-revised
+    doc.add_page_break()
+    main_fig_width = Inches(5.0)
+    
+    zh_limitations_paragraph = (
+        '本研究存在若干關鍵限制，在此必須加以說明。其一，本研究僅為電腦模擬層面的概念驗證，實際生物化學工程建構之合成電路可能展現截然不同的反應動力學。'
+        '其二，SHAP 推估之活化閾值為分類器行為的統計拐點，並非實驗量測之生化解離常數。'
+        '其三，組織層級的 bulk RNA-seq 數據反映的是細胞群體的平均表現，極易受到腫瘤純度、基質密度與免疫細胞浸潤的影響，可能掩蓋了細胞類型特異性的表達模式。'
+        '其四，儘管已透過 TOIL 管線進行數據標準化，TCGA 腫瘤樣本與 GTEx 正常組織的比較仍可能存在殘餘的批次效應。'
+        '其五，外部驗證世代顯示極低的敏感度（4.3%），凸顯了從 RNA-seq 到微陣列的跨平台閾值轉移具有重大挑戰。'
+        '其六，選定的候選基因對（UBE2S + CCR6）在統計上並非嚴格正交，其在 bulk 數據中的 Spearman 相關係數達 0.714。'
+        '其七，轉錄本豐度並不保證感測器在蛋白質層級的可及性或等量的蛋白質翻譯。'
+        '其八，將這些候選基因轉化為功能性合成電路，需要啟動子工程或 RNA 感測器設計，各自引入額外的設計複雜度。'
+        '最後，任何診斷或治療性的臨床應用，都需要在適當的模式生物中進行廣泛的濕實驗驗證與安全性測試，方能考慮臨床轉譯。'
+    )
         
     sections_order_zh = [
         ("一、前言", zh_sections["Introduction"]),
@@ -1331,21 +1307,9 @@ def generate_word_zh(is_revised=False):
             add_word_table(doc, t7_headers, t7_data, is_chinese=True)
             
     add_word_heading(doc, "十五、研究限制", 1, is_chinese=True)
-    limitations_list_zh = [
-        "本研究僅為電腦模擬之概念驗證，實際生化反應之動力學可能有所不同。",
-        "SHAP 推估之表達閾值為統計學之拐點，無法直接對應至物理學上的生化解離常數。",
-        "組織轉錄體 (Bulk RNA-seq) 表達數據易受到細胞組成、腫瘤純度及免疫細胞浸潤之干擾。",
-        "儘長經過 TOIL 管線標準化，TCGA (腫瘤) 與 GTEx (健康) 的比較可能仍存在部分批次效應。",
-        "外部驗證世代中顯示極低的敏感度 (4.3%)，顯示跨平台定量尺度的不匹配是閾值轉移的重大挑戰。",
-        "選定的候選基因對 (UBE2S + CCR6) 統計上並非嚴格正交，在 bulk RNA-seq 中的相關係數達 0.714。",
-        "轉錄體層級之豐度差異不代表合成感測器之可及性，亦不保證有同等程度的蛋白質翻譯表現。",
-        "將此候選組合轉譯為合成基因線路，仍需進行啟動子工程或 RNA 轉錄調節器設計，程序較為複雜。",
-        "任何診斷或治療性之臨床應用，皆須經過細胞、動物與安全性的嚴格檢驗。"
-    ]
-    for lim in limitations_list_zh:
-        add_word_paragraph(doc, f"- {lim}", is_chinese=True, font_name='DFKai-SB', space_after=4)
+    add_word_paragraph(doc, zh_limitations_paragraph, is_chinese=True, font_name='DFKai-SB')
         
-    add_word_heading(doc, "十六、後續濕實驗驗證規劃", 1, is_chinese=True)
+    add_word_heading(doc, "十六、未來實驗方向", 1, is_chinese=True)
     add_word_paragraph(doc, zh_sections["WetLab"], is_chinese=True, font_name='DFKai-SB')
     
     add_word_heading(doc, "十七、結論", 1, is_chinese=True)
@@ -1356,15 +1320,7 @@ def generate_word_zh(is_revised=False):
     for ref in refs:
         add_word_paragraph(doc, ref, is_chinese=True, font_name='DFKai-SB', space_after=4)
         
-    if is_revised:
-        sec3 = doc.add_section(start_type=WD_SECTION.NEW_PAGE)
-        set_section_columns(sec3, 1)
-        sec3.top_margin = Inches(0.98)
-        sec3.bottom_margin = Inches(0.98)
-        sec3.left_margin = Inches(0.98)
-        sec3.right_margin = Inches(0.98)
-    else:
-        doc.add_page_break()
+    doc.add_page_break()
         
     add_word_heading(doc, "十九、補充表格與圖", 1, is_chinese=True)
     add_word_paragraph(doc, zh_sections["Supplementary"], is_chinese=True, font_name='DFKai-SB')

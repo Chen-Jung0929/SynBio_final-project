@@ -1,7 +1,7 @@
 % Auto-generated Chinese report for PDAC Biosensor Project
-\documentclass[10pt, a4paper, twocolumn]{article}
+\documentclass[12pt, a4paper]{article}
 
-\input{../shared/report_style_revised.tex}
+\input{../shared/report_style.tex}
 \input{../shared/macros.tex}
 \usepackage{xeCJK}
 \setCJKmainfont{DFKai-SB}
@@ -14,27 +14,22 @@
 \usepackage[style=apa,backend=biber]{biblatex}
 \addbibresource{references_zh.bib}
 
-\title{\Large \bfseries 以無偏差轉錄體剖析進行胰臟腫瘤微環境之邏輯閘生物感測器的數據驅動設計 \\ \vspace{0.5em} \large Data-Driven Design of a Logic-Gated Biosensor via Unbiased Transcriptomic Profiling of Pancreatic Tumor Microenvironment}
-\author{施貞蓉、廖軒佑、宿淂芳、林家誼}
-\affil{國家高速網路與計算中心 (NCHC) 生物醫學計算節點
-中華民國 台灣}
+\title{以無偏差轉錄體剖析進行胰臟腫瘤微環境之邏輯閘生物感測器的數據驅動設計}
+\author{施貞蓉$^1$、宿淂芳$^1$、廖軒佑$^2$、林家誼$^2$}
+\affil{$^1$國立臺灣大學 生命科學系\\$^2$國立臺灣大學 生化科技學系}
 \date{2026年5月}
 
 \begin{document}
 
 
-\twocolumn[
-  \begin{@twocolumnfalse}
-    \maketitle
-    \begin{abstract}
-      胰臟導管腺癌 (pancreatic ductal adenocarcinoma, PDAC) 仍然是致死率極高的惡性腫瘤，五年存活率低於12\%，主要原因在於診斷較晚且缺乏具特異性的腫瘤生物標記。本研究提出一個無偏差、數據驅動的運算分析管線，旨在篩選最適合用於合成生物學 logic-gated 及閘 (AND-gate) 生物感測器的候選基因組合，以精準區分胰臟癌與正常胰臟組織。我們整合了 TCGA-PAAD (n=178 腫瘤) 與 GTEx 正常胰臟組織 (n=167 正常) 世代的轉錄體數據，共分析了 58,581 個基因。利用 L1 正則化邏輯斯迴歸 (L1-regularized Logistic Regression) 機器學習模型進行分類，其五折交叉驗證 AUC 達到 1.000，藉此篩選出具高度預測能力的特徵。接著，利用可解釋型人工智慧 (explainable artificial intelligence, XAI) 技術中的 SHAP 值分析，推估出候選基因在腫瘤與正常組織轉換的「模型推估活化閾值 (model-inferred activation threshold)」。根據基因之間的正交性 (orthogonality) 與組合活化率，我們選定 UBE2S 與 CCR6 為最終候選基因組合，兩者皮爾森相關係數 (Pearson correlation) 為 0.714。利用希爾方程式 (Hill equation) 對該及閘進行數學建模與參數優化，結果顯示該及閘在發現世代中的 AUC 達 0.9986，準確度 (Accuracy) 為 98.6\%、敏感度 (Sensitivity) 為 97.8\%、特異度 (Specificity) 為 99.4\% (輸出活化閾值設為 0.25)。經由 1,000 次隨機基因組合的排列測試 (permutation test)，證實此結果具有極顯著的統計學意義 (p < 0.0001)。在外在驗證世代 (GSE62452 微陣列數據，n=130) 中，該及閘維持了極高的特異度 (98.4\%)，但敏感度降至 4.3\%，顯示跨平台轉換 (RNA-seq vs Microarray) 在閾值轉移上仍具挑戰。本研究建立的分析管線為合成生物感測器的邏輯閘設計提供了一套穩健且具可重現性的運算框架。
-    \end{abstract}
-    \vspace{1.5em}
-  \end{@twocolumnfalse}
-]
-
-\tableofcontents
+\maketitle
 \newpage
+
+\begin{abstract}
+胰臟導管腺癌 (pancreatic ductal adenocarcinoma, PDAC) 仍然是致死率極高的惡性腫瘤，五年存活率低於12\%，主要原因在於診斷較晚且缺乏具特異性的腫瘤生物標記。本研究提出一個無偏差、數據驅動的運算分析管線，旨在篩選最適合用於合成生物學 logic-gated 及閘 (AND-gate) 生物感測器的候選基因組合，以精準區分胰臟癌與正常胰臟組織。我們整合了 TCGA-PAAD (n=178 腫瘤) 與 GTEx 正常胰臟組織 (n=167 正常) 世代的轉錄體數據，共分析了 58,581 個基因。利用 L1 正則化邏輯斯迴歸 (L1-regularized Logistic Regression) 機器學習模型進行分類，其五折交叉驗證 AUC 達到 1.000，藉此篩選出具高度預測能力的特徵。接著，利用可解釋型人工智慧 (explainable artificial intelligence, XAI) 技術中的 SHAP 值分析，推估出候選基因在腫瘤與正常組織轉換的「模型推估活化閾值 (model-inferred activation threshold)」。根據基因之間的正交性 (orthogonality) 與組合活化率，我們選定 UBE2S 與 CCR6 為最終候選基因組合，兩者皮爾森相關係數 (Pearson correlation) 為 0.714。利用希爾方程式 (Hill equation) 對該及閘進行數學建模與參數優化，結果顯示該及閘在發現世代中的 AUC 達 0.9986，準確度 (Accuracy) 為 98.6\%、敏感度 (Sensitivity) 為 97.8\%、特異度 (Specificity) 為 99.4\% (輸出活化閾值設為 0.25)。經由 1,000 次隨機基因組合的排列測試 (permutation test)，證實此結果具有極顯著的統計學意義 (p < 0.0001)。在外在驗證世代 (GSE62452 微陣列數據，n=130) 中，該及閘維持了極高的特異度 (98.4\%)，但敏感度降至 4.3\%，顯示跨平台轉換 (RNA-seq vs Microarray) 在閾值轉移上仍具挑戰。本研究建立的分析管線為合成生物感測器的邏輯閘設計提供了一套穩健且具可重現性的運算框架。
+\end{abstract}
+\newpage
+
 
 \section{前言}
 胰臟導管腺癌 (PDAC) 的病理特徵包括隱匿性病程發展、極強的早期轉移能力，以及由多種細胞與細胞外基質構成的高度促結締組織增生基質 (desmoplastic stroma) 與胰臟腫瘤微環境 (tumor microenvironment, TME)。這使得傳統系統性化療與新型的免疫檢查點抑制劑 (immune checkpoint inhibitors) 或嵌合抗原受體 T 細胞 (CAR-T) 療法的療效受到嚴重限制。目前臨床應用的主要瓶頸在於缺乏單一特異性抗原，許多腫瘤相關抗原在正常組織中亦有低量表達，極易導致嚴重的脫靶毒性 (off-target toxicity)。合成生物學 (synthetic biology) 提供了解決此一困境的新路徑。透過在細胞或基因層次建構邏輯閘 (logic gates) 電路，例如 AND 閘 (及閘) 電路，只有在兩種輸入訊號 (Input A 與 Input B) 同時高於特定閾值時，才會觸發 downstream 報導基因或治療性載荷的釋放。這種雙輸入設計能呈指數級地提升對腫瘤細胞的辨識特異度，降低正常組織的假陽性活化率。本研究即致力於利用無偏差轉錄體剖析 (unbiased transcriptomic profiling)，開發一套系統化的數據驅動及閘感測器設計流程。
@@ -48,6 +43,7 @@
 \begin{table}[H]
 \centering
 \caption{數據世代與樣本量分布}\label{tab:datasets_zh}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Dataset / Cohort} & \textbf{Platform / Type} & \textbf{Tumor Samples} & \textbf{Normal Samples} & \textbf{Total Samples} \\
@@ -58,6 +54,7 @@ Discovery Cohort (Combined) & RNA-seq (RSEM TPM) & 178 & 167 & 345 \\
 GSE62452 (External Validation) & Microarray (Affymetrix GPL6244) & 69 & 61 & 130 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 
@@ -72,14 +69,15 @@ GSE62452 (External Validation) & Microarray (Affymetrix GPL6244) & 69 & 61 & 130
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.95\linewidth]{volcano_discovery.png}
+\includegraphics[width=0.7\textwidth]{volcano_discovery.png}
 \caption{發現世代中的火山圖，標記顯著差異表現基因。其中 UBE2S 與 CCR6 被註記為顯著上調之候選基因。}
 \label{fig:volcano_zh}
 \end{figure}
 
-\begin{table*}[t]
+\begin{table}[H]
 \centering
 \caption{前 10 個差異表現基因 (按特異性得分排序)}\label{tab:top_de_zh}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lcccccc}
 \toprule
 \textbf{Gene} & \textbf{Mean Tumor (log2 TPM)} & \textbf{Mean Normal (log2 TPM)} & \textbf{log2FC} & \textbf{FDR} & \textbf{ROC-AUC} & \textbf{Specificity Score} \\
@@ -96,15 +94,17 @@ ANXA2 & 10.566 & 6.667 & 3.899 & 6.29e-52 & 0.979 & 1.000 \\
 PPIA & 10.525 & 8.267 & 2.258 & 1.96e-53 & 0.988 & 1.000 \\
 \bottomrule
 \end{tabular}
-\end{table*}
+}
+\end{table}
 
 
 \section{機器學習分類器表現}
 為獲得最稀疏且最具預測力的基因特徵，我們將數據按 80/20 比例劃分訓練集與測試集，訓練了三種機器學習模型：L1 正則化邏輯斯迴歸、隨機森林 (Random Forest) 以及 XGBoost。結果顯示，L1 邏輯斯迴歸在測試集上取得了 1.000 的完美 AUC 以及 100.0\% 的準確度，其五折交叉驗證 (5-fold CV) 的 AUC 亦為 1.000 +- 0.000。隨機森林測試集 AUC 為 0.9983，XGBoost 則為 1.000。基於 L1 正則化能將無效權重歸零的稀疏性特徵，以及優異的分類效能，我們選擇 L1 邏輯斯迴歸模型作為後續 SHAP 解釋分析的基礎。
 
-\begin{table*}[t]
+\begin{table}[H]
 \centering
 \caption{機器學習分類器表現與五折交叉驗證結果摘要}\label{tab:ml_perf_zh}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lcccccc}
 \toprule
 \textbf{Classifier Model} & \textbf{Mean 5-Fold CV AUC} & \textbf{Test AUC} & \textbf{Test Accuracy} & \textbf{Sensitivity} & \textbf{Specificity} & \textbf{F1 Score} \\
@@ -114,7 +114,8 @@ Random Forest & 1.000 & 0.998 & 98.6\% & 0.972 & 1.000 & 0.986 \\
 XGBoost & 0.996 & 1.000 & 100.0\% & 1.000 & 1.000 & 1.000 \\
 \bottomrule
 \end{tabular}
-\end{table*}
+}
+\end{table}
 
 
 \section{基於 SHAP 的可解釋型人工智慧分析}
@@ -122,14 +123,15 @@ XGBoost & 0.996 & 1.000 & 100.0\% & 1.000 & 1.000 & 1.000 \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.95\linewidth]{shap_summary.png}
+\includegraphics[width=0.7\textwidth]{shap_summary.png}
 \caption{SHAP 摘要圖，顯示推動 L1 邏輯斯迴歸分類器決策的前 15 個特徵重要性排名。}
 \label{fig:shap_summary_zh}
 \end{figure}
 
-\begin{table*}[t]
+\begin{table}[H]
 \centering
 \caption{前 10 個 SHAP 特徵重要性與模型推估表達閾值}\label{tab:shap_thresh_zh}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Rank} & \textbf{Gene Symbol} & \textbf{Mean Absolute SHAP Value} & \textbf{Inferred Threshold (log2 TPM)} & \textbf{95\% Confidence Interval} \\
@@ -146,15 +148,17 @@ XGBoost & 0.996 & 1.000 & 100.0\% & 1.000 & 1.000 & 1.000 \\
 10 & FTH1P7 & 0.0000 & 3.001 & [1.578, 3.822] \\
 \bottomrule
 \end{tabular}
-\end{table*}
+}
+\end{table}
 
 
 \section{候選基因組合篩選}
 為從前 100 個 SHAP 基因中選出最佳的及閘輸入，我們對所有可能的兩兩組合計算了綜合評分：Pair Score = tumor\_AND\_activation * AND\_specificity * (1 - |r|)。其中 tumor\_AND\_activation 代表兩基因同時高於各自閾值的腫瘤比例，AND\_specificity 代表至少有一基因低於閾值的正常組織比例，r 為皮爾森相關係數。經掃描，UBE2S + CCR6 組合脫穎而出，得分最高 (0.264)。該基因對個別 AUC 分別為 0.9959 與 0.9964，在腫瘤中的同時活化率為 93.3\%，在正常組織中的活化率僅為 0.6\%。
 
-\begin{table*}[t]
+\begin{table}[H]
 \centering
 \caption{選定候選基因組合的詳細分子譜描述}\label{tab:candidate_pair_zh}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lccc}
 \toprule
 \textbf{Property} & \textbf{Gene A (UBE2S)} & \textbf{Gene B (CCR6)} & \textbf{Composite AND Gate} \\
@@ -167,7 +171,8 @@ Tumor AND Activation Rate & 93.3\% & — & 93.3\% \\
 Normal AND Activation Rate & 0.6\% & — & 0.6\% \\
 \bottomrule
 \end{tabular}
-\end{table*}
+}
+\end{table}
 
 
 \section{正交性評估}
@@ -175,7 +180,7 @@ Normal AND Activation Rate & 0.6\% & — & 0.6\% \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.95\linewidth]{gene_pair_scatter_final.png}
+\includegraphics[width=0.7\textwidth]{gene_pair_scatter_final.png}
 \caption{UBE2S 與 CCR6 在發現世代中的表達量散佈圖，呈現決策邊界與樣本分布象限。}
 \label{fig:scatter_zh}
 \end{figure}
@@ -197,7 +202,7 @@ Output = P_{\text{basal}} + V_{\max} \left( \frac{[A]^n}{K_A^n + [A]^n} \right) 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.95\linewidth]{and_gate_heatmap_final.png}
+\includegraphics[width=0.7\textwidth]{and_gate_heatmap_final.png}
 \caption{UBE2S 與 CCR6 及閘模擬輸出之二維等高線熱圖，並疊加腫瘤與健康樣本。}
 \label{fig:heatmap_zh}
 \end{figure}
@@ -205,6 +210,7 @@ Output = P_{\text{basal}} + V_{\max} \left( \frac{[A]^n}{K_A^n + [A]^n} \right) 
 \begin{table}[H]
 \centering
 \caption{及閘模擬在發現世代中的分類效能指標摘要}\label{tab:and_perf_zh}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lcc}
 \toprule
 \textbf{Metric} & \textbf{Formula / Definition} & \textbf{Value} \\
@@ -216,19 +222,21 @@ Specificity & TN / (TN + FP) & 99.40\% \\
 Decision Threshold & Hill output threshold for ON state & 0.25 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.95\linewidth]{roc_curves.png}
+\includegraphics[width=0.7\textwidth]{roc_curves.png}
 \caption{比較單一基因輸入 (UBE2S, CCR6) 與雙輸入邏輯及閘輸出的 ROC 曲線。}
 \label{fig:roc_zh}
 \end{figure}
 
-\begin{table*}[t]
+\begin{table}[H]
 \centering
 \caption{GSE62452 外部驗證結果摘要}\label{tab:ext_val_zh}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lccc}
 \toprule
 \textbf{Metric} & \textbf{Value in Discovery (TCGA+GTEx)} & \textbf{Value in Validation (GSE62452)} & \textbf{Interpretation} \\
@@ -240,27 +248,18 @@ Sensitivity & 97.8\% & 4.3\% & Significant drop (platform scale mismatch) \\
 Specificity & 99.4\% & 98.4\% & Highly conserved (retains safety profile) \\
 \bottomrule
 \end{tabular}
-\end{table*}
+}
+\end{table}
 
 
 \section{穩健性分析與負控制}
 我們進行了兩項穩健性與負控制分析。首先，我們評估了 1,000 對隨機挑選的基因組合，其平均及閘 AUC 僅為 0.594，而 UBE2S + CCR6 組合的 AUC (0.999) 顯著高於隨機分布 (p < 0.0001)，排除偶然性。其次，我們對 $K_A$ 與 $K_B$ 參數進行了 +-10\%、+-25\% 與 +-50\% 的微擾分析，結果顯示，即使在 +-50\% 的極端微擾下，及閘的 AUC 仍維持在 0.994 以上，證明該感測器對生化親和力 (affinity) 的波動具有極高的容錯能力。
 
 \section{研究限制}
-\begin{enumerate}
-\item 本研究僅為電腦模擬之概念驗證，實際生化反應之動力學可能有所不同。
-\item SHAP 推估之表達閾值為統計學之拐點，無法直接對應至物理學上的生化解離常數。
-\item 組織轉錄體 (Bulk RNA-seq) 表達數據易受到細胞組成、腫瘤純度及免疫細胞浸潤之干擾。
-\item 儘管經過 TOIL 管線標準化，TCGA (腫瘤) 與 GTEx (健康) 的比較可能仍存在部分批次效應。
-\item 外部驗證世代中顯示極低的敏感度 (4.3%)，顯示跨平台定量尺度的不匹配是閾值轉移的重大挑戰。
-\item 選定的候選基因對 (UBE2S + CCR6) 統計上並非嚴格正交，在 bulk RNA-seq 中的相關係數達 0.714。
-\item 轉錄體層級之豐度差異不代表合成感測器之可及性，亦不保證有同等程度的蛋白質翻譯表現。
-\item 將此候選組合轉譯為合成基因線路，仍需進行啟動子工程或 RNA 轉錄調節器設計，程序較為複雜。
-\item 任何診斷或治療性之臨床應用，皆須經過細胞、動物與安全性的嚴格檢驗。
-\end{enumerate}
+本研究存在若干關鍵限制，在此必須加以說明。其一，本研究僅為電腦模擬層面的概念驗證，實際生物化學工程建構之合成電路可能展現截然不同的反應動力學。其二，SHAP 推估之活化閾值為分類器行為的統計拐點，並非實驗量測之生化解離常數。其三，組織層級的 bulk RNA-seq 數據反映的是細胞群體的平均表現，極易受到腫瘤純度、基質密度與免疫細胞浸潤的影響，可能掩蓋了細胞類型特異性的表達模式。其四，儘管已透過 TOIL 管線進行數據標準化，TCGA 腫瘤樣本與 GTEx 正常組織的比較仍可能存在殘餘的批次效應。其五，外部驗證世代顯示極低的敏感度（4.3\%），凸顯了從 RNA-seq 到微陣列的跨平台閾值轉移具有重大挑戰。其六，選定的候選基因對（UBE2S + CCR6）在統計上並非嚴格正交，其在 bulk 數據中的 Spearman 相關係數達 0.714。其七，轉錄本豐度並不保證感測器在蛋白質層級的可及性或等量的蛋白質翻譯。其八，將這些候選基因轉化為功能性合成電路，需要啟動子工程或 RNA 感測器設計，各自引入額外的設計複雜度。最後，任何診斷或治療性的臨床應用，都需要在適當的模式生物中進行廣泛的濕實驗驗證與安全性測試，方能考慮臨床轉譯。
 
-\section{後續濕實驗驗證規劃}
-為驗證此及閘感測器，我們規劃了合成啟動子 (synthetic promoters) 與合成 Notch (synNotch) 受體系統。將 UBE2S 與 CCR6 的上游特異性啟動子區段分別克隆至控制兩個正交轉錄因子 (如 tTA 與 LhG4) 的載體中。這兩個轉錄因子將共同驅動一個 split-transactivator 系統，只有當兩者同時表達時，才能組裝成完整的活化因子，進而啟動 GFP 報導基因或殺傷性載荷 (如 Diphtheria toxin A)。實驗將在 PANC-1、MIA PaCa-2 等胰臟癌細胞株與 HPDE 正常上皮細胞株進行活化特異性篩選，並在小鼠異種移植瘤模型 (xenograft mouse models) 中進行體內安全性與有效性驗證。
+\section{未來實驗方向}
+為將本研究的運算結果轉化為功能性合成生物線路，未來有數個實驗方向值得深入探索。首先，可嘗試建構合成啟動子系統，將 UBE2S 與 CCR6 的上游調控區段分別克隆至驅動正交轉錄因子（如 tTA 與 LhG4）的載體中，以 split-transactivator 架構實現轉錄層級的 AND 閘邏輯。其次，可利用合成 Notch（synNotch）受體線路，藉由細胞表面對腫瘤相關配體的辨識，觸發細胞內部客製化轉錄因子的釋放。此外，基於 RNA 的感測器設計（如 toehold switches 或 ribocomputing devices），可直接偵測目標基因的內源性 mRNA 濃度，無需啟動子工程。功能驗證應先以胰臟癌細胞株（如 PANC-1、MIA PaCa-2）做為陽性對照，人類正常胰管上皮細胞（HPDE）做為陰性對照，進行劑量反應特性分析。中長期方向則包含在患者來源異種移植（PDX）小鼠模型中進行體內驗證、評估電路在代謝壓力下的穩定性，以及探索多輸入邏輯閘（如三輸入 AND 閘或 AND-NOT 閘）以進一步提升腫瘤特異度與降低脫靶活化風險。
 
 \section{結論}
 總結而言，本研究成功建立了一套數據驅動的運算框架，用於篩選胰臟癌及閘生物感測器的最優輸入基因對。透過結合差異表達、機器學習、可解釋型人工智慧與數學模擬，選定 UBE2S 與 CCR6 作為雙輸入特徵。此組合不僅在電腦模擬中表現出極高的分類準確度與特異度，更代表了胰臟癌的兩個核心特徵：細胞週期失控與腫瘤微環境發炎。本分析管線具備高度的可重現性與擴展性，可推廣至其他癌症類型或多輸入邏輯閘的設計中。
@@ -270,15 +269,15 @@ Specificity & 99.4\% & 98.4\% & Highly conserved (retains safety profile) \\
 \printbibliography[title={參考文獻}]
 
 \newpage
-\onecolumn
 \section{補充表格與圖}
 補充表格 1：參數掃描結果。此掃描評估了希爾係數 n 從 1 到 4，以及基底洩漏量從 0.0 到 0.1 的影響，最優值為 n=1, P\_basal=0.0。
 補充表格 2：前 100 個 SHAP 候選基因及其推估閾值。雖然許多非編碼基因排在前列，但考量到啟動子設計的可行性，我們優先挑選了 UBE2S 與 CCR6 等蛋白編碼基因。
 
 \subsection{補充表格 1：參數掃描結果}
-\begin{table*}[t]
+\begin{table}[H]
 \centering
 \caption{希爾方程式網格掃描參數表現結果}\label{tab:supp_sweep_zh}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lccccc}
 \toprule
 \textbf{Hill 係數 (n)} & \textbf{基底洩漏量 (P\_basal)} & \textbf{ROC-AUC} & \textbf{準確度} & \textbf{敏感度} & \textbf{特異度} \\
@@ -291,13 +290,15 @@ Specificity & 99.4\% & 98.4\% & Highly conserved (retains safety profile) \\
 2.0 & 0.01 & 0.9985 & 98.6\\% & 98.3\\% & 98.8\\% \\
 \bottomrule
 \end{tabular}
-\end{table*}
+}
+\end{table}
 
 
 \subsection{補充表格 2：K 參數微擾對分類效能影響之敏感度分析}
-\begin{table*}[t]
+\begin{table}[H]
 \centering
 \caption{K 參數微擾對分類效能影響之敏感度分析}\label{tab:supp_sensitivity_zh}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lccccc}
 \toprule
 \textbf{UBE2S Threshold (K\_A)} & \textbf{CCR6 Threshold (K\_B)} & \textbf{ROC-AUC} & \textbf{Accuracy} & \textbf{Sensitivity} & \textbf{Specificity} \\
@@ -309,7 +310,8 @@ Specificity & 99.4\% & 98.4\% & Highly conserved (retains safety profile) \\
 1.140 (+50\%) & 0.696 (+50\%) & 0.9985 & 53.6\% & N/A & N/A \\
 \bottomrule
 \end{tabular}
-\end{table*}
+}
+\end{table}
 
 
 \subsection{補充圖}
