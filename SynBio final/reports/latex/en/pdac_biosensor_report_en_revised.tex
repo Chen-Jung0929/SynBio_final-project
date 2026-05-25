@@ -1,39 +1,60 @@
 % !TEX program = xelatex
 % !BIB program = biber
 % Auto-generated English report for PDAC Biosensor Project
-\documentclass[10pt, a4paper, twocolumn]{article}
+\documentclass[12pt, journal]{IEEEtran}
 
-\input{../shared/report_style_revised.tex}
-\input{../shared/macros.tex}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\graphicspath{{../shared/figures/}}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
 
 \setmainfont{Times New Roman}
 \setsansfont{Arial}
 \setmonofont{Courier New}
 
-\usepackage[style=apa,backend=biber]{biblatex}
+\renewcommand{\IEEEPARstart}[2]{\noindent\textbf{\huge #1}\textsc{#2}}
+
+\usepackage[style=numeric,backend=biber]{biblatex}
 \addbibresource{references_en.bib}
 
+\markboth{Cognitive Security Vol. X Issue. X}{}
+\IEEEpubid{XXXXXXX/csip.XXXXXXXX  ~\copyright~2026 CSI Press}
+
 \title{Data-Driven Design of a Logic-Gated Biosensor via Unbiased Transcriptomic Profiling of Pancreatic Tumor Microenvironment}
-\author{SHIH, Chen-Jung$^1$, SU, Te-Fang$^1$, LIAO, Xuan-You$^2$, LIN, Chia-I$^2$}
-\affil{$^1$Department of Life Science, National Taiwan University\\$^2$Department of Biochemical Science and Technology, National Taiwan University}
-\date{May 2026}
+
+\author{\IEEEauthorblockN{SHIH, CHEN-JUNG\IEEEauthorrefmark{1}, SU, TE-FANG\IEEEauthorrefmark{1}, LIAO, XUAN-YOU\IEEEauthorrefmark{2}, and LIN, CHIA-I\IEEEauthorrefmark{2}} \\
+\vspace{4pt}
+\IEEEauthorblockA{\footnotesize
+\IEEEauthorrefmark{1}Department of Life Science, National Taiwan University, Taipei, Taiwan \\
+\IEEEauthorrefmark{2}Department of Biochemical Science and Technology, National Taiwan University, Taipei, Taiwan}
+\thanks{\hrule \vspace{4pt} \noindent Manuscript received May 25, 2026; revised May 25, 2026. \vspace{3pt} \\
+Corresponding Author Email: \href{mailto:email@example.com}{email@example.com} \vspace{3pt}}
+}
+
+\IEEEaftertitletext{\vspace{-1\baselineskip}\noindent\begin{abstract}
+Pancreatic ductal adenocarcinoma (PDAC) remains a highly lethal malignancy with a 5-year survival rate below 12\%, primarily due to late-stage diagnosis and a lack of specific tumor biomarkers. In this study, we present an unbiased, data-driven computational pipeline to identify optimal candidate gene pairs for a synthetic biology AND-gate biosensor designed to discriminate PDAC from normal tissue. We utilized transcriptomic data from the TCGA-PAAD (n=178 tumors) and GTEx Normal Pancreas (n=167 normal tissues) cohorts, analyzing a filtered set of 58,581 genes. Differential expression and machine learning classification using an L1-regularized Logistic Regression model achieved a 5-fold cross-validation AUC of 1.000, identifying the most predictive features. Explainable AI (SHAP) was applied to infer expression thresholds for the top-ranked genes. Candidate gene pairs were selected based on orthogonality and activation rates. The optimal pair, UBE2S and CCR6, demonstrates a pairwise Pearson correlation of 0.714. Mathematical modeling using the Hill equation optimized the AND-gate parameters, yielding a discovery cohort AUC of 0.9986, an accuracy of 98.6\%, a sensitivity of 97.8\%, and a specificity of 99.4\% at an activation threshold of 0.25. Permutation testing against 1,000 random gene pairs confirmed statistical significance (p < 0.0001). External validation on the GSE62452 microarray dataset (n=130) showed moderate AUC (0.648) with high specificity (98.4\%) but low sensitivity (4.3\%), reflecting cross-platform transferability challenges. Our pipeline provides a robust framework for logic-gated synthetic sensor design, bridging the gap between bioinformatics and wet-lab implementation.
+\end{abstract}
+\noindent\begin{IEEEkeywords}
+Pancreatic ductal adenocarcinoma, AND-gate biosensor, transcriptomics, explainable AI, UBE2S, CCR6
+\end{IEEEkeywords}
+\vspace{1\baselineskip}}
 
 \begin{document}
-
-
-\twocolumn[
-  \begin{@twocolumnfalse}
-    \maketitle
-    \begin{abstract}
-      Pancreatic ductal adenocarcinoma (PDAC) remains a highly lethal malignancy with a 5-year survival rate below 12\%, primarily due to late-stage diagnosis and a lack of specific tumor biomarkers. In this study, we present an unbiased, data-driven computational pipeline to identify optimal candidate gene pairs for a synthetic biology AND-gate biosensor designed to discriminate PDAC from normal tissue. We utilized transcriptomic data from the TCGA-PAAD (n=178 tumors) and GTEx Normal Pancreas (n=167 normal tissues) cohorts, analyzing a filtered set of 58,581 genes. Differential expression and machine learning classification using an L1-regularized Logistic Regression model achieved a 5-fold cross-validation AUC of 1.000, identifying the most predictive features. Explainable AI (SHAP) was applied to infer expression thresholds for the top-ranked genes. Candidate gene pairs were selected based on orthogonality and activation rates. The optimal pair, UBE2S and CCR6, demonstrates a pairwise Pearson correlation of 0.714. Mathematical modeling using the Hill equation optimized the AND-gate parameters, yielding a discovery cohort AUC of 0.9986, an accuracy of 98.6\%, a sensitivity of 97.8\%, and a specificity of 99.4\% at an activation threshold of 0.25. Permutation testing against 1,000 random gene pairs confirmed statistical significance (p < 0.0001). External validation on the GSE62452 microarray dataset (n=130) showed moderate AUC (0.648) with high specificity (98.4\%) but low sensitivity (4.3\%), reflecting cross-platform transferability challenges. Our pipeline provides a robust framework for logic-gated synthetic sensor design, bridging the gap between bioinformatics and wet-lab implementation.
-    \end{abstract}
-    \vspace{1.5em}
-  \end{@twocolumnfalse}
-]
-
+\maketitle
 
 \section{Introduction}
-Pancreatic ductal adenocarcinoma (PDAC) is characterized by a silent progression, aggressive metastatic potential, and a dense desmoplastic tumor microenvironment (TME) that acts as a physical and immunological barrier. Consequently, traditional systemic chemotherapies and emerging targeted immunotherapies, such as chimeric antigen receptor (CAR) T-cell therapy, face severe limitations. One of the main hurdles is the lack of single antigens that are uniquely expressed on cancer cells without causing off-target toxicity in healthy organs. Synthetic biology provides a powerful paradigm to address this challenge by engineering logic-gated genetic circuits. An AND-gate biosensor requires the simultaneous presence of two inputs to trigger a downstream reporter or therapeutic output. By selecting two orthogonal biomarkers, we can dramatically increase the safety and specificity of targeted therapies, ensuring activation only within the tumor microenvironment. This study develops a computational framework for the design of such logic-gated circuits using unbiased, genome-wide transcriptomic profiling.
+\IEEEPARstart{P}{ancreatic} ductal adenocarcinoma (PDAC) is characterized by a silent progression, aggressive metastatic potential, and a dense desmoplastic tumor microenvironment (TME) that acts as a physical and immunological barrier. Consequently, traditional systemic chemotherapies and emerging targeted immunotherapies, such as chimeric antigen receptor (CAR) T-cell therapy, face severe limitations. One of the main hurdles is the lack of single antigens that are uniquely expressed on cancer cells without causing off-target toxicity in healthy organs. Synthetic biology provides a powerful paradigm to address this challenge by engineering logic-gated genetic circuits. \IEEEpubidadjcol An AND-gate biosensor requires the simultaneous presence of two inputs to trigger a downstream reporter or therapeutic output. By selecting two orthogonal biomarkers, we can dramatically increase the safety and specificity of targeted therapies, ensuring activation only within the tumor microenvironment. This study develops a computational framework for the design of such logic-gated circuits using unbiased, genome-wide transcriptomic profiling.
 
 \section{Scientific Rationale and Unmet Need}
 The desmoplastic stroma of PDAC contains diverse cell populations, including cancer-associated fibroblasts (CAFs), extracellular matrix components, and infiltrating immune cells, which collectively modulate tumor progression and therapy resistance. Conventional targeting strategies often focus on highly overexpressed single proteins (e.g., mesothelin or CEA), which are frequently present at lower levels in normal tissues (e.g., lung, pleura, or gastrointestinal tract), leading to 'on-target, off-tumor' toxicity. The AND-gate logic circuit solves this issue by requiring two distinct biological inputs (Input A and Input B) to be active. If only one input is present, the gate remains closed (OFF). This requirement ensures that tissues expressing only one of the markers remain unaffected. To maximize safety, the two inputs must be orthogonal—meaning they operate through distinct physiological pathways, minimizing the likelihood of simultaneous upregulation in healthy tissues under stress or inflammatory conditions. This study leverages unbiased transcriptomics to identify and model such orthogonal inputs.
@@ -265,7 +286,6 @@ Several experimental avenues merit exploration to translate the computational fi
 \section{Conclusion}
 In conclusion, we have developed a data-driven computational framework for the selection of input gene pairs for a synthetic biology AND-gate biosensor in pancreatic cancer. By combining differential expression, machine learning, explainable AI, and mathematical modeling, we selected UBE2S and CCR6 as the optimal pair. This combination achieves excellent classification performance and robustness in silico, while capturing distinct biological hallmarks of PDAC (mitotic progression and microenvironmental inflammation). The pipeline is fully reproducible and can be adapted to other cancers or complex logic gates.
 
-\newpage
 \nocite{*}
 \printbibliography[title={References}]
 

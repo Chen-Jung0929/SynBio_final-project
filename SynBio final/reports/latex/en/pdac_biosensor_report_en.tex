@@ -19,8 +19,6 @@
 \date{May 2026}
 
 \begin{document}
-
-
 \maketitle
 \newpage
 
@@ -28,7 +26,6 @@
 Pancreatic ductal adenocarcinoma (PDAC) remains a highly lethal malignancy with a 5-year survival rate below 12\%, primarily due to late-stage diagnosis and a lack of specific tumor biomarkers. In this study, we present an unbiased, data-driven computational pipeline to identify optimal candidate gene pairs for a synthetic biology AND-gate biosensor designed to discriminate PDAC from normal tissue. We utilized transcriptomic data from the TCGA-PAAD (n=178 tumors) and GTEx Normal Pancreas (n=167 normal tissues) cohorts, analyzing a filtered set of 58,581 genes. Differential expression and machine learning classification using an L1-regularized Logistic Regression model achieved a 5-fold cross-validation AUC of 1.000, identifying the most predictive features. Explainable AI (SHAP) was applied to infer expression thresholds for the top-ranked genes. Candidate gene pairs were selected based on orthogonality and activation rates. The optimal pair, UBE2S and CCR6, demonstrates a pairwise Pearson correlation of 0.714. Mathematical modeling using the Hill equation optimized the AND-gate parameters, yielding a discovery cohort AUC of 0.9986, an accuracy of 98.6\%, a sensitivity of 97.8\%, and a specificity of 99.4\% at an activation threshold of 0.25. Permutation testing against 1,000 random gene pairs confirmed statistical significance (p < 0.0001). External validation on the GSE62452 microarray dataset (n=130) showed moderate AUC (0.648) with high specificity (98.4\%) but low sensitivity (4.3\%), reflecting cross-platform transferability challenges. Our pipeline provides a robust framework for logic-gated synthetic sensor design, bridging the gap between bioinformatics and wet-lab implementation.
 \end{abstract}
 \newpage
-
 
 \section{Introduction}
 Pancreatic ductal adenocarcinoma (PDAC) is characterized by a silent progression, aggressive metastatic potential, and a dense desmoplastic tumor microenvironment (TME) that acts as a physical and immunological barrier. Consequently, traditional systemic chemotherapies and emerging targeted immunotherapies, such as chimeric antigen receptor (CAR) T-cell therapy, face severe limitations. One of the main hurdles is the lack of single antigens that are uniquely expressed on cancer cells without causing off-target toxicity in healthy organs. Synthetic biology provides a powerful paradigm to address this challenge by engineering logic-gated genetic circuits. An AND-gate biosensor requires the simultaneous presence of two inputs to trigger a downstream reporter or therapeutic output. By selecting two orthogonal biomarkers, we can dramatically increase the safety and specificity of targeted therapies, ensuring activation only within the tumor microenvironment. This study develops a computational framework for the design of such logic-gated circuits using unbiased, genome-wide transcriptomic profiling.

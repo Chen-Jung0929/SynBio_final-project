@@ -1,19 +1,19 @@
 [0] Config.pm:328> INFO - This is Biber 2.21
 [0] Config.pm:331> INFO - Logfile is 'pdac_biosensor_report_en.blg'
-[30] biber-darwin:342> INFO - === Mon May 25, 2026, 08:20:29
-[37] Biber.pm:421> INFO - Reading 'pdac_biosensor_report_en.bcf'
-[77] Biber.pm:999> INFO - Using all citekeys in bib section 0
-[86] Biber.pm:4487> INFO - Processing section 0
-[91] Biber.pm:4678> INFO - Looking for bibtex file 'references_en.bib' for section 0
-[92] bibtex.pm:1713> INFO - LaTeX decoding ...
-[98] bibtex.pm:1519> INFO - Found BibTeX data source 'references_en.bib'
-[168] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[168] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[168] Biber.pm:4307> INFO - Sorting list 'apa/apasortcite//global/global/global' of type 'entry' with template 'apa' and locale 'en-US'
-[168] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
-[189] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[189] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[189] Biber.pm:4307> INFO - Sorting list 'apa/global//global/global/global' of type 'entry' with template 'apa' and locale 'en-US'
-[189] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
-[199] bbl.pm:676> INFO - Writing 'pdac_biosensor_report_en.bbl' with encoding 'UTF-8'
-[208] bbl.pm:779> INFO - Output to pdac_biosensor_report_en.bbl
+[50] biber-darwin:342> INFO - === Mon May 25, 2026, 14:48:53
+[63] Biber.pm:421> INFO - Reading 'pdac_biosensor_report_en.bcf'
+[130] Biber.pm:999> INFO - Using all citekeys in bib section 0
+[144] Biber.pm:4487> INFO - Processing section 0
+[151] Biber.pm:4678> INFO - Looking for bibtex file 'references_en.bib' for section 0
+[152] bibtex.pm:1713> INFO - LaTeX decoding ...
+[164] bibtex.pm:1519> INFO - Found BibTeX data source 'references_en.bib'
+[284] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[284] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[284] Biber.pm:4307> INFO - Sorting list 'apa/apasortcite//global/global/global' of type 'entry' with template 'apa' and locale 'en-US'
+[284] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
+[321] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[321] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[321] Biber.pm:4307> INFO - Sorting list 'apa/global//global/global/global' of type 'entry' with template 'apa' and locale 'en-US'
+[321] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
+[337] bbl.pm:676> INFO - Writing 'pdac_biosensor_report_en.bbl' with encoding 'UTF-8'
+[354] bbl.pm:779> INFO - Output to pdac_biosensor_report_en.bbl

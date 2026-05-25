@@ -529,40 +529,83 @@ def generate_latex_en(is_revised=False):
         escaped_headers = [h.replace("%", "\\%").replace("_", "\\_") for h in headers]
         latex += " & ".join([f"\\textbf{{{h}}}" for h in escaped_headers]) + " \\\\\n\\midrule\n"
         for row in data:
-            escaped_row = [str(x).replace("%", "\\%").replace("_", "\\_").replace("&", "\\&").replace("+-", "$\\pm$") for x in row]
+            escaped_row = [str(x).replace("%", "\\%").replace("_", "\\_").replace("&", "\&").replace("+-", "$\\pm$") for x in row]
             latex += " & ".join(escaped_row) + " \\\\\n"
         latex += f"\\bottomrule\n\\end{{tabular}}\n}}\n\\end{{{env}}}\n"
         return latex
 
-    doc_class = "\\documentclass[10pt, a4paper, twocolumn]{article}" if is_revised else "\\documentclass[12pt, a4paper]{article}"
-    style_file = "report_style_revised.tex" if is_revised else "report_style.tex"
     fig_width = "0.95\\linewidth" if is_revised else "0.7\\textwidth"
     fig_placement = "[htbp]" if is_revised else "[H]"
     
     if is_revised:
-        title_block = f"""
-\\twocolumn[
-  \\begin{{@twocolumnfalse}}
-    \\maketitle
-    \\begin{{abstract}}
-      {en_secs['Abstract']}
-    \\end{{abstract}}
-    \\vspace{{1.5em}}
-  \\end{{@twocolumnfalse}}
-]
-"""
-    else:
-        title_block = f"""
-\\maketitle
-\\newpage
+        intro_text = en_secs['Introduction']
+        if intro_text.startswith("Pancreatic"):
+            intro_text = "\\IEEEPARstart{P}{ancreatic}" + intro_text[10:]
+        target_sentence = "Synthetic biology provides a powerful paradigm to address this challenge by engineering logic-gated genetic circuits. "
+        replacement_sentence = target_sentence + "\\IEEEpubidadjcol "
+        intro_text = intro_text.replace(target_sentence, replacement_sentence)
+        
+        preamble = f"""% !TEX program = xelatex
+% !BIB program = biber
+% Auto-generated English report for PDAC Biosensor Project
+\\documentclass[12pt, journal]{{IEEEtran}}
 
-\\begin{{abstract}}
+\\usepackage{{fontspec}}
+\\usepackage{{graphicx}}
+\\graphicspath{{{{../shared/figures/}}}}
+\\usepackage{{float}}
+\\usepackage{{booktabs}}
+\\usepackage{{amsmath}}
+\\usepackage{{amssymb}}
+\\usepackage{{siunitx}}
+\\usepackage{{xcolor}}
+\\usepackage{{url}}
+\\usepackage{{hyperref}}
+\\usepackage{{subcaption}}
+\\usepackage{{array}}
+\\usepackage{{multirow}}
+\\usepackage{{tabularx}}
+
+\\setmainfont{{Times New Roman}}
+\\setsansfont{{Arial}}
+\\setmonofont{{Courier New}}
+
+\\renewcommand{{\\IEEEPARstart}}[2]{{\\noindent\\textbf{{\\huge #1}}\\textsc{{#2}}}}
+
+\\usepackage[style=numeric,backend=biber]{{biblatex}}
+\\addbibresource{{references_en.bib}}
+
+\\markboth{{Cognitive Security Vol. X Issue. X}}{{}}
+\\IEEEpubid{{XXXXXXX/csip.XXXXXXXX  ~\\copyright~2026 CSI Press}}
+
+\\title{{{en_secs['Title']}}}
+
+\\author{{\\IEEEauthorblockN{{SHIH, CHEN-JUNG\\IEEEauthorrefmark{{1}}, SU, TE-FANG\\IEEEauthorrefmark{{1}}, LIAO, XUAN-YOU\\IEEEauthorrefmark{{2}}, and LIN, CHIA-I\\IEEEauthorrefmark{{2}}}} \\\\
+\\vspace{{4pt}}
+\\IEEEauthorblockA{{\\footnotesize
+\\IEEEauthorrefmark{{1}}Department of Life Science, National Taiwan University, Taipei, Taiwan \\\\
+\\IEEEauthorrefmark{{2}}Department of Biochemical Science and Technology, National Taiwan University, Taipei, Taiwan}}
+\\thanks{{\\hrule \\vspace{{4pt}} \\noindent Manuscript received May 25, 2026; revised May 25, 2026. \\vspace{{3pt}} \\\\
+Corresponding Author Email: \\href{{mailto:email@example.com}}{{email@example.com}} \\vspace{{3pt}}}}
+}}
+
+\\IEEEaftertitletext{{\\vspace{{-1\\baselineskip}}\\noindent\\begin{{abstract}}
 {en_secs['Abstract']}
 \\end{{abstract}}
-\\newpage
-"""
+\\noindent\\begin{{IEEEkeywords}}
+Pancreatic ductal adenocarcinoma, AND-gate biosensor, transcriptomics, explainable AI, UBE2S, CCR6
+\\end{{IEEEkeywords}}
+\\vspace{{1\\baselineskip}}}}
 
-    content = f"""% !TEX program = xelatex
+\\begin{{document}}
+\\maketitle
+"""
+    else:
+        intro_text = en_secs['Introduction']
+        doc_class = "\\documentclass[12pt, a4paper]{article}"
+        style_file = "report_style.tex"
+        
+        preamble = f"""% !TEX program = xelatex
 % !BIB program = biber
 % Auto-generated English report for PDAC Biosensor Project
 {doc_class}
@@ -583,11 +626,18 @@ def generate_latex_en(is_revised=False):
 \\date{{{en_secs['Date']}}}
 
 \\begin{{document}}
+\\maketitle
+\\newpage
 
-{title_block}
+\\begin{{abstract}}
+{en_secs['Abstract']}
+\\end{{abstract}}
+\\newpage
+"""
 
+    content = preamble + f"""
 \\section{{Introduction}}
-{en_secs['Introduction']}
+{intro_text}
 
 \\section{{Scientific Rationale and Unmet Need}}
 {en_secs['Rationale']}
@@ -686,8 +736,9 @@ def generate_latex_en(is_revised=False):
 \\section{{Conclusion}}
 {en_secs['Conclusion']}
 
-\\newpage
-\\nocite{{*}}
+"""
+    bib_prefix = "" if is_revised else "\\newpage\n"
+    content += f"""{bib_prefix}\\nocite{{*}}
 \\printbibliography[title={{References}}]
 
 """
@@ -727,6 +778,7 @@ def generate_latex_en(is_revised=False):
     with open(filepath, "w") as f:
         f.write(content)
     print(f"Generated {filepath}")
+
 
 def generate_latex_zh(is_revised=False):
     filename = "pdac_biosensor_report_zh_revised.tex" if is_revised else "pdac_biosensor_report_zh.tex"
