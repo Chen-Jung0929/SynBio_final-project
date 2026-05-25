@@ -562,7 +562,9 @@ def generate_latex_en(is_revised=False):
 \\newpage
 """
 
-    content = f"""% Auto-generated English report for PDAC Biosensor Project
+    content = f"""% !TEX program = xelatex
+% !BIB program = biber
+% Auto-generated English report for PDAC Biosensor Project
 {doc_class}
 
 \\input{{../shared/{style_file}}}
@@ -767,7 +769,9 @@ def generate_latex_zh(is_revised=False):
 \\newpage
 """
 
-    content = f"""% Auto-generated Chinese report for PDAC Biosensor Project
+    content = f"""% !TEX program = xelatex
+% !BIB program = biber
+% Auto-generated Chinese report for PDAC Biosensor Project
 {doc_class}
 
 \\input{{../shared/{style_file}}}
