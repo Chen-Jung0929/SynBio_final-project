@@ -1,0 +1,5 @@
+Identified Limitation,Impact,v2 Mitigating Upgrade
+Source Confounding,TCGA (tumor) and GTEx (normal) are batch confounded.,Add same-cohort validation GSE62452 early in pipeline.
+Single-Model Bias,Relying on L1 regression might miss tree-based interactions.,"Implement consensus of L1 LR, RF, and XGBoost."
+Low Sensitivity,Validation sensitivity collapsed to 4.3% in v1.,Consensus stable gene filtering retains robust genes.
+Cellular Origin,Bulk data cannot confirm cell-type source.,Add single-cell and spatial validation analysis.

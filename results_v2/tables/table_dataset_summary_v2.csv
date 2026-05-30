@@ -1,0 +1,5 @@
+Dataset,Platform/Type,Tumor Samples,Normal Samples,Total Samples,Role
+TCGA-PAAD,RNA-seq (RSEM TPM),178,0,178,Discovery
+GTEx Pancreas,RNA-seq (RSEM TPM),0,167,167,Discovery
+GSE62452,Microarray (HuGene-1_0-st),69,61,130,Same-Cohort Validation
+GSE28735,Microarray (HuGene-1_0-st),45,45,90,Final External Validation

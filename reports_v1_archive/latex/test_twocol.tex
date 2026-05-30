@@ -1,0 +1,19 @@
+\documentclass[10pt, a4paper, twocolumn]{article}
+\usepackage{authblk}
+\usepackage{setspace}
+\title{Test Title}
+\author{A. Author}
+\affil{Affiliation}
+\date{\today}
+\begin{document}
+\twocolumn[
+  \begin{@twocolumnfalse}
+    \maketitle
+    \begin{abstract}
+      This is a test abstract that should span both columns of the page.
+    \end{abstract}
+    \vspace{1.5em}
+  \end{@twocolumnfalse}
+]
+This is the main text which should be in double columns.
+\end{document}

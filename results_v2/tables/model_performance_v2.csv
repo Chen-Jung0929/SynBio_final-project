@@ -1,0 +1,4 @@
+Model,Train_AUC,Accuracy,Sensitivity,Specificity
+L1 Logistic Regression,1.0,1.0,1.0,1.0
+Random Forest,1.0,1.0,1.0,1.0
+XGBoost,1.0,1.0,1.0,1.0
