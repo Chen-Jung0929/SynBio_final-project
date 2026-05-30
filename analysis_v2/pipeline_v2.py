@@ -45,23 +45,23 @@ def load_config():
 
 config = load_config()
 
-# Set up matplotlib style for Kami visual language
-plt.rcParams['font.family'] = 'serif'
-plt.rcParams['font.serif'] = ['Georgia', 'Times New Roman', 'Charter', 'serif']
-plt.rcParams['axes.edgecolor'] = '#dedccf'
-plt.rcParams['axes.facecolor'] = '#f5f4ed'
-plt.rcParams['figure.facecolor'] = '#f5f4ed'
-plt.rcParams['text.color'] = '#2c2a29'
-plt.rcParams['axes.labelcolor'] = '#2c2a29'
-plt.rcParams['xtick.color'] = '#2c2a29'
-plt.rcParams['ytick.color'] = '#2c2a29'
+# Set up matplotlib style for formal academic presentation (clean white background, sans-serif font)
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = ['Arial', 'Helvetica', 'DejaVu Sans', 'sans-serif']
+plt.rcParams['axes.edgecolor'] = '#333333'
+plt.rcParams['axes.facecolor'] = '#ffffff'
+plt.rcParams['figure.facecolor'] = '#ffffff'
+plt.rcParams['text.color'] = '#000000'
+plt.rcParams['axes.labelcolor'] = '#000000'
+plt.rcParams['xtick.color'] = '#333333'
+plt.rcParams['ytick.color'] = '#333333'
 
-# Color palette: Warm Neutral, Ink-Blue, Alert Red, Gray
-C_INK_BLUE = "#1B365D"
-C_ALERT_RED = "#8f342d"
-C_NEUTRAL_DARK = "#2c2a29"
-C_WARM_GRAY = "#c5c3b2"
-C_PARCHMENT = "#f5f4ed"
+# Color palette: Academic colors
+C_INK_BLUE = "#1F77B4"    # Standard academic blue
+C_ALERT_RED = "#D62728"   # Standard academic red
+C_NEUTRAL_DARK = "#000000"
+C_WARM_GRAY = "#7F7F7F"
+C_PARCHMENT = "#FFFFFF"   # Clean white background for legends and text boxes
 
 def print_section(title):
     print("\n" + "="*80)
@@ -1438,7 +1438,7 @@ def draw_flowcharts(best_row):
     plt.text(0.3, 0.5, "Stage 2\nSame-Cohort\nValidation\n(GSE62452)\nN=130", bbox=dict(boxstyle="round", fc=C_PARCHMENT, ec=C_INK_BLUE), ha="center", va="center")
     plt.text(0.5, 0.5, "Stage 4\nConsensus ML\n(L1, RF, XGB)\nPrioritization", bbox=dict(boxstyle="round", fc=C_PARCHMENT, ec=C_INK_BLUE), ha="center", va="center")
     plt.text(0.7, 0.5, "Stage 5 & 6\nSHAP Gating\n& Pair Search\n(Correlation Penalty)", bbox=dict(boxstyle="round", fc=C_PARCHMENT, ec=C_INK_BLUE), ha="center", va="center")
-    plt.text(0.9, 0.5, f"Stage 8 & 3\nscRNA & External\nValidation\n(GSE28735)\n{best_row['gene_A']}+{best_row['gene_B']}", bbox=dict(boxstyle="round", fc="#e8e6dc", ec=C_ALERT_RED), ha="center", va="center")
+    plt.text(0.9, 0.5, f"Stage 8 & 3\nscRNA & External\nValidation\n(GSE28735)\n{best_row['gene_A']}+{best_row['gene_B']}", bbox=dict(boxstyle="round", fc=C_PARCHMENT, ec=C_ALERT_RED), ha="center", va="center")
     
     for x in [0.2, 0.4, 0.6, 0.8]:
         plt.annotate("", xy=(x+0.05, 0.5), xytext=(x-0.05, 0.5), arrowprops=dict(arrowstyle="->", color=C_INK_BLUE, lw=2))
@@ -1456,7 +1456,7 @@ def draw_flowcharts(best_row):
     plt.text(0.2, 0.6, "v1 Pipeline Design\n(Source Confounded)\n\nTumor: TCGA\nNormal: GTEx\n\nExternal Val: GSE62452 (Only at end)", 
              bbox=dict(boxstyle="round", fc=C_PARCHMENT, ec=C_INK_BLUE), ha="center", va="center")
     plt.text(0.7, 0.6, "v2 Pipeline Design\n(Batch-Robust)\n\nTCGA+GTEx (Discovery)\n+\nGSE62452 (Validation Filter)\n\nExternal Val: GSE28735 (Final Check)", 
-             bbox=dict(boxstyle="round", fc="#e8e6dc", ec=C_ALERT_RED), ha="center", va="center")
+             bbox=dict(boxstyle="round", fc=C_PARCHMENT, ec=C_ALERT_RED), ha="center", va="center")
     plt.xlim(0, 1.0)
     plt.ylim(0, 1.0)
     plt.title("Comparison of Cohort Selection Designs (v1 vs v2)", fontsize=12, fontweight="bold")
