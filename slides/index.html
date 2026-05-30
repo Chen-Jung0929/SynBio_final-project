@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data-Driven Design of a Logic-Gated Biosensor | Slides</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Reduced Motion Mode Info and Toggle -->
+  <div id="motion-control">
+    <button id="toggle-motion" aria-label="Toggle Reduced Motion">Reduced Motion: OFF</button>
+  </div>
+
+  <main id="presentation-container">
+
+    <!-- Slide 1: Title Slide -->
+    <section class="slide active" id="slide-1">
+      <div class="slide-content title-layout">
+        <div class="title-accent">Cognitive Security Institute Press</div>
+        <h1 class="slide-title">Data-Driven Design of a Logic-Gated Biosensor</h1>
+        <p class="slide-subtitle">via Unbiased Transcriptomic Profiling of Pancreatic Tumor Microenvironment</p>
+        
+        <div class="author-block">
+          <div class="author-names">
+            <span>SHIH, CHEN-JUNG<sup>1</sup></span>, 
+            <span>SU, TE-FANG<sup>1</sup></span>, 
+            <span>LIAO, XUAN-YOU<sup>2</sup></span>, and 
+            <span>LIN, CHIA-I<sup>2</sup></span>
+          </div>
+          <div class="author-affiliations">
+            <sup>1</sup>Department of Life Science, National Taiwan University, Taipei, Taiwan<br>
+            <sup>2</sup>Department of Biochemical Science and Technology, National Taiwan University, Taipei, Taiwan
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: PDAC Tumor Microenvironment -->
+    <section class="slide" id="slide-2">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">II</span>
+          <h2 class="section-title">The Pancreatic Tumor Microenvironment (PDAC TME)</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            Pancreatic ductal adenocarcinoma (PDAC) remains a lethal malignancy with a 5-year survival rate below 12%. A key challenge is the dense desmoplastic stroma that acts as a physical and immunological barrier.
+          </p>
+          <div class="bullet-box">
+            <div class="bullet-item">
+              <strong>Desmoplastic Stroma:</strong> Abundant cancer-associated fibroblasts (CAFs) and extracellular matrix elements.
+            </div>
+            <div class="bullet-item">
+              <strong>Immunological Barrier:</strong> Immunosuppressive stroma limits T-cell infiltration and efficacy.
+            </div>
+            <div class="bullet-item">
+              <strong>Biomarker Scarcity:</strong> Lack of single tumor-specific antigens, causing off-target safety risks.
+            </div>
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card visual-card">
+            <h3>TME Structural Layers</h3>
+            <div class="tme-diagram">
+              <div class="tme-layer stroma-layer">Dense Fibrotic Stroma (CAFs & Collagen)</div>
+              <div class="tme-layer immune-layer">Immunosuppressive Cells (MDSCs, Tregs)</div>
+              <div class="tme-layer tumor-layer">Malignant Epithelial Cells (PDAC)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Single Marker Toxicity (Unmet Need) -->
+    <section class="slide" id="slide-3">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">III</span>
+          <h2 class="section-title">Why a Single Marker is Insufficient</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            Standard targeting strategies rely on highly overexpressed single proteins (e.g., MSLN or CEA). However, these markers are frequently expressed at lower levels in healthy tissues (e.g., gastrointestinal tract, lung).
+          </p>
+          <div class="alert-box">
+            <span class="alert-title">On-Target, Off-Tumor Toxicity</span>
+            <p>Single-antigen chimeric antigen receptor (CAR) therapies cannot distinguish between low-expressing healthy tissue and high-expressing tumor tissue, causing severe systemic toxicity.</p>
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card visual-card" id="toxicity-card">
+            <h3>Toxicity Scenario</h3>
+            <div class="cell-interaction">
+              <div class="cell normal-cell">Healthy Cell <span class="expression-lvl">Low Expression</span></div>
+              <div class="cell-receptor">Single CAR-T Cell</div>
+              <div class="toxic-status status-danger">Toxicity Triggered (OFF-Target)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Why AND Gate? (Animated Scene 1) -->
+    <section class="slide" id="slide-4">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">IV</span>
+          <h2 class="section-title">The AND-Gate Biosensor Paradigm</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            To prevent off-target toxicity, we engineer logic-gated synthetic circuits that require the simultaneous presence of two distinct inputs (Input A AND Input B) to trigger activation.
+          </p>
+          <div class="interactive-instruction">
+            <em>Animation concept:</em> Watch how single-marker overlaps resolve into a strict 2D decision boundary.
+          </div>
+          <div class="control-panel">
+            <button class="replay-btn" data-scene="scene1">Replay Scene 1</button>
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card visual-card" id="scene1-container">
+            <!-- D3 Visualization container -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Data Sources: TCGA-PAAD + GTEx -->
+    <section class="slide" id="slide-5">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">V</span>
+          <h2 class="section-title">Discovery Cohort & Sample Size</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            To build a robust and unbiased pipeline, we combined sequencing data from primary pancreatic tumors (TCGA-PAAD) and healthy pancreas tissue (GTEx). Values were harmonized using the TOIL pipeline.
+          </p>
+          <div class="note-box">
+            <strong>Microarray Validation:</strong> For external validation, the GSE62452 dataset from GEO was used to test cross-platform transferability.
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card table-card">
+            <h3>Cohort Distribution</h3>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Cohort</th>
+                  <th>Type</th>
+                  <th>Tumor</th>
+                  <th>Normal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>TCGA-PAAD</td>
+                  <td>RNA-Seq</td>
+                  <td>178</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>GTEx Pancreas</td>
+                  <td>RNA-Seq</td>
+                  <td>0</td>
+                  <td>167</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td>Discovery Cohort</td>
+                  <td>Combined</td>
+                  <td>178</td>
+                  <td>167</td>
+                </tr>
+                <tr>
+                  <td>GSE62452</td>
+                  <td>Microarray</td>
+                  <td>69</td>
+                  <td>61</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Computational Pipeline (Animated Scene 2) -->
+    <section class="slide" id="slide-6">
+      <div class="slide-content layout-vertical">
+        <div class="row-header">
+          <span class="slide-number">VI</span>
+          <h2 class="section-title">Unbiased Selection Pipeline</h2>
+          <hr class="section-divider">
+          <p class="body-text text-center">
+            Our pipeline proceeds through nine steps to identify candidate pairs starting from genome-wide transcripts down to math modeling and validation.
+          </p>
+        </div>
+        <div class="row-visual" id="scene2-container">
+          <!-- Animated Flowchart container -->
+        </div>
+        <div class="flow-controls text-center">
+          <button class="flow-step-btn" id="prev-flow-btn">Previous Step</button>
+          <button class="flow-step-btn" id="next-flow-btn">Next Step</button>
+          <button class="replay-btn" data-scene="scene2">Reset Flow</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Differential Expression Analysis -->
+    <section class="slide" id="slide-7">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">VII</span>
+          <h2 class="section-title">First-Pass Screening (Welch's t-test)</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            Differential expression (DE) comparing 178 tumors against 167 normal tissues identified 19,399 tumor-high candidate genes (log2FC &ge; 1.0, FDR &lt; 0.05).
+          </p>
+          <div class="bullet-box">
+            <div class="bullet-item">
+              <strong>Specificity Scoring:</strong> Prioritized genes using the product of single-gene AUC and log2 fold change.
+            </div>
+            <div class="bullet-item">
+              <strong>Top Candidates:</strong> Highlighted UBE2S and CCR6 as significant upregulated candidate genes.
+            </div>
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card visual-card" id="scene3a-container">
+            <!-- D3 Volcano Plot -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8: Machine Learning and SHAP (Animated Scene 3) -->
+    <section class="slide" id="slide-8">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">VIII</span>
+          <h2 class="section-title">ML Prioritization & SHAP Attribution</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            An L1-regularized Logistic Regression model achieved perfect cross-validation AUC (1.000). Features were prioritized using SHAP value attributions.
+          </p>
+          <div class="alert-box warning-border">
+            <span class="alert-title">Model Attribution vs. Causality</span>
+            <p id="shap-disclaimer">SHAP values reflect model feature importance, explaining how predictions are built. They do not directly prove biological causality.</p>
+          </div>
+          <div class="control-panel">
+            <button class="replay-btn" data-scene="scene3">Replay Scene 3</button>
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card visual-card" id="scene3-container">
+            <!-- D3 Push/Pull Visualizer -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9: Candidate Pair Selection (Animated Scene 4) -->
+    <section class="slide" id="slide-9">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">IX</span>
+          <h2 class="section-title">Selected Input Candidate: UBE2S + CCR6</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            We evaluated all combinations of the top 100 SHAP genes using a composite Pair Score based on pairwise correlation and tumor activation rates.
+          </p>
+          <div class="bullet-box">
+            <div class="bullet-item">
+              <strong>UBE2S (Input A):</strong> Proliferation / cell-cycle axis.
+            </div>
+            <div class="bullet-item">
+              <strong>CCR6 (Input B):</strong> Immune stroma / chemokine receptor axis.
+            </div>
+            <div class="bullet-item">
+              <span id="corr-warn">Pearson correlation: r = 0.714.</span> Functionally divergent pathways, but statistically correlated in bulk tissue.
+            </div>
+          </div>
+          <div class="control-panel">
+            <button class="replay-btn" data-scene="scene4">Replay Scene 4</button>
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card visual-card" id="scene4-container">
+            <!-- D3 2D Scatter plot and thresholds -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: Hill-Equation Model (Animated Scene 5) -->
+    <section class="slide" id="slide-10">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">X</span>
+          <h2 class="section-title">Mathematical Hill-Equation Modeling</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            The AND gate is simulated using a dual-input Hill equation modeling continuous logic circuit activation kinetics.
+          </p>
+          <div id="hill-equation-container">
+            <!-- Equation progressively shown -->
+            <div class="equation-line" id="eq-main">
+              $$Output = P_{\text{basal}} + V_{\max} \cdot H(A) \cdot H(B)$$
+            </div>
+            <div class="equation-line" id="eq-sub" style="font-size: 0.9em; margin-top: 10px; color: #555;">
+              $$H(X) = \frac{[X]^n}{K_X^n + [X]^n}$$
+            </div>
+          </div>
+          <div class="note-box warning-border" style="margin-top: 15px;">
+            <span id="threshold-disclaimer">Model parameters K_A (0.760) and K_B (0.464) are transcriptomic thresholds, not physical dissociation constants.</span>
+          </div>
+          <div class="control-panel">
+            <button class="replay-btn" data-scene="scene5">Replay Scene 5</button>
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card visual-card" id="scene5-container">
+            <!-- D3 Contour activation heatmap -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 11: Validation and Transferability (Animated Scene 6) -->
+    <section class="slide" id="slide-11">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">XI</span>
+          <h2 class="section-title">Validation and Transferability</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            The optimized AND gate was validated on the independent GSE62452 dataset. While specificity remains exceptionally high, sensitivity drops significantly due to platform differences (microarray vs. RNA-seq).
+          </p>
+          <div class="takeaway-badge-container">
+            <!-- Takeaway box highlighted by rough notation -->
+            <div id="validation-takeaway">
+              "high-specificity candidate" &ne; "validated biosensor"
+            </div>
+          </div>
+          <div class="control-panel" style="margin-top: 15px;">
+            <button class="replay-btn" data-scene="scene6">Replay Scene 6</button>
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card visual-card" id="scene6-container">
+            <!-- D3 side by side bar comparisons -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 12: Future Directions & Conclusion -->
+    <section class="slide" id="slide-12">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">XII</span>
+          <h2 class="section-title">Summary & Wet-Lab Translation</h2>
+          <hr class="section-divider">
+          <p class="body-text">
+            Our unbiased computational pipeline prioritized candidate pairs for a logic-gated synthetic biosensor. Wet-lab validation is the next critical step.
+          </p>
+          <div class="bullet-box">
+            <div class="bullet-item">
+              <strong>Synthetic Promoters:</strong> Drive orthogonal transcription factors in split-transactivator configurations.
+            </div>
+            <div class="bullet-item">
+              <strong>RNA-Based Sensors:</strong> Leverage toehold switches for direct intracellular transcript sensing.
+            </div>
+            <div class="bullet-item">
+              <strong>In Vitro Validation:</strong> Test circuit activation in target PDAC cell lines (PANC-1) vs. healthy epithelia (HPDE).
+            </div>
+          </div>
+        </div>
+        <div class="col-visual centering">
+          <div class="card summary-card">
+            <h3>Design Takeaway</h3>
+            <div class="summary-points">
+              <div class="summary-point">Unbiased Data-Driven Discovery</div>
+              <div class="summary-point">Safety via Pathway Orthogonality</div>
+              <div class="summary-point">Rigorous Transferability Benchmarking</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Presentation Nav Bar and Progress -->
+  <div id="controls-container">
+    <button class="nav-btn" id="prev-btn" aria-label="Previous Slide">← Previous</button>
+    <div id="slide-indicator">Slide 1 / 12</div>
+    <button class="nav-btn" id="next-btn" aria-label="Next Slide">Next →</button>
+  </div>
+
+  <div id="progress-bar-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- Load MathJax (Optional, offline fallback handles formatting in plain text if required) -->
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  
+  <!-- Fallback for offline MathJax support -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+
+  <!-- Scripts -->
+  <script src="scripts/anime.min.js"></script>
+  <script src="scripts/d3.min.js"></script>
+  <script src="scripts/rough-notation.js"></script>
+  <script src="scripts/presentation.js"></script>
+</body>
+</html>
