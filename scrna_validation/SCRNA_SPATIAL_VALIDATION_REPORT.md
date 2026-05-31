@@ -1,6 +1,10 @@
-# Real scRNA-seq & Spatial Transcriptomics Validation Report
+# Real scRNA-seq & Spatial Transcriptomics Validation Report (Archived Circular Version)
 
-This report presents a rigorous data-driven validation of the second-generation biosensor candidate gene pair **CEACAM5 + CST1** (v2) compared with **UBE2S + CCR6** (v1) using real patient-level single-cell data.
+> [!WARNING]
+> This report represents the **archived circular validation version** which contains a methodological flaw (using CEACAM5 to define malignant cells and then validating CEACAM5 on those same cells). 
+> For the corrected, methodologically sound independent validation, please refer to the [INDEPENDENT_SCRNA_VALIDATION_REPORT.md](file:///Users/Janet/Documents/Antigravity/SynBio%20final/scrna_validation_independent/INDEPENDENT_SCRNA_VALIDATION_REPORT.md).
+
+This report presents a validation of the second-generation biosensor candidate gene pair **CEACAM5 + CST1** (v2) compared with **UBE2S + CCR6** (v1) using real patient-level single-cell data under the archived circular annotation rules.
 
 ---
 

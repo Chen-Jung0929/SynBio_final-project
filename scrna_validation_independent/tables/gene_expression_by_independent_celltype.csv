@@ -1,0 +1,45 @@
+cell_type,gene,mean_expression,median_expression,percent_expressing,n_cells,n_patients,annotation_source
+B cells,CEACAM5,0.06997909,0.0,5.555555555555555,90,13,independent-marker-inferred
+B cells,CST1,0.011393567,0.0,1.1111111111111112,90,13,independent-marker-inferred
+B cells,UBE2S,0.36257827,0.0,25.555555555555554,90,13,independent-marker-inferred
+B cells,CCR6,0.113593146,0.0,7.777777777777778,90,13,independent-marker-inferred
+CAF / fibroblast,CEACAM5,0.05833292,0.0,4.80912245909767,2017,12,independent-marker-inferred
+CAF / fibroblast,CST1,0.5407354,0.0,34.01090728805156,2017,12,independent-marker-inferred
+CAF / fibroblast,UBE2S,0.4929442,0.0,33.96132870599901,2017,12,independent-marker-inferred
+CAF / fibroblast,CCR6,0.013369313,0.0,0.991571641051066,2017,12,independent-marker-inferred
+CD8 T cells,CEACAM5,0.01581655,0.0,0.9615384615384616,104,10,independent-marker-inferred
+CD8 T cells,CST1,0.01237504,0.0,0.9615384615384616,104,10,independent-marker-inferred
+CD8 T cells,UBE2S,0.7364439,0.0,46.15384615384615,104,10,independent-marker-inferred
+CD8 T cells,CCR6,0.026602682,0.0,1.9230769230769231,104,10,independent-marker-inferred
+T cells,CEACAM5,0.047988255,0.0,3.508771929824561,114,13,independent-marker-inferred
+T cells,CST1,0.04106518,0.0,2.631578947368421,114,13,independent-marker-inferred
+T cells,UBE2S,0.5594443,0.0,32.45614035087719,114,13,independent-marker-inferred
+T cells,CCR6,0.38309512,0.0,23.684210526315788,114,13,independent-marker-inferred
+Tregs,CEACAM5,0.0,0.0,0.0,61,9,independent-marker-inferred
+Tregs,CST1,0.051395193,0.0,3.278688524590164,61,9,independent-marker-inferred
+Tregs,UBE2S,0.5363589,0.0,34.42622950819672,61,9,independent-marker-inferred
+Tregs,CCR6,0.61082566,0.0,37.704918032786885,61,9,independent-marker-inferred
+acinar-like cells,CEACAM5,0.025623523,0.0,1.787751996957018,2629,6,independent-marker-inferred
+acinar-like cells,CST1,0.00043745706,0.0,0.038037276531000384,2629,6,independent-marker-inferred
+acinar-like cells,UBE2S,0.432753,0.0,29.288702928870293,2629,6,independent-marker-inferred
+acinar-like cells,CCR6,0.0032733758,0.0,0.26626093571700266,2629,6,independent-marker-inferred
+endothelial,CEACAM5,0.040285543,0.0,2.8301886792452833,106,11,independent-marker-inferred
+endothelial,CST1,0.15718363,0.0,10.377358490566039,106,11,independent-marker-inferred
+endothelial,UBE2S,0.48395717,0.0,35.84905660377358,106,11,independent-marker-inferred
+endothelial,CCR6,0.011079057,0.0,0.9433962264150944,106,11,independent-marker-inferred
+epithelial / ductal tumor-origin cells,CEACAM5,0.3833568,0.0,23.386400098728867,8103,16,independent-marker-inferred
+epithelial / ductal tumor-origin cells,CST1,0.13101819,0.0,7.737874861162532,8103,16,independent-marker-inferred
+epithelial / ductal tumor-origin cells,UBE2S,0.5064157,0.0,33.45674441564853,8103,16,independent-marker-inferred
+epithelial / ductal tumor-origin cells,CCR6,0.019112026,0.0,1.4315685548562262,8103,16,independent-marker-inferred
+macrophages / monocytes,CEACAM5,0.0323705,0.0,2.3455824863174355,1279,15,independent-marker-inferred
+macrophages / monocytes,CST1,0.10989814,0.0,7.427677873338546,1279,15,independent-marker-inferred
+macrophages / monocytes,UBE2S,0.5444125,0.0,35.574667709147775,1279,15,independent-marker-inferred
+macrophages / monocytes,CCR6,0.049004994,0.0,3.205629397967162,1279,15,independent-marker-inferred
+mast cells,CEACAM5,0.11290284,0.0,9.25925925925926,54,7,independent-marker-inferred
+mast cells,CST1,0.059297368,0.0,5.555555555555555,54,7,independent-marker-inferred
+mast cells,UBE2S,0.6019455,0.0,42.592592592592595,54,7,independent-marker-inferred
+mast cells,CCR6,0.028907644,0.0,1.8518518518518516,54,7,independent-marker-inferred
+plasma cells,CEACAM5,0.19155645,0.0,16.62125340599455,367,16,independent-marker-inferred
+plasma cells,CST1,0.14101085,0.0,10.08174386920981,367,16,independent-marker-inferred
+plasma cells,UBE2S,0.65142655,0.0,48.228882833787466,367,16,independent-marker-inferred
+plasma cells,CCR6,0.039337035,0.0,2.7247956403269753,367,16,independent-marker-inferred

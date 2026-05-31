@@ -134,13 +134,16 @@ Independent re-normalization and thresholds applied to raw matrices:
 
 ## 4. Real scRNA-seq / Spatial Validation Update
 
-A real single-cell transcriptomics validation has been completed to replace the previous illustrative placeholder:
+An independent single-cell transcriptomics validation has been completed to replace the previous circular validation:
 * **Dataset Used**: GSE154778 (Lin et al. 2020)
 * **Data Format**: Real gene expression counts (CSV format), normalized and processed into an AnnData object.
 * **Statistics**: 14,924 cells and 16 patients (10 primary tumors and 6 metastases).
-* **Cell Annotations**: Hierarchically inferred using canonical cell marker genes (`EPCAM`, `KRT19`, `CD3D`, `COL1A1`, etc.).
+* **Cell Annotations**: Hierarchically inferred using canonical cell marker genes, completely excluding `CEACAM5`, `CST1`, `UBE2S`, and `CCR6` to avoid circular logic. Ductal cells were labeled conservatively as `epithelial / ductal tumor-origin cells`.
 * **Biological Findings**:
-  * **CEACAM5 + CST1 (v2)**: Confirmed as **Category A (Strong cell-intrinsic support)**. Co-expression is highly specific to malignant ductal epithelial cells (10.8% double-positive), with **absolute zero co-expression (0.0%)** in normal ductal and normal acinar cells, representing 100% pancreatic tissue specificity.
-  * **UBE2S + CCR6 (v1)**: Confirmed as a tissue-level multicellular signature only. Co-expression in cancer cells is near-zero (0.9%), and it exhibits a high risk of off-target activation in regulatory T cells (16.2% double-positive in Tregs).
+  * **CEACAM5 + CST1 (v2)**: Re-classified as **Category B (Supportive but subpopulation-restricted)**. Co-expression in `epithelial / ductal tumor-origin cells` is **2.55%** overall, and is highly variable across individuals: co-expression is detected in only 9 out of 16 patients, with a median double-positive fraction of 0.68% and a range of [0.0%, 12.43%] (heavily driven by patient `MET02` at 12.43%).
+  * **Off-Target Stromal Expression**: `CST1` is highly expressed in the CAF/fibroblast compartment (34.01%), resulting in a stromal double-positive fraction of **1.54%**.
+  * **UBE2S + CCR6 (v1)**: Co-expression in epithelial tumor-origin cells is near-zero (0.67%), and it exhibits a high risk of off-target activation in regulatory T cells (16.39% in Tregs) and T cells (10.53%).
+  * **Healthy Control Reference**: Healthy-normal pancreas single-cell validation was not completed. Off-target conclusions are limited to non-malignant-like compartments within the PDAC dataset.
   * **Spatial Validation**: Spatial coordinates validation could not be completed due to the lack of public spatial transcriptomics files in this environment.
-* **Limitations**: While cell-intrinsic validation is confirmed in the tumor microenvironment, in vivo translation requires promoter engineering.
+* **Limitations**: While cell-intrinsic validation is supported in a subpopulation of epithelial cells, there is high patient-to-patient variability and potential stromal off-target risk due to CAF expression of CST1.
+

@@ -177,17 +177,19 @@ pair_en = (
 
 singlecell_en = (
     "Real single-cell RNA-seq validation was completed using the public GSE154778 dataset (Lin et al. 2020), consisting "
-    "of 14,924 single cells from 16 patients (10 primary tumors and 6 metastases). We verified the cell-type "
-    "specificity of the candidate gene pairs by classifying cells based on marker gene signatures. For the v2 candidate pair "
-    "CEACAM5 and CST1, our analysis confirms Category A (Strong cell-intrinsic support). Both genes are specifically "
-    "co-expressed in the malignant ductal epithelial cells, yielding a double-positive fraction of 10.8% "
-    "in malignant cells. Crucially, the double-positive rate is absolute zero (0.0%) in normal ductal and normal acinar cells, "
-    "confirming high specificity and zero healthy-pancreas leakiness. In contrast, the v1 pair UBE2S and CCR6 showed near-zero "
-    "co-expression in malignant cells (0.9%) and displayed a high risk of off-target activation in regulatory T cells "
-    "(16.2% double-positive in Tregs), illustrating a major immune-compartment safety liability. The single-cell "
-    "evidence therefore strongly supports a cell-intrinsic AND-gate circuit design for the CEACAM5 + CST1 pair, overcoming the "
-    "compartmentalization failure of the first-generation design. Spatial transcriptomics validation could not be completed "
-    "in this run due to lack of raw spatial coordinates files."
+    "of 14,924 single cells from 16 patients (10 primary tumors and 6 metastases). To prevent circular validation, "
+    "the candidate genes CEACAM5, CST1, UBE2S, and CCR6 were completely excluded from cell-type annotation, and "
+    "epithelial cells of tumor origin were annotated conservatively using independent lineage markers. Under this independent "
+    "annotation, we classify the CEACAM5 + CST1 pair under Category B (Supportive but subpopulation-restricted). Same-cell "
+    "co-expression is observed specifically in a small subpopulation of epithelial / ductal tumor-origin cells, yielding an overall "
+    "double-positive fraction of 2.55%. Patient-level analysis reveals high inter-individual heterogeneity: co-expression is detected "
+    "in only 9 out of 16 patients, with a median double-positive fraction of 0.68% and a range of 0.0% to 12.43% (heavily driven by patient MET02). "
+    "CST1 also shows strong expression in CAFs/fibroblasts (34.01%), resulting in a stromal double-positive fraction of 1.54%. "
+    "Healthy-normal pancreas single-cell validation was not completed; off-target conclusions are limited to non-malignant-like "
+    "compartments within the PDAC dataset. In contrast, the v1 pair UBE2S + CCR6 shows a co-expression fraction of 0.67% in "
+    "epithelial cells and high co-expression in Tregs (16.39%) and T cells (10.53%), highlighting a major off-target immune safety risk. "
+    "Thus, while the CEACAM5 + CST1 pair remains a superior candidate, its signal is restricted to an epithelial subpopulation and "
+    "is highly variable across patients. Spatial transcriptomics validation was not completed due to lack of raw spatial files."
 )
 
 hill_en = (
@@ -346,13 +348,15 @@ pair_zh = (
 
 singlecell_zh = (
     "我們使用公共單細胞轉錄組數據集 GSE154778 (Lin et al. 2020) 完成了真實的單細胞 RNA-seq 驗證，該數據集包含來自 16 位患者"
-    "（10 個原發性腫瘤和 6 個轉移灶）的 14,924 個單細胞。我們藉由經典標誌基因對細胞進行了特徵分類。對於第二代候選基因對 "
-    "CEACAM5 和 CST1，驗證結果表現出「Category A (強細胞內源性支持)」。兩者特異性地共同表達於惡性導管上皮細胞中，"
-    "在惡性細胞中的雙陽性比例達 10.8%。最關鍵的是，雙陽性率在正常胰管細胞和正常腺泡細胞中均為絕對零 (0.0%)，"
-    "證實了極高的組織特異性與零正常胰臟洩漏。相反地，第一代 (v1) 組合 UBE2S 與 CCR6 在惡性細胞中的雙陽性率接近於零 (0.9%)，"
-    "且在調節型 T 細胞 (Tregs) 中表現出極高比例的雙陽性活化 (16.2%)，呈現嚴重的免疫細胞脫靶活化風險。因此，單細胞"
-    "轉錄組證據強烈支持 CEACAM5 + CST1 組合的細胞內源性 AND 閘電路設計，成功克服了第一代設計的空間隔離限制。空間轉錄體驗證因"
-    "缺乏本地空間座標檔案，在此次運行中無法完成。"
+    "（10 個原發性腫瘤和 6 個轉移灶）的 14,924 個單細胞。為了避免循環驗證的邏輯缺陷，候選基因 CEACAM5、CST1、UBE2S 和 CCR6 被"
+    "完全排除於細胞類型註釋之外，且腫瘤來源的上系細胞僅使用獨立的譜系標誌物進行保守註釋。在此獨立註釋下，我們將 CEACAM5 + CST1 "
+    "組合歸類為「Category B (支持但受限於細胞亞群)」。兩者特異性地共同表達於保守註釋的導管上皮細胞中，總雙陽性比例為 2.55%。"
+    "患者層級分析顯示出高度的個體間異質性：僅在 16 位患者中的 9 位中檢測到共同表達，中位雙陽性率僅為 0.68%，範圍為 0.0% 至 12.43%"
+    "（主要受患者 MET02 驅動）。此外，CST1 在 CAF / 纖維母細胞中高表達 (34.01%)，導致基質雙陽性率為 1.54%。"
+    "健康正常胰臟的單細胞驗證在此次運行中尚未完成，因此脫靶結論僅限於該 PDAC 數據集中的非上皮細胞區室。相比之下，第一代 (v1) "
+    "組合 UBE2S + CCR6 在上皮細胞中的雙陽性率為 0.67%，且在 Tregs (16.39%) 和 T 細胞 (10.53%) 中表現出高比例雙陽性活化，"
+    "存在嚴重的免疫脫靶風險。因此，儘管 CEACAM5 + CST1 仍是較優的候選組合，其內源性信號受限於上皮細胞亞群且在患者間變異較大。"
+    "空間轉錄組學驗證因缺乏本地空間座標檔案，在此次運行中無法完成。"
 )
 
 hill_zh = (

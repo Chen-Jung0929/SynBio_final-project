@@ -1,0 +1,5 @@
+query_gene,matched_gene,present_yes_no,gene_symbol_source,notes
+CCR6,CCR6,yes,HGNC,Found in expression matrix
+CEACAM5,CEACAM5,yes,HGNC,Found in expression matrix
+CST1,CST1,yes,HGNC,Found in expression matrix
+UBE2S,UBE2S,yes,HGNC,Found in expression matrix

@@ -1,0 +1,8 @@
+Metric,Value
+n_patients_with_epithelial_cells,16
+n_patients_with_CEACAM5_CST1_double_positive_epithelial_cells_gt_0,9
+n_patients_with_CEACAM5_CST1_double_positive_epithelial_cells_gt_0_5,9
+median_double_positive_fraction_gt_0,0.0068
+range_double_positive_fraction_gt_0,"[0.0000, 0.1243]"
+median_double_positive_fraction_gt_0_5,0.0068
+range_double_positive_fraction_gt_0_5,"[0.0000, 0.1243]"

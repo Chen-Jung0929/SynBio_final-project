@@ -1,0 +1,7 @@
+Metric,Value
+Cells before QC,14926.0
+Genes before QC,22217.0
+Cells after QC,14924.0
+Genes after QC,22217.0
+Mean genes per cell,2225.601112302332
+Mean counts per cell,3323.232846421871

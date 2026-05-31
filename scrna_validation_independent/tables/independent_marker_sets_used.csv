@@ -1,0 +1,13 @@
+cell_type,marker_genes
+epithelial_ductal,"EPCAM, KRT8, KRT18, KRT19, MUC1, SOX9"
+acinar,"PRSS1, CPA1, CPA2, REG1A, AMY2A"
+ductal,"KRT19, SOX9, CFTR, SPP1, MSLN"
+fibroblast,"COL1A1, COL1A2, DCN, LUM, ACTA2, FAP, TAGLN"
+endothelial,"PECAM1, VWF, KDR, ENG"
+t_cells,"CD3D, CD3E, CD2, TRAC"
+cd8_t_cells,"CD8A, CD8B, GZMB, NKG7"
+tregs,"FOXP3, IL2RA, CTLA4, TIGIT"
+b_cells,"MS4A1, CD79A, CD79B, CD74"
+plasma_cells,"MZB1, JCHAIN, XBP1"
+macrophages,"LST1, CD68, CD14, FCGR3A, C1QA, C1QB"
+mast_cells,"TPSAB1, TPSB2, CPA3"

@@ -1,6 +1,11 @@
-# Single-Cell & Spatial Validation (Real Data)
+# Single-Cell & Spatial Validation (Archived Circular Annotation Version)
 
-This directory contains the pipeline and results for the real single-cell RNA-seq validation of the PDAC AND-gate biosensor candidate pairs.
+> [!WARNING]
+> This folder contains the **archived circular annotation version** of the single-cell validation. 
+> It contains a methodological flaw where candidate genes were used during cell-type classification.
+> For the corrected, independent validation, please refer to the [scrna_validation_independent](file:///Users/Janet/Documents/Antigravity/SynBio%20final/scrna_validation_independent) directory.
+
+This directory contains the pipeline and results for the real single-cell RNA-seq validation of the PDAC AND-gate biosensor candidate pairs using circular classification rules.
 
 ## Folders
 * **`data/`**: Raw and processed single-cell transcriptomic matrices.
