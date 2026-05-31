@@ -1,0 +1,11 @@
+metric_name,report_value,table_value,consistent_yes_no,notes
+Discovery AUC,0.984,0.984,yes,"Previously, v1_vs_v2_pair_comparison.csv contained a hardcoded v2 discovery AUC of 0.999 (now corrected dynamically to 0.984 to resolve the mismatch)."
+Discovery Sensitivity,92.1%,92.1%,yes,Matches TCGA+GTEx Discovery sensitivity.
+Discovery Specificity,100.0%,100.0%,yes,Matches TCGA+GTEx Discovery specificity.
+GSE62452 Sensitivity,59.4%,59.4%,yes,Matches same-cohort validation sensitivity.
+GSE62452 Specificity,93.4%,93.4%,yes,Matches same-cohort validation specificity.
+GSE28735 Sensitivity,64.4%,64.4%,yes,Matches external validation sensitivity.
+GSE28735 Specificity,93.3%,93.3%,yes,Matches external validation specificity.
+Tumor Correlation Metric,Spearman,Spearman,yes,Inconsistency fixed: changed all report text references from Pearson to Spearman to match scipy.stats.spearmanr used in code.
+Pair Score Formula,((sens_disc + sens_val)/2) * ((spec_disc + spec_val)/2) - 0.2 * |r|,((sens_disc + sens_val)/2) * ((spec_disc + spec_val)/2) - 0.2 * |r|,yes,Inconsistency fixed: report text updated to use the code's correlation subtraction penalty instead of the old product-based formula.
+Model Performance Labeled,Train performance only,Train performance only,yes,"Table headers updated to specify Train_AUC, Train_Accuracy, Train_Sensitivity, Train_Specificity."

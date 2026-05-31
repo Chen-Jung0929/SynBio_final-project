@@ -1,1295 +1,359 @@
-/* ==========================================================================
-   KAMI Slide System — Custom Script & Animation Engine
-   Handles slide routing, keyboard events, and scientific animations
+/* ========================================================================== 
+   KAMI Slide System — route controller + explanatory scientific animations
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-
-  // ==========================================
-  // 1. Presentation State & Controller
-  // ==========================================
-  const slides = document.querySelectorAll(".slide");
+  const slides = Array.from(document.querySelectorAll(".slide"));
   const prevBtn = document.getElementById("prev-btn");
   const nextBtn = document.getElementById("next-btn");
   const indicator = document.getElementById("slide-indicator");
   const progressBar = document.getElementById("progress-bar");
   const toggleMotionBtn = document.getElementById("toggle-motion");
-  
   let currentSlideIndex = 0;
   let isReducedMotion = false;
-  let activeTimelines = []; // Track active Anime.js timelines for cleaning
-  let activeTimeouts = [];  // Track active setTimeout calls for cleaning
+  let activeTimeouts = [];
 
-  // Clear running animation states
+  const C = {
+    ink: "#1B365D",
+    paper: "#f5f4ed",
+    grid: "#dedccf",
+    mute: "#c5c3b2",
+    red: "#8f342d",
+    text: "#2c2a29"
+  };
+
   function clearActiveAnimations() {
-    activeTimelines.forEach(tl => {
-      if (tl) tl.pause();
-    });
-    activeTimelines = [];
-    activeTimeouts.forEach(t => clearTimeout(t));
+    activeTimeouts.forEach(clearTimeout);
     activeTimeouts = [];
+    if (window.anime) anime.remove("*");
   }
 
   function updateSlide(index) {
     clearActiveAnimations();
-    
-    // Remove active class from all slides
     slides.forEach(slide => slide.classList.remove("active"));
-    
-    // Update active slide
     currentSlideIndex = index;
     slides[currentSlideIndex].classList.add("active");
-    
-    // Update controls UI
     indicator.textContent = `Slide ${currentSlideIndex + 1} / ${slides.length}`;
-    const progressPercent = ((currentSlideIndex) / (slides.length - 1)) * 100;
-    progressBar.style.width = `${progressPercent}%`;
-    
-    // Enable/disable buttons
+    progressBar.style.width = `${(currentSlideIndex / (slides.length - 1)) * 100}%`;
     prevBtn.disabled = currentSlideIndex === 0;
     nextBtn.disabled = currentSlideIndex === slides.length - 1;
-    
-    // Trigger animations for the active slide
     triggerSlideAnimations(currentSlideIndex + 1);
   }
 
-  function nextSlide() {
-    if (currentSlideIndex < slides.length - 1) {
-      updateSlide(currentSlideIndex + 1);
-    }
-  }
+  function nextSlide() { if (currentSlideIndex < slides.length - 1) updateSlide(currentSlideIndex + 1); }
+  function prevSlide() { if (currentSlideIndex > 0) updateSlide(currentSlideIndex - 1); }
 
-  function prevSlide() {
-    if (currentSlideIndex > 0) {
-      updateSlide(currentSlideIndex - 1);
-    }
-  }
-
-  // Key Bindings
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight" || e.key === "Space") {
-      e.preventDefault();
-      nextSlide();
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      prevSlide();
-    } else if (e.key === "r" || e.key === "R") {
-      toggleReducedMotion();
-    }
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); nextSlide(); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); prevSlide(); }
+    if (e.key === "r" || e.key === "R") toggleReducedMotion();
   });
-
-  // Click Bindings
   nextBtn.addEventListener("click", nextSlide);
   prevBtn.addEventListener("click", prevSlide);
+  toggleMotionBtn.addEventListener("click", toggleReducedMotion);
+  document.querySelectorAll(".replay-btn").forEach(btn => btn.addEventListener("click", e => {
+    e.stopPropagation();
+    clearActiveAnimations();
+    triggerSlideAnimations(currentSlideIndex + 1, true);
+  }));
 
-  // Reduced Motion Controller
   function toggleReducedMotion() {
     isReducedMotion = !isReducedMotion;
-    if (isReducedMotion) {
-      document.body.classList.add("reduced-motion");
-      toggleMotionBtn.textContent = "Reduced Motion: ON";
-    } else {
-      document.body.classList.remove("reduced-motion");
-      toggleMotionBtn.textContent = "Reduced Motion: OFF";
-    }
-    // Re-render active slide to reflect state change
+    document.body.classList.toggle("reduced-motion", isReducedMotion);
+    toggleMotionBtn.textContent = isReducedMotion ? "Reduced Motion: ON" : "Reduced Motion: OFF";
     updateSlide(currentSlideIndex);
   }
 
-  toggleMotionBtn.addEventListener("click", toggleMotionBtnClick);
-  function toggleMotionBtnClick() {
-    toggleReducedMotion();
+  function triggerSlideAnimations(slideNum) {
+    const scenes = {
+      4: runScene1,
+      6: runScene2,
+      7: runVolcanoDerivation,
+      8: runMLPrioritization,
+      9: runSHAPAttribution,
+      10: runSHAPThreshold,
+      11: runPairSelection,
+      12: runHillModel,
+      13: runRandomPairControl,
+      14: runThresholdSensitivity,
+      15: runExternalValidation
+    };
+    if (scenes[slideNum]) scenes[slideNum]();
   }
 
-  // Replay Animation Triggers
-  document.querySelectorAll(".replay-btn").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      triggerSlideAnimations(currentSlideIndex + 1, true);
-    });
-  });
-
-
-  // ==========================================
-  // 2. Explanatory Animation Implementations
-  // ==========================================
-
-  function triggerSlideAnimations(slideNum, forceReplay = false) {
-    switch (slideNum) {
-      case 4: // Scene 1 — Why AND Gate?
-        runScene1();
-        break;
-      case 6: // Scene 2 — Computational Pipeline Flow
-        runScene2();
-        break;
-      case 7: // Slide 7 — Volcano Plot (Static/Interactive)
-        runScene3a();
-        break;
-      case 8: // Scene 3 — Machine Learning & SHAP
-        runScene3();
-        break;
-      case 9: // Scene 4 — Selection & Orthogonality
-        runScene4();
-        break;
-      case 10: // Scene 5 — Hill-Equation contour heatmap
-        runScene5();
-        break;
-      case 11: // Scene 6 — Validation Metrics Comparison
-        runScene6();
-        break;
-      default:
-        // No animations on other slides
-        break;
-    }
-  }
-
-  // Helper: Clear container and create SVG
-  function resetContainer(id, width = 500, height = 400) {
+  function resetContainer(id, width = 520, height = 420) {
     const container = document.getElementById(id);
     if (!container) return null;
     container.innerHTML = "";
-    const svg = d3.select(`#${id}`)
-      .append("svg")
-      .attr("width", "100%")
-      .attr("height", "100%")
+    return d3.select(container).append("svg")
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet");
-    return svg;
   }
 
+  function reveal(selector, delay = 0, duration = 650) {
+    const nodes = typeof selector === "string" ? document.querySelectorAll(selector) : selector;
+    if (isReducedMotion) {
+      d3.selectAll(nodes).style("opacity", 1);
+      return;
+    }
+    activeTimeouts.push(setTimeout(() => {
+      anime({ targets: nodes, opacity: [0, 1], translateY: [8, 0], duration, easing: "easeOutQuad", delay: anime.stagger(35) });
+    }, delay));
+  }
 
-  // ----------------------------------------------------
-  // Scene 1 — Why AND Gate? (Ambiguity to 2D logic)
-  // ----------------------------------------------------
+  function label(svg, text, x, y, cls = "step-caption", anchor = "middle") {
+    return svg.append("text").attr("x", x).attr("y", y).attr("text-anchor", anchor).attr("class", cls).text(text);
+  }
+
+  function arrow(svg, x1, y1, x2, y2, cls = "derive") {
+    const id = `arrow-${Math.random().toString(36).slice(2)}`;
+    svg.append("defs").append("marker").attr("id", id).attr("viewBox", "0 0 10 10").attr("refX", 8).attr("refY", 5).attr("markerWidth", 5).attr("markerHeight", 5).attr("orient", "auto-start-reverse")
+      .append("path").attr("d", "M 0 0 L 10 5 L 0 10 z").attr("fill", C.ink);
+    return svg.append("line").attr("class", cls).attr("x1", x1).attr("y1", y1).attr("x2", x2).attr("y2", y2).attr("stroke", C.ink).attr("stroke-width", 1.3).attr("marker-end", `url(#${id})`).style("opacity", 0);
+  }
+
+  function drawAxes(svg, x, y, xLabel, yLabel) {
+    svg.append("g").attr("class", "axis").attr("transform", `translate(0,${y.range()[0]})`).call(d3.axisBottom(x).ticks(5));
+    svg.append("g").attr("class", "axis").attr("transform", `translate(${x.range()[0]},0)`).call(d3.axisLeft(y).ticks(5));
+    label(svg, xLabel, (x.range()[0] + x.range()[1]) / 2, y.range()[0] + 36, "step-caption");
+    label(svg, yLabel, -((y.range()[0] + y.range()[1]) / 2), x.range()[0] - 38, "step-caption").attr("transform", "rotate(-90)");
+  }
+
+  function drawMiniMatrix(svg, x, y, rows, cols, values, cls = "matrix-demo") {
+    const g = svg.append("g").attr("class", cls).attr("transform", `translate(${x},${y})`).style("opacity", 0);
+    cols.forEach((c, j) => label(g, c, 58 + j * 36, 0, "matrix-header"));
+    rows.forEach((r, i) => label(g, r, 0, 28 + i * 28, "matrix-header", "start"));
+    rows.forEach((r, i) => cols.forEach((c, j) => {
+      g.append("rect").attr("x", 50 + j * 36).attr("y", 10 + i * 28).attr("width", 30).attr("height", 22).attr("class", "matrix-cell");
+      label(g, values[i][j], 65 + j * 36, 25 + i * 28, "svg-note");
+    }));
+    return g;
+  }
+
+  // Existing opening AND-gate teaching slide.
   function runScene1() {
-    const width = 500;
-    const height = 400;
-    const svg = resetContainer("scene1-container", width, height);
-    if (!svg) return;
-
-    // Normal samples (brown/gray) and Tumor samples (ink-blue)
-    const normalPoints = [
-      {x: 100, y: 320}, {x: 120, y: 310}, {x: 140, y: 290}, {x: 150, y: 330},
-      {x: 160, y: 280}, {x: 180, y: 300}, {x: 190, y: 260}, {x: 210, y: 290},
-      {x: 230, y: 270}, {x: 250, y: 310}, {x: 130, y: 200}, {x: 160, y: 210},
-      {x: 110, y: 150}, {x: 150, y: 180}, {x: 170, y: 160}, {x: 180, y: 190}
-    ];
-
-    const tumorPoints = [
-      {x: 300, y: 100}, {x: 320, y: 90}, {x: 340, y: 120}, {x: 350, y: 80},
-      {x: 360, y: 110}, {x: 380, y: 70}, {x: 390, y: 130}, {x: 410, y: 90},
-      {x: 430, y: 100}, {x: 450, y: 120}, {x: 280, y: 220}, {x: 260, y: 240},
-      {x: 330, y: 230}, {x: 310, y: 250}, {x: 290, y: 270}, {x: 340, y: 210}
-    ];
-
-    // Axis scales
-    const xScale = d3.scaleLinear().domain([0, 500]).range([50, 450]);
-    const yScale = d3.scaleLinear().domain([0, 400]).range([350, 50]);
-
-    // Grid layout
-    svg.append("g")
-      .attr("transform", "translate(0, 350)")
-      .call(d3.axisBottom(xScale).ticks(5).tickFormat(""))
-      .attr("class", "axis");
-    svg.append("g")
-      .attr("transform", "translate(50, 0)")
-      .call(d3.axisLeft(yScale).ticks(5).tickFormat(""))
-      .attr("class", "axis");
-
-    // Labels
-    svg.append("text")
-      .attr("x", 250)
-      .attr("y", 385)
-      .attr("text-anchor", "middle")
-      .text("Gene A Expression (Min-Max Scaled)")
-      .style("font-size", "11px");
-
-    svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("x", -200)
-      .attr("y", 20)
-      .attr("text-anchor", "middle")
-      .text("Gene B Expression (Min-Max Scaled)")
-      .style("font-size", "11px");
-
-    // Legend
-    const legend = svg.append("g").attr("transform", "translate(300, 30)");
-    legend.append("circle").attr("cx", 0).attr("cy", 0).attr("r", 5).attr("fill", "#c5c3b2");
-    legend.append("text").attr("x", 12).attr("y", 4).text("Normal (GTEx)").style("font-size", "11px");
-    legend.append("circle").attr("cx", 0).attr("cy", 20).attr("r", 5).attr("fill", "#1B365D");
-    legend.append("text").attr("x", 12).attr("y", 24).text("Tumor (TCGA)").style("font-size", "11px");
-
-    if (isReducedMotion) {
-      // Direct render 2D scatter with threshold
-      renderPoints();
-      drawThresholdBox();
-      return;
-    }
-
-    // Animation stages
-    // 1. Show all points projected on X-axis (1D Gene A representation)
-    const normalGroup = svg.selectAll(".normal-pt")
-      .data(normalPoints)
-      .enter()
-      .append("circle")
-      .attr("class", "normal-pt")
-      .attr("cx", d => xScale(d.x))
-      .attr("cy", yScale(0)) // Projected onto bottom axis
-      .attr("r", 5)
-      .attr("fill", "#c5c3b2")
-      .style("opacity", 0);
-
-    const tumorGroup = svg.selectAll(".tumor-pt")
-      .data(tumorPoints)
-      .enter()
-      .append("circle")
-      .attr("class", "tumor-pt")
-      .attr("cx", d => xScale(d.x))
-      .attr("cy", yScale(0))
-      .attr("r", 5)
-      .attr("fill", "#1B365D")
-      .style("opacity", 0);
-
-    // Timeline sequence
-    // A. Fade in points on 1D axis
-    anime({
-      targets: '#scene1-container circle',
-      opacity: [0, 0.7],
-      delay: anime.stagger(30),
-      duration: 800,
-      easing: 'easeOutQuad'
-    });
-
-    // B. Draw X-axis threshold (1D split marker)
-    let thresholdLine1;
-    activeTimeouts.push(setTimeout(() => {
-      thresholdLine1 = svg.append("line")
-        .attr("x1", xScale(240))
-        .attr("y1", yScale(0))
-        .attr("x2", xScale(240))
-        .attr("y2", yScale(400))
-        .attr("stroke", "#8f342d")
-        .attr("stroke-width", 2)
-        .attr("stroke-dasharray", "4 4")
-        .style("opacity", 0);
-
-      anime({
-        targets: thresholdLine1.node(),
-        opacity: 0.8,
-        duration: 500,
-        easing: 'easeOutQuad'
-      });
-    }, 1200));
-
-    // C. Transition points to their 2D layout (Y-axis reveal)
-    activeTimeouts.push(setTimeout(() => {
-      // Remove X-threshold line during transition to 2D
-      if (thresholdLine1) {
-        anime({
-          targets: thresholdLine1.node(),
-          opacity: 0,
-          duration: 300,
-          complete: () => thresholdLine1.remove()
-        });
-      }
-
-      normalGroup.transition()
-        .duration(1500)
-        .attr("cy", d => yScale(d.y));
-
-      tumorGroup.transition()
-        .duration(1500)
-        .attr("cy", d => yScale(d.y));
-    }, 2500));
-
-    // D. Draw 2D AND-gate quadrant threshold box
-    activeTimeouts.push(setTimeout(() => {
-      drawThresholdBox();
-    }, 4200));
-
-    function renderPoints() {
-      svg.selectAll(".normal-pt")
-        .data(normalPoints)
-        .enter()
-        .append("circle")
-        .attr("cx", d => xScale(d.x))
-        .attr("cy", d => yScale(d.y))
-        .attr("r", 5)
-        .attr("fill", "#c5c3b2")
-        .style("opacity", 0.7);
-
-      svg.selectAll(".tumor-pt")
-        .data(tumorPoints)
-        .enter()
-        .append("circle")
-        .attr("cx", d => xScale(d.x))
-        .attr("cy", d => yScale(d.y))
-        .attr("r", 5)
-        .attr("fill", "#1B365D")
-        .style("opacity", 0.7);
-    }
-
-    function drawThresholdBox() {
-      // Draw lines at boundaries (x=240, y=200)
-      svg.append("line")
-        .attr("x1", xScale(240))
-        .attr("y1", yScale(0))
-        .attr("x2", xScale(240))
-        .attr("y2", yScale(400))
-        .attr("stroke", "#c5c3b2")
-        .attr("stroke-width", 1.5)
-        .attr("stroke-dasharray", "2 2");
-
-      svg.append("line")
-        .attr("x1", xScale(0))
-        .attr("y1", yScale(200))
-        .attr("x2", xScale(500))
-        .attr("y2", yScale(200))
-        .attr("stroke", "#c5c3b2")
-        .attr("stroke-width", 1.5)
-        .attr("stroke-dasharray", "2 2");
-
-      // Color the Double-High quadrant (top right, x > 240, y > 200)
-      const rect = svg.append("rect")
-        .attr("x", xScale(240))
-        .attr("y", yScale(400))
-        .attr("width", xScale(500) - xScale(240))
-        .attr("height", yScale(200) - yScale(400))
-        .attr("fill", "rgba(27, 54, 93, 0.15)")
-        .attr("stroke", "#1B365D")
-        .attr("stroke-width", 2)
-        .style("opacity", 0);
-
-      const label = svg.append("text")
-        .attr("x", xScale(370))
-        .attr("y", yScale(300))
-        .attr("text-anchor", "middle")
-        .text("ON Region (Tumor Active)")
-        .attr("fill", "#1B365D")
-        .style("font-size", "12px")
-        .style("font-weight", "600")
-        .style("opacity", 0);
-
-      if (isReducedMotion) {
-        rect.style("opacity", 1);
-        label.style("opacity", 1);
-      } else {
-        anime({
-          targets: [rect.node(), label.node()],
-          opacity: 1,
-          duration: 800,
-          easing: 'easeOutQuad'
-        });
-      }
-    }
+    const svg = resetContainer("scene1-container"); if (!svg) return;
+    label(svg, "Single marker overlap becomes separable only after using two inputs", 260, 28, "svg-title");
+    const x = d3.scaleLinear().domain([0, 1]).range([70, 460]);
+    const y = d3.scaleLinear().domain([0, 1]).range([350, 70]);
+    drawAxes(svg, x, y, "Input A expression", "Input B expression");
+    const normal = d3.range(18).map((_, i) => ({x: 0.12 + (i % 6) * 0.09, y: 0.08 + Math.floor(i / 6) * 0.12 + (i % 2) * 0.04}));
+    const tumor = d3.range(18).map((_, i) => ({x: 0.58 + (i % 6) * 0.06, y: 0.52 + Math.floor(i / 6) * 0.12 + (i % 2) * 0.05}));
+    svg.selectAll(".scene1-normal").data(normal).enter().append("circle").attr("class", "scene1-normal").attr("cx", d => x(d.x)).attr("cy", d => y(d.y)).attr("r", 4).attr("fill", C.mute).style("opacity", 0);
+    svg.selectAll(".scene1-tumor").data(tumor).enter().append("circle").attr("class", "scene1-tumor").attr("cx", d => x(d.x)).attr("cy", d => y(d.y)).attr("r", 4).attr("fill", C.ink).style("opacity", 0);
+    const v = svg.append("line").attr("x1", x(0.58)).attr("x2", x(0.58)).attr("y1", y(0)).attr("y2", y(1)).attr("stroke", C.red).attr("stroke-dasharray", "4 4").style("opacity", 0);
+    const h = svg.append("line").attr("x1", x(0)).attr("x2", x(1)).attr("y1", y(0.50)).attr("y2", y(0.50)).attr("stroke", C.red).attr("stroke-dasharray", "4 4").style("opacity", 0);
+    svg.append("rect").attr("class", "scene1-on").attr("x", x(0.58)).attr("y", y(1)).attr("width", x(1)-x(0.58)).attr("height", y(0.50)-y(1)).attr("fill", "rgba(27,54,93,.12)").attr("stroke", C.ink).style("opacity", 0);
+    label(svg, "ON only when A high AND B high", 365, 105, "step-caption").attr("class", "scene1-on-label step-caption").style("opacity", 0);
+    reveal(".scene1-normal,.scene1-tumor", 0); reveal([v.node(), h.node()], 900); reveal(".scene1-on,.scene1-on-label", 1500);
   }
 
-
-  // ----------------------------------------------------
-  // Scene 2 — Computational Pipeline Flow
-  // ----------------------------------------------------
-  const pipelineSteps = [
-    { num: "01", name: "Data Fetch", desc: "Combined TCGA (n=178) & GTEx (n=167)" },
-    { num: "02", name: "QC Filters", desc: "Low-variance filtering (58,581 features)" },
-    { num: "03", name: "Welch's DE", desc: "Welch t-test screen (19,399 candidate genes)" },
-    { num: "04", name: "ML Lasso", desc: "L1 Logistic Regression (perfect 1.0 AUC)" },
-    { num: "05", name: "SHAP Values", desc: "Explainable AI threshold & logic prioritization" },
-    { num: "06", name: "Pair Scoring", desc: "Orthogonality scoring (Pearson score search)" },
-    { num: "07", name: "Hill Model", desc: "Simulation: optimal params (UBE2S & CCR6)" },
-    { num: "08", name: "Sensitivity", desc: "K parameter sweeps & negative permutation" },
-    { num: "09", name: "External Val", desc: "GSE62452 Microarray validation" }
-  ];
-
-  let currentPipelineStep = 0;
-
+  // Existing high-level pipeline slide.
+  const pipelineSteps = ["Data", "DE", "ML", "SHAP", "Threshold", "Pair", "Hill", "Controls", "External"];
   function runScene2() {
-    const container = document.getElementById("scene2-container");
-    if (!container) return;
+    const container = document.getElementById("scene2-container"); if (!container) return;
     container.innerHTML = "";
-
-    currentPipelineStep = 0;
-
-    // Render all elements
-    pipelineSteps.forEach((step, idx) => {
-      const node = document.createElement("div");
-      node.className = "pipeline-node";
-      node.id = `pipe-step-${idx}`;
-      node.innerHTML = `
-        <span class="step-num">${step.num}</span>
-        <h4>${step.name}</h4>
-      `;
-      node.addEventListener("click", () => showPipelineDetails(idx));
-      container.appendChild(node);
-
-      if (idx < pipelineSteps.length - 1) {
-        const arrow = document.createElement("div");
-        arrow.className = "pipeline-arrow";
-        arrow.textContent = "→";
-        container.appendChild(arrow);
-      }
+    pipelineSteps.forEach((step, i) => {
+      const n = document.createElement("div"); n.className = "pipeline-node"; n.id = `pipe-step-${i}`; n.innerHTML = `<span class="step-num">${String(i+1).padStart(2,"0")}</span><h4>${step}</h4>`; container.appendChild(n);
+      if (i < pipelineSteps.length - 1) { const a = document.createElement("div"); a.className = "pipeline-arrow"; a.textContent = "→"; container.appendChild(a); }
+      activeTimeouts.push(setTimeout(() => n.classList.add("active-step", "completed-step"), isReducedMotion ? 0 : i * 350));
     });
-
-    if (isReducedMotion) {
-      // Show everything instantly
-      pipelineSteps.forEach((_, idx) => {
-        const el = document.getElementById(`pipe-step-${idx}`);
-        if (el) el.classList.add("completed-step");
-      });
-      showPipelineDetails(8);
-      return;
-    }
-
-    // Slide-in sequence
-    runPipelineStepAnimation();
-  }
-
-  function runPipelineStepAnimation() {
-    if (currentPipelineStep >= pipelineSteps.length) return;
-
-    const el = document.getElementById(`pipe-step-${currentPipelineStep}`);
-    if (!el) return;
-
-    el.classList.add("active-step");
-    showPipelineDetails(currentPipelineStep);
-
-    anime({
-      targets: el,
-      scale: [0.9, 1],
-      opacity: [0, 1],
-      duration: 600,
-      easing: 'easeOutQuad',
-      complete: () => {
-        activeTimeouts.push(setTimeout(() => {
-          el.classList.remove("active-step");
-          el.classList.add("completed-step");
-          currentPipelineStep++;
-          runPipelineStepAnimation();
-        }, 1500));
-      }
-    });
-  }
-
-  function showPipelineDetails(index) {
-    // Highlight selected, un-highlight others
-    pipelineSteps.forEach((_, idx) => {
-      const el = document.getElementById(`pipe-step-${idx}`);
-      if (el) {
-        el.classList.remove("active-step");
-        if (idx < index) {
-          el.classList.add("completed-step");
-        } else if (idx === index) {
-          el.classList.add("active-step");
-        } else {
-          el.classList.remove("completed-step");
-        }
-      }
-    });
-
-    // We can show details in the pipeline text label or update a sub-description card
-    const step = pipelineSteps[index];
     const textCenter = document.querySelector("#slide-6 .text-center");
-    if (textCenter) {
-      textCenter.innerHTML = `<strong>Step ${step.num} — ${step.name}:</strong> ${step.desc}`;
-    }
+    if (textCenter) textCenter.innerHTML = "<strong>Logic of revised deck:</strong> every result figure is introduced as raw data → computation → visual mapping → conclusion → limitation.";
   }
 
-  // Bind pipeline flow buttons
-  const prevFlowBtn = document.getElementById("prev-flow-btn");
-  const nextFlowBtn = document.getElementById("next-flow-btn");
+  function runVolcanoDerivation() {
+    const svg = resetContainer("scene3a-container"); if (!svg) return;
+    label(svg, "Volcano derivation", 260, 24, "svg-title");
+    const matrix = drawMiniMatrix(svg, 15, 50, ["UBE2S", "CCR6", "GENE3"], ["PDAC1", "PDAC2", "N1", "N2"], [[12, 14, 3, 4], [18, 20, 2, 1], [5, 4, 6, 5]]);
+    const calc = svg.append("g").attr("class", "volcano-calc").style("opacity", 0);
+    calc.append("rect").attr("x", 210).attr("y", 60).attr("width", 120).attr("height", 92).attr("fill", "rgba(222,220,207,.18)").attr("stroke", C.grid);
+    label(calc, "Example gene: UBE2S", 270, 82, "matrix-header");
+    label(calc, "mean PDAC = 13", 270, 105, "svg-note");
+    label(calc, "mean normal = 3.5", 270, 124, "svg-note");
+    label(calc, "log2FC = log2(13/3.5) = 1.9", 270, 143, "svg-note");
+    const fdr = svg.append("g").attr("class", "volcano-fdr").style("opacity", 0);
+    fdr.append("rect").attr("x", 350).attr("y", 60).attr("width", 135).attr("height", 92).attr("fill", "rgba(222,220,207,.18)").attr("stroke", C.grid);
+    label(fdr, "Welch t-test", 418, 85, "matrix-header");
+    label(fdr, "p-value → FDR", 418, 110, "svg-note");
+    label(fdr, "y = -log10(FDR)", 418, 135, "svg-note");
+    arrow(svg, 175, 102, 205, 102); arrow(svg, 330, 102, 348, 102);
 
-  if (prevFlowBtn) {
-    prevFlowBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      clearActiveAnimations();
-      let prevIdx = currentPipelineStep - 1;
-      if (prevIdx < 0) prevIdx = 0;
-      currentPipelineStep = prevIdx;
-      showPipelineDetails(prevIdx);
-    });
+    const x = d3.scaleLinear().domain([-3, 9]).range([65, 470]);
+    const y = d3.scaleLinear().domain([0, 60]).range([370, 190]);
+    drawAxes(svg, x, y, "x-axis = log2FC tumor / normal", "y-axis = -log10 FDR");
+    const points = [{x:-1.2,y:6,t:"ns"},{x:.2,y:2,t:"ns"},{x:1.3,y:12,t:"up"},{x:2.0,y:18,t:"up"},{x:3.2,y:30,t:"up"},{x:5.2,y:35,t:"up"},{x:7.3,y:48,t:"up"},{x:8.2,y:42,t:"up"},{x:-.8,y:15,t:"ns"},{x:.5,y:8,t:"ns"}];
+    for (let i=0;i<90;i++) points.push({x:-2+Math.random()*10,y:Math.random()*35,t:Math.random()>.55?"up":"ns"});
+    const dots = svg.selectAll(".volcano-dot").data(points).enter().append("circle").attr("class","volcano-dot").attr("cx",d=>x(d.x)).attr("cy",d=>y(d.y)).attr("r",2.5).attr("fill",d=>d.t==="up"?"rgba(27,54,93,.45)":C.mute).style("opacity",0);
+    const selected = [{x:3.78,y:52,n:"UBE2S"},{x:8.92,y:55,n:"CCR6"}];
+    const top = svg.selectAll(".volcano-top").data(selected).enter().append("g").attr("class","volcano-top").style("opacity",0);
+    top.append("circle").attr("cx",d=>x(d.x)).attr("cy",d=>y(d.y)).attr("r",6).attr("fill",C.red);
+    top.append("text").attr("x",d=>x(d.x)+9).attr("y",d=>y(d.y)+4).text(d=>d.n).attr("fill",C.red).style("font-size","10px").style("font-weight",700);
+    reveal([matrix.node()],0); reveal(".derive",700); reveal([calc.node()],950); reveal([fdr.node()],1650); reveal(dots.nodes(),2300); reveal(top.nodes(),3300);
   }
 
-  if (nextFlowBtn) {
-    nextFlowBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      clearActiveAnimations();
-      let nextIdx = currentPipelineStep + 1;
-      if (nextIdx >= pipelineSteps.length) nextIdx = pipelineSteps.length - 1;
-      currentPipelineStep = nextIdx;
-      showPipelineDetails(nextIdx);
-    });
+  function runMLPrioritization() {
+    const svg = resetContainer("scene3-container"); if (!svg) return;
+    label(svg, "Classifier workflow: samples × genes → probability → AUC", 260, 24, "svg-title");
+    const g1 = drawMiniMatrix(svg, 25, 55, ["UBE2S", "CCR6", "MMP12"], ["S1", "S2", "S3"], [[12, 18, 9], [3, 2, 1], [14, 20, 8]], "gene-by-sample");
+    label(g1, "genes × samples", 105, 115, "step-caption");
+    const g2 = drawMiniMatrix(svg, 250, 55, ["S1", "S2", "S3"], ["UBE2S", "CCR6", "label"], [[12,18,1],[3,2,0],[14,20,1]], "sample-by-gene");
+    label(g2, "rows=samples, columns=genes; label: PDAC=1 normal=0", 130, 115, "step-caption");
+    arrow(svg, 205, 115, 242, 115);
+    const split = svg.append("g").attr("class","ml-split").style("opacity",0);
+    split.append("rect").attr("x",55).attr("y",230).attr("width",150).attr("height",70).attr("fill","rgba(27,54,93,.06)").attr("stroke",C.ink);
+    split.append("rect").attr("x",235).attr("y",230).attr("width",95).attr("height",70).attr("fill","rgba(222,220,207,.35)").attr("stroke",C.grid);
+    label(split,"train split: learn helpful genes",130,270,"step-caption"); label(split,"test split",282,270,"step-caption");
+    const out = svg.append("g").attr("class","ml-out").style("opacity",0);
+    out.append("rect").attr("x",360).attr("y",218).attr("width",115).attr("height",95).attr("fill",C.paper).attr("stroke",C.red);
+    label(out,"output",418,244,"matrix-header"); label(out,"P(PDAC)=0.97",418,268,"step-caption"); label(out,"AUC = 1.000",418,292,"step-caption");
+    arrow(svg, 205, 265, 235, 265); arrow(svg, 330, 265, 358, 265);
+    reveal([g1.node()],0); reveal(".derive",650); reveal([g2.node()],900); reveal([split.node()],1700); reveal([out.node()],2500);
   }
 
-
-  // ----------------------------------------------------
-  // Slide 7 — Volcano Plot (Differential Expression)
-  // ----------------------------------------------------
-  function runScene3a() {
-    const width = 500;
-    const height = 400;
-    const svg = resetContainer("scene3a-container", width, height);
-    if (!svg) return;
-
-    // Standard scales
-    const xScale = d3.scaleLinear().domain([-10, 15]).range([50, 450]);
-    const yScale = d3.scaleLinear().domain([0, 60]).range([350, 50]);
-
-    // Draw Axes
-    svg.append("g")
-      .attr("transform", "translate(0, 350)")
-      .call(d3.axisBottom(xScale).ticks(5))
-      .attr("class", "axis");
-    svg.append("g")
-      .attr("transform", "translate(50, 0)")
-      .call(d3.axisLeft(yScale).ticks(5))
-      .attr("class", "axis");
-
-    // Labels
-    svg.append("text")
-      .attr("x", 250)
-      .attr("y", 385)
-      .attr("text-anchor", "middle")
-      .text("log2 Fold Change (log2FC)")
-      .style("font-size", "11px");
-
-    svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("x", -200)
-      .attr("y", 20)
-      .attr("text-anchor", "middle")
-      .text("-log10 FDR Significance")
-      .style("font-size", "11px");
-
-    // Generate points representing genes
-    const volcanoPoints = [];
-    // Downregulated/low significance (Normal)
-    for (let i = 0; i < 120; i++) {
-      volcanoPoints.push({
-        x: (Math.random() - 0.6) * 4,
-        y: Math.random() * 15,
-        type: "ns"
-      });
-    }
-    // Significant upregulated (Tumor)
-    for (let i = 0; i < 80; i++) {
-      volcanoPoints.push({
-        x: 1 + Math.random() * 8,
-        y: 10 + Math.random() * 40,
-        type: "up"
-      });
-    }
-
-    const circles = svg.selectAll(".volcano-dot")
-      .data(volcanoPoints)
-      .enter()
-      .append("circle")
-      .attr("class", "volcano-dot")
-      .attr("cx", d => xScale(d.x))
-      .attr("cy", d => yScale(d.y))
-      .attr("r", 3)
-      .attr("fill", d => d.type === "up" ? "rgba(27, 54, 93, 0.4)" : "#c5c3b2")
-      .style("opacity", isReducedMotion ? 0.7 : 0);
-
-    // Top Candidates Annotated
-    const UBE2S = { x: 3.78, y: 52, label: "UBE2S" };
-    const CCR6 = { x: 8.92, y: 55, label: "CCR6" };
-
-    const topPoints = svg.selectAll(".top-dot")
-      .data([UBE2S, CCR6])
-      .enter()
-      .append("g");
-
-    topPoints.append("circle")
-      .attr("cx", d => xScale(d.x))
-      .attr("cy", d => yScale(d.y))
-      .attr("r", 6)
-      .attr("fill", "#8f342d");
-
-    topPoints.append("text")
-      .attr("x", d => xScale(d.x) + 10)
-      .attr("y", d => yScale(d.y) + 4)
-      .text(d => d.label)
-      .style("font-size", "11px")
-      .style("font-weight", "600")
-      .attr("fill", "#8f342d");
-
-    if (isReducedMotion) {
-      return;
-    }
-
-    // Animate points appearing
-    anime({
-      targets: '.volcano-dot',
-      opacity: 0.7,
-      delay: anime.stagger(4),
-      duration: 1000,
-      easing: 'easeOutQuad'
-    });
+  function runSHAPAttribution() {
+    const svg = resetContainer("scene-shap-container"); if (!svg) return;
+    label(svg, "SHAP decomposes one prediction", 260, 24, "svg-title");
+    const profile = drawMiniMatrix(svg, 25, 65, ["sample T-01"], ["UBE2S", "CCR6", "MMP12", "AC009"], [[0.92,0.81,0.70,0.15]], "shap-profile");
+    const pred = svg.append("g").attr("class","shap-pred").style("opacity",0);
+    pred.append("rect").attr("x",195).attr("y",67).attr("width",130).attr("height",64).attr("fill","rgba(27,54,93,.06)").attr("stroke",C.ink);
+    label(pred,"trained classifier",260,92,"matrix-header"); label(pred,"P(PDAC)=0.94",260,116,"step-caption");
+    arrow(svg, 165, 95, 192, 95);
+    const feats = [{n:"UBE2S",v:0.42},{n:"CCR6",v:0.35},{n:"MMP12",v:0.18},{n:"AC009",v:-0.22}];
+    const x = d3.scaleLinear().domain([-0.5,0.5]).range([95,455]);
+    const y = d3.scaleBand().domain(feats.map(d=>d.n)).range([200,345]).padding(.35);
+    svg.append("line").attr("class","shap-axis").attr("x1",x(0)).attr("x2",x(0)).attr("y1",185).attr("y2",360).attr("stroke",C.grid).style("opacity",0);
+    svg.selectAll(".shap-bar").data(feats).enter().append("rect").attr("class","shap-bar").attr("x",d=>d.v>0?x(0):x(d.v)).attr("y",d=>y(d.n)).attr("height",y.bandwidth()).attr("width",d=>Math.abs(x(d.v)-x(0))).attr("fill",d=>d.v>0?C.ink:C.mute).style("opacity",0);
+    svg.selectAll(".shap-label").data(feats).enter().append("text").attr("class","shap-label step-caption").attr("x",d=>d.v>0?x(0)-6:x(0)+6).attr("y",d=>y(d.n)+14).attr("text-anchor",d=>d.v>0?"end":"start").text(d=>`${d.n} ${d.v>0?"pushes PDAC":"pulls normal"}`).style("opacity",0);
+    label(svg,"negative SHAP ← normal",160,382,"step-caption"); label(svg,"PDAC → positive SHAP",365,382,"step-caption");
+    reveal([profile.node()],0); reveal(".derive",650); reveal([pred.node()],950); reveal(".shap-axis,.shap-bar,.shap-label",1700);
   }
 
-
-  // ----------------------------------------------------
-  // Scene 3 — Machine Learning & SHAP (Push/Pull bar chart)
-  // ----------------------------------------------------
-  function runScene3() {
-    const width = 500;
-    const height = 400;
-    const svg = resetContainer("scene3-container", width, height);
-    if (!svg) return;
-
-    // Feature attribution data
-    const features = [
-      { name: "RP11-40C6.2", val: 3.03, rank: 1, type: "push" },
-      { name: "AC009065.4", val: -2.12, rank: 2, type: "pull" },
-      { name: "MMP12", val: 0.79, rank: 3, type: "push" },
-      { name: "MISP", val: 0.54, rank: 4, type: "push" },
-      { name: "UBE2SP2", val: -0.48, rank: 5, type: "pull" }
-    ];
-
-    const xScale = d3.scaleLinear().domain([-3.5, 3.5]).range([50, 450]);
-    const yScale = d3.scaleBand().domain(features.map(f => f.name)).range([80, 320]).padding(0.4);
-
-    // Draw central axis at 0
-    svg.append("line")
-      .attr("x1", xScale(0))
-      .attr("y1", 60)
-      .attr("x2", xScale(0))
-      .attr("y2", 340)
-      .attr("stroke", varColor("warm-gray-border"))
-      .attr("stroke-width", 1.5);
-
-    // Draw bottom X Axis ticks
-    svg.append("g")
-      .attr("transform", "translate(0, 340)")
-      .call(d3.axisBottom(xScale).ticks(5))
-      .attr("class", "axis");
-
-    svg.append("text")
-      .attr("x", 250)
-      .attr("y", 375)
-      .attr("text-anchor", "middle")
-      .text("SHAP Feature Importance Value")
-      .style("font-size", "11px");
-
-    // Labels explaining prediction forces
-    svg.append("text")
-      .attr("x", xScale(-2.5))
-      .attr("y", 50)
-      .attr("text-anchor", "middle")
-      .text("← Pulls Toward Normal")
-      .attr("fill", "#666")
-      .style("font-size", "11px");
-
-    svg.append("text")
-      .attr("x", xScale(2.5))
-      .attr("y", 50)
-      .attr("text-anchor", "middle")
-      .text("Pushes Toward PDAC →")
-      .attr("fill", "#1B365D")
-      .style("font-size", "11px")
-      .style("font-weight", "600");
-
-    // Render bars
-    const bars = svg.selectAll(".shap-bar")
-      .data(features)
-      .enter()
-      .append("rect")
-      .attr("class", "shap-bar")
-      .attr("x", d => d.val > 0 ? xScale(0) : xScale(d.val))
-      .attr("y", d => yScale(d.name))
-      .attr("height", yScale.bandwidth())
-      .attr("fill", d => d.type === "push" ? "#1B365D" : "#c5c3b2")
-      .attr("width", 0); // Start at width 0 for animation
-
-    // Render names on left/right depending on value sign
-    const textLabels = svg.selectAll(".bar-label")
-      .data(features)
-      .enter()
-      .append("text")
-      .attr("x", d => d.val > 0 ? xScale(-0.1) : xScale(0.1))
-      .attr("y", d => yScale(d.name) + yScale.bandwidth()/2 + 4)
-      .attr("text-anchor", d => d.val > 0 ? "end" : "start")
-      .text(d => d.name)
-      .style("font-size", "11px")
-      .style("font-weight", "600")
-      .style("opacity", 0);
-
-    if (isReducedMotion) {
-      bars.attr("x", d => d.val > 0 ? xScale(0) : xScale(d.val))
-        .attr("width", d => Math.abs(xScale(d.val) - xScale(0)));
-      textLabels.style("opacity", 1);
-      drawRoughNotationDisclaimer();
-      return;
-    }
-
-    // Animation bar growth
-    anime({
-      targets: '.shap-bar',
-      width: (el, i) => {
-        const d = features[i];
-        return Math.abs(xScale(d.val) - xScale(0));
-      },
-      x: (el, i) => {
-        const d = features[i];
-        return d.val > 0 ? xScale(0) : xScale(d.val);
-      },
-      duration: 1200,
-      easing: 'easeOutQuint',
-      delay: anime.stagger(150),
-      complete: () => {
-        anime({
-          targets: textLabels.nodes(),
-          opacity: 1,
-          duration: 500,
-          easing: 'easeOutQuad'
-        });
-        drawRoughNotationDisclaimer();
-      }
-    });
-
-    function drawRoughNotationDisclaimer() {
-      const disclaimer = document.getElementById("shap-disclaimer");
-      if (disclaimer && window.RoughNotation) {
-        const annotation = window.RoughNotation.annotate(disclaimer, {
-          type: 'box',
-          color: '#1B365D',
-          padding: 8,
-          strokeWidth: 1.5
-        });
-        annotation.show();
-      }
-    }
+  function runSHAPThreshold() {
+    const svg = resetContainer("scene-threshold-container"); if (!svg) return;
+    label(svg, "Dependence plot: expression → SHAP value → zero crossing", 260, 24, "svg-title");
+    const x = d3.scaleLinear().domain([0,1]).range([70,460]);
+    const y = d3.scaleLinear().domain([-0.7,0.7]).range([350,70]);
+    drawAxes(svg,x,y,"x-axis = expression","y-axis = SHAP value");
+    const data = d3.range(55).map(i => { const xv=i/54; return {x:xv, yv:(xv-.46)*1.55 + Math.sin(i)*.08}; });
+    const dots = svg.selectAll(".dep-dot").data(data).enter().append("circle").attr("class","dep-dot").attr("cx",d=>x(d.x)).attr("cy",d=>y(d.yv)).attr("r",3).attr("fill",d=>d.yv>0?C.ink:C.mute).style("opacity",0);
+    const zero = svg.append("line").attr("class","dep-zero").attr("x1",x(0)).attr("x2",x(1)).attr("y1",y(0)).attr("y2",y(0)).attr("stroke",C.red).attr("stroke-dasharray","4 4").style("opacity",0);
+    const th = svg.append("line").attr("class","dep-th").attr("x1",x(.46)).attr("x2",x(.46)).attr("y1",y(-.7)).attr("y2",y(.7)).attr("stroke",C.ink).style("opacity",0);
+    label(svg,"SHAP = 0",415,y(0)-8,"step-caption").attr("class","dep-zero-label step-caption").style("opacity",0);
+    label(svg,"threshold K_B ≈ 0.464",x(.46)+52,88,"step-caption").attr("class","dep-th-label step-caption").style("opacity",0);
+    reveal(dots.nodes(),0); reveal(".dep-zero,.dep-zero-label",900); reveal(".dep-th,.dep-th-label",1700);
   }
 
-
-  // ----------------------------------------------------
-  // Scene 4 — Selection & Orthogonality
-  // ----------------------------------------------------
-  function runScene4() {
-    const width = 500;
-    const height = 400;
-    const svg = resetContainer("scene4-container", width, height);
-    if (!svg) return;
-
-    // Normal samples and Tumor samples mapped on 2D expressions
-    const normalPoints = [
-      {x: 0.12, y: 0.05}, {x: 0.20, y: 0.08}, {x: 0.35, y: 0.12}, {x: 0.40, y: 0.15},
-      {x: 0.50, y: 0.20}, {x: 0.55, y: 0.25}, {x: 0.60, y: 0.38}, {x: 0.65, y: 0.30},
-      {x: 0.70, y: 0.28}, {x: 0.72, y: 0.45}, {x: 0.85, y: 0.30}, {x: 0.90, y: 0.22}
-    ];
-
-    const tumorPoints = [
-      {x: 0.78, y: 0.48}, {x: 0.80, y: 0.52}, {x: 0.82, y: 0.65}, {x: 0.85, y: 0.72},
-      {x: 0.90, y: 0.80}, {x: 0.95, y: 0.88}, {x: 0.77, y: 0.90}, {x: 0.88, y: 0.95},
-      {x: 0.92, y: 0.78}, {x: 0.84, y: 0.60}, {x: 0.86, y: 0.85}, {x: 0.96, y: 0.92}
-    ];
-
-    const xScale = d3.scaleLinear().domain([0, 1]).range([60, 440]);
-    const yScale = d3.scaleLinear().domain([0, 1]).range([340, 60]);
-
-    // Axis line render
-    svg.append("g")
-      .attr("transform", "translate(0, 340)")
-      .call(d3.axisBottom(xScale).ticks(5))
-      .attr("class", "axis");
-    svg.append("g")
-      .attr("transform", "translate(60, 0)")
-      .call(d3.axisLeft(yScale).ticks(5))
-      .attr("class", "axis");
-
-    svg.append("text")
-      .attr("x", 250)
-      .attr("y", 380)
-      .attr("text-anchor", "middle")
-      .text("Rescaled UBE2S Expression (Input A)")
-      .style("font-size", "11px")
-      .style("font-weight", "600");
-
-    svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("x", -200)
-      .attr("y", 22)
-      .attr("text-anchor", "middle")
-      .text("Rescaled CCR6 Expression (Input B)")
-      .style("font-size", "11px")
-      .style("font-weight", "600");
-
-    // Draw Decision Boundaries
-    const lineA = svg.append("line")
-      .attr("x1", xScale(0.76))
-      .attr("y1", yScale(0))
-      .attr("x2", xScale(0.76))
-      .attr("y2", yScale(1))
-      .attr("stroke", "#8f342d")
-      .attr("stroke-width", 1.5)
-      .attr("stroke-dasharray", "4 4")
-      .style("opacity", 0);
-
-    const lineB = svg.append("line")
-      .attr("x1", xScale(0))
-      .attr("y1", yScale(0.464))
-      .attr("x2", xScale(1))
-      .attr("y2", yScale(0.464))
-      .attr("stroke", "#8f342d")
-      .attr("stroke-width", 1.5)
-      .attr("stroke-dasharray", "4 4")
-      .style("opacity", 0);
-
-    // Quad labels
-    const boundsLabelA = svg.append("text")
-      .attr("x", xScale(0.76) + 6)
-      .attr("y", yScale(0.98))
-      .text("K_A = 0.760")
-      .style("font-size", "10px")
-      .attr("fill", "#8f342d")
-      .style("opacity", 0);
-
-    const boundsLabelB = svg.append("text")
-      .attr("x", xScale(0.02))
-      .attr("y", yScale(0.464) - 6)
-      .text("K_B = 0.464")
-      .style("font-size", "10px")
-      .attr("fill", "#8f342d")
-      .style("opacity", 0);
-
-    // Draw ON region background
-    const ONbox = svg.append("rect")
-      .attr("x", xScale(0.76))
-      .attr("y", yScale(1))
-      .attr("width", xScale(1) - xScale(0.76))
-      .attr("height", yScale(0.464) - yScale(1))
-      .attr("fill", "rgba(27, 54, 93, 0.12)")
-      .attr("stroke", "#1B365D")
-      .attr("stroke-width", 1.5)
-      .style("opacity", 0);
-
-    // Draw normal & tumor points
-    const normalGroup = svg.selectAll(".norm-dot")
-      .data(normalPoints)
-      .enter()
-      .append("circle")
-      .attr("class", "norm-dot")
-      .attr("cx", d => xScale(d.x))
-      .attr("cy", d => yScale(d.y))
-      .attr("r", 4.5)
-      .attr("fill", "#c5c3b2")
-      .style("opacity", isReducedMotion ? 0.75 : 0);
-
-    const tumorGroup = svg.selectAll(".tum-dot")
-      .data(tumorPoints)
-      .enter()
-      .append("circle")
-      .attr("class", "tum-dot")
-      .attr("cx", d => xScale(d.x))
-      .attr("cy", d => yScale(d.y))
-      .attr("r", 4.5)
-      .attr("fill", "#1B365D")
-      .style("opacity", isReducedMotion ? 0.75 : 0);
-
-    if (isReducedMotion) {
-      lineA.style("opacity", 0.8);
-      lineB.style("opacity", 0.8);
-      boundsLabelA.style("opacity", 1);
-      boundsLabelB.style("opacity", 1);
-      ONbox.style("opacity", 1);
-      annotateRoughLines();
-      return;
-    }
-
-    // Sequence animations
-    // 1. Reveal points
-    anime({
-      targets: '.norm-dot, .tum-dot',
-      opacity: 0.75,
-      delay: anime.stagger(40),
-      duration: 800,
-      easing: 'easeOutQuad',
-      complete: () => {
-        // 2. Draw threshold lines
-        anime({
-          targets: [lineA.node(), lineB.node(), boundsLabelA.node(), boundsLabelB.node()],
-          opacity: [0, 0.8],
-          duration: 600,
-          easing: 'easeOutQuad',
-          complete: () => {
-            // 3. Reveal the ON quadrant
-            anime({
-              targets: ONbox.node(),
-              opacity: 1,
-              duration: 800,
-              easing: 'easeOutQuad',
-              complete: () => {
-                annotateRoughLines();
-              }
-            });
-          }
-        });
-      }
-    });
-
-    function annotateRoughLines() {
-      const corrWarn = document.getElementById("corr-warn");
-      if (corrWarn && window.RoughNotation) {
-        const annotation = window.RoughNotation.annotate(corrWarn, {
-          type: 'highlight',
-          color: 'rgba(222, 220, 207, 0.5)',
-          padding: 3
-        });
-        annotation.show();
-      }
-    }
+  function pairData() {
+    return {
+      normal: [{x:.12,y:.05},{x:.20,y:.08},{x:.35,y:.12},{x:.45,y:.18},{x:.55,y:.25},{x:.65,y:.30},{x:.72,y:.45},{x:.82,y:.28},{x:.90,y:.22},{x:.60,y:.38}],
+      tumor: [{x:.78,y:.48},{x:.80,y:.52},{x:.82,y:.65},{x:.85,y:.72},{x:.90,y:.80},{x:.95,y:.88},{x:.77,y:.90},{x:.88,y:.95},{x:.92,y:.78},{x:.84,y:.60},{x:.86,y:.85},{x:.96,y:.92}]
+    };
   }
 
-
-  // ----------------------------------------------------
-  // Scene 5 — Hill-Equation AND Gate Simulation contour
-  // ----------------------------------------------------
-  function runScene5() {
-    const width = 500;
-    const height = 400;
-    const svg = resetContainer("scene5-container", width, height);
-    if (!svg) return;
-
-    // Mathematical parameters
-    const n = 1;
-    const Ka = 0.76;
-    const Kb = 0.46;
-
-    // Generate grid matrix for rendering contour
-    const gridSize = 25;
-    const contourData = [];
-
-    for (let r = 0; r < gridSize; r++) {
-      for (let c = 0; c < gridSize; c++) {
-        const aVal = c / (gridSize - 1);
-        const bVal = r / (gridSize - 1);
-        const ha = Math.pow(aVal, n) / (Math.pow(Ka, n) + Math.pow(aVal, n));
-        const hb = Math.pow(bVal, n) / (Math.pow(Kb, n) + Math.pow(bVal, n));
-        const out = ha * hb;
-        contourData.push({
-          row: r,
-          col: c,
-          aVal: aVal,
-          bVal: bVal,
-          output: out
-        });
-      }
-    }
-
-    const xScale = d3.scaleLinear().domain([0, 1]).range([60, 440]);
-    const yScale = d3.scaleLinear().domain([0, 1]).range([340, 60]);
-
-    // Grid sizes in svg pixels
-    const cellW = (440 - 60) / gridSize;
-    const cellH = (340 - 60) / gridSize;
-
-    // Color gradient scale representing activation level
-    // Interpolate from warm parchment to ink-blue
-    const colorScale = d3.scaleLinear()
-      .domain([0, 0.1, 0.25, 0.5])
-      .range(["#f5f4ed", "#dce2e8", "#a6b9cd", "#1B365D"]);
-
-    // Draw Axes
-    svg.append("g")
-      .attr("transform", "translate(0, 340)")
-      .call(d3.axisBottom(xScale).ticks(5))
-      .attr("class", "axis");
-    svg.append("g")
-      .attr("transform", "translate(60, 0)")
-      .call(d3.axisLeft(yScale).ticks(5))
-      .attr("class", "axis");
-
-    svg.append("text")
-      .attr("x", 250)
-      .attr("y", 380)
-      .attr("text-anchor", "middle")
-      .text("Rescaled Input A [UBE2S]")
-      .style("font-size", "11px");
-
-    svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("x", -200)
-      .attr("y", 22)
-      .attr("text-anchor", "middle")
-      .text("Rescaled Input B [CCR6]")
-      .style("font-size", "11px");
-
-    // Render cells of the contour heatmap
-    const cells = svg.selectAll(".heatmap-cell")
-      .data(contourData)
-      .enter()
-      .append("rect")
-      .attr("class", "heatmap-cell")
-      .attr("x", d => xScale(d.aVal))
-      .attr("y", d => yScale(d.bVal) - cellH)
-      .attr("width", cellW + 0.5)
-      .attr("height", cellH + 0.5)
-      .attr("fill", d => colorScale(d.output))
-      .style("opacity", isReducedMotion ? 1 : 0);
-
-    // Annotate the decision threshold border (output = 0.25)
-    // Draw contour line where output = 0.25
-    // 0.25 threshold boundary is approx when ha * hb = 0.25. 
-    // This is mathematically drawn as B = Kb / ((4*A/(Ka+A)) - 1)
-    const lineGenerator = d3.line()
-      .x(d => xScale(d.a))
-      .y(d => yScale(d.b))
-      .curve(d3.curveBasis);
-
-    const boundaryPoints = [];
-    for (let a = Ka + 0.05; a <= 1.0; a += 0.02) {
-      const termA = a / (Ka + a);
-      if (termA > 0.25) {
-        const termB = 0.25 / termA;
-        const b = (Kb * termB) / (1 - termB);
-        if (b >= 0 && b <= 1.0) {
-          boundaryPoints.push({ a: a, b: b });
-        }
-      }
-    }
-
-    const contourLine = svg.append("path")
-      .datum(boundaryPoints)
-      .attr("fill", "none")
-      .attr("stroke", "#8f342d")
-      .attr("stroke-width", 2)
-      .attr("stroke-dasharray", "4 4")
-      .attr("d", lineGenerator)
-      .style("opacity", 0);
-
-    const contourLabel = svg.append("text")
-      .attr("x", xScale(0.9))
-      .attr("y", yScale(0.55))
-      .text("ON Threshold (0.25)")
-      .attr("fill", "#8f342d")
-      .style("font-size", "10px")
-      .style("font-weight", "600")
-      .style("opacity", 0);
-
-    if (isReducedMotion) {
-      cells.style("opacity", 1);
-      contourLine.style("opacity", 0.9);
-      contourLabel.style("opacity", 1);
-      annotateThresholdDisclaimer();
-      return;
-    }
-
-    // Animate equation lines fade-in on the left
-    anime({
-      targets: '#hill-equation-container .equation-line',
-      opacity: [0, 1],
-      translateY: [15, 0],
-      delay: anime.stagger(200),
-      duration: 800,
-      easing: 'easeOutQuad'
-    });
-
-    // Heatmap cells reveal sweep
-    anime({
-      targets: '.heatmap-cell',
-      opacity: 1,
-      delay: (el, i) => {
-        const d = contourData[i];
-        // Diagonal sweep animation from bottom-left to top-right
-        return (d.row + d.col) * 20;
-      },
-      duration: 500,
-      easing: 'easeOutQuad',
-      complete: () => {
-        // Draw threshold contour line
-        anime({
-          targets: [contourLine.node(), contourLabel.node()],
-          opacity: 0.9,
-          duration: 600,
-          easing: 'easeOutQuad',
-          complete: () => {
-            annotateThresholdDisclaimer();
-          }
-        });
-      }
-    });
-
-    function annotateThresholdDisclaimer() {
-      const disclaimer = document.getElementById("threshold-disclaimer");
-      if (disclaimer && window.RoughNotation) {
-        const annotation = window.RoughNotation.annotate(disclaimer, {
-          type: 'underline',
-          color: '#1B365D',
-          strokeWidth: 1.5
-        });
-        annotation.show();
-      }
-    }
+  function runPairSelection() {
+    const svg = resetContainer("scene4-container"); if (!svg) return;
+    label(svg,"Pair scoring → selected scatter",260,24,"svg-title");
+    const genes = ["UBE2S","CCR6","MMP12","PKM","S100A6","GRN","CD63","GBA"];
+    const cloud = svg.append("g").attr("class","pair-cloud").style("opacity",0);
+    genes.forEach((g,i)=>{ cloud.append("circle").attr("cx",55+(i%4)*45).attr("cy",60+Math.floor(i/4)*34).attr("r",12).attr("fill",i<2?C.red:C.mute).attr("opacity",.85); label(cloud,g,55+(i%4)*45,63+Math.floor(i/4)*34,"svg-note"); });
+    const score = svg.append("g").attr("class","pair-score").style("opacity",0);
+    score.append("rect").attr("x",250).attr("y",48).attr("width",210).attr("height",92).attr("fill","rgba(222,220,207,.18)").attr("stroke",C.grid);
+    label(score,"For each pair",355,70,"matrix-header"); label(score,"tumor AND activation = 97.8%",355,94,"svg-note"); label(score,"normal AND activation = 0.6%",355,113,"svg-note"); label(score,"correlation penalty: r = 0.714",355,132,"svg-note");
+    arrow(svg, 200, 92, 247, 92);
+    const x = d3.scaleLinear().domain([0,1]).range([65,465]), y = d3.scaleLinear().domain([0,1]).range([365,180]);
+    drawAxes(svg,x,y,"UBE2S expression","CCR6 expression");
+    const {normal,tumor}=pairData();
+    svg.selectAll(".pair-n").data(normal).enter().append("circle").attr("class","pair-n").attr("cx",d=>x(d.x)).attr("cy",d=>y(d.y)).attr("r",4).attr("fill",C.mute).style("opacity",0);
+    svg.selectAll(".pair-t").data(tumor).enter().append("circle").attr("class","pair-t").attr("cx",d=>x(d.x)).attr("cy",d=>y(d.y)).attr("r",4).attr("fill",C.ink).style("opacity",0);
+    const v=svg.append("line").attr("class","pair-line").attr("x1",x(.76)).attr("x2",x(.76)).attr("y1",y(0)).attr("y2",y(1)).attr("stroke",C.red).attr("stroke-dasharray","4 4").style("opacity",0);
+    const h=svg.append("line").attr("class","pair-line").attr("x1",x(0)).attr("x2",x(1)).attr("y1",y(.464)).attr("y2",y(.464)).attr("stroke",C.red).attr("stroke-dasharray","4 4").style("opacity",0);
+    svg.append("rect").attr("class","pair-on").attr("x",x(.76)).attr("y",y(1)).attr("width",x(1)-x(.76)).attr("height",y(.464)-y(1)).attr("fill","rgba(27,54,93,.14)").attr("stroke",C.ink).style("opacity",0);
+    label(svg,"AND ON = UBE2S high AND CCR6 high",335,205,"step-caption").attr("class","pair-on-label step-caption").style("opacity",0);
+    reveal([cloud.node()],0); reveal(".derive",700); reveal([score.node()],950); reveal(".pair-n,.pair-t",1700); reveal([v.node(),h.node()],2400); reveal(".pair-on,.pair-on-label",3100);
   }
 
-
-  // ----------------------------------------------------
-  // Scene 6 — Validation & Metrics Comparison
-  // ----------------------------------------------------
-  function runScene6() {
-    const width = 500;
-    const height = 400;
-    const svg = resetContainer("scene6-container", width, height);
-    if (!svg) return;
-
-    // Discovery vs GSE62452 Validation comparative metrics
-    const metrics = [
-      { name: "ROC-AUC", discovery: 99.9, validation: 64.8 },
-      { name: "Specificity", discovery: 99.4, validation: 98.4 },
-      { name: "Sensitivity", discovery: 97.8, validation: 4.3 }
-    ];
-
-    const xScale = d3.scaleBand().domain(metrics.map(m => m.name)).range([60, 440]).padding(0.4);
-    const yScale = d3.scaleLinear().domain([0, 100]).range([340, 60]);
-
-    // Draw Axes
-    svg.append("g")
-      .attr("transform", "translate(0, 340)")
-      .call(d3.axisBottom(xScale))
-      .attr("class", "axis");
-    svg.append("g")
-      .attr("transform", "translate(60, 0)")
-      .call(d3.axisLeft(yScale).ticks(5).tickFormat(d => d + "%"))
-      .attr("class", "axis");
-
-    // Grid lines
-    svg.selectAll(".y-grid")
-      .data([20, 40, 60, 80, 100])
-      .enter()
-      .append("line")
-      .attr("class", "grid-line")
-      .attr("x1", 60)
-      .attr("y1", d => yScale(d))
-      .attr("x2", 440)
-      .attr("y2", d => yScale(d));
-
-    // Legend
-    const legend = svg.append("g").attr("transform", "translate(300, 30)");
-    legend.append("rect").attr("x", 0).attr("y", 0).attr("width", 15).attr("height", 10).attr("fill", "#1B365D");
-    legend.append("text").attr("x", 20).attr("y", 9).text("Discovery Cohort").style("font-size", "11px");
-    legend.append("rect").attr("x", 0).attr("y", 20).attr("width", 15).attr("height", 10).attr("fill", "#c5c3b2");
-    legend.append("text").attr("x", 20).attr("y", 29).text("Validation (GSE62452)").style("font-size", "11px");
-
-    // Double Bar rendering setup
-    const groupWidth = xScale.bandwidth();
-    const barWidth = groupWidth / 2 - 2;
-
-    const discBars = svg.selectAll(".disc-bar")
-      .data(metrics)
-      .enter()
-      .append("rect")
-      .attr("class", "disc-bar")
-      .attr("x", d => xScale(d.name))
-      .attr("y", yScale(0))
-      .attr("width", barWidth)
-      .attr("fill", "#1B365D")
-      .attr("height", 0);
-
-    const valBars = svg.selectAll(".val-bar")
-      .data(metrics)
-      .enter()
-      .append("rect")
-      .attr("class", "val-bar")
-      .attr("x", d => xScale(d.name) + barWidth + 4)
-      .attr("y", yScale(0))
-      .attr("width", barWidth)
-      .attr("fill", d => d.name === "Sensitivity" ? "#8f342d" : "#c5c3b2") // Highlight sensitivity collapse
-      .attr("height", 0);
-
-    // Value Labels on top of bars
-    const discLabels = svg.selectAll(".disc-val-label")
-      .data(metrics)
-      .enter()
-      .append("text")
-      .attr("class", "disc-val-label")
-      .attr("x", d => xScale(d.name) + barWidth / 2)
-      .attr("y", d => yScale(d.discovery) - 5)
-      .attr("text-anchor", "middle")
-      .text(d => d.discovery + "%")
-      .style("font-size", "10px")
-      .style("font-weight", "600")
-      .style("opacity", 0);
-
-    const valLabels = svg.selectAll(".val-val-label")
-      .data(metrics)
-      .enter()
-      .append("text")
-      .attr("class", "val-val-label")
-      .attr("x", d => xScale(d.name) + barWidth * 1.5 + 4)
-      .attr("y", d => yScale(d.validation) - 5)
-      .attr("text-anchor", "middle")
-      .text(d => d.validation + "%")
-      .style("font-size", "10px")
-      .style("font-weight", "600")
-      .style("opacity", 0)
-      .attr("fill", d => d.name === "Sensitivity" ? "#8f342d" : "inherit");
-
-    if (isReducedMotion) {
-      discBars.attr("y", d => yScale(d.discovery))
-        .attr("height", d => yScale(0) - yScale(d.discovery));
-      valBars.attr("y", d => yScale(d.validation))
-        .attr("height", d => yScale(0) - yScale(d.validation));
-      discLabels.style("opacity", 1);
-      valLabels.style("opacity", 1);
-      annotateTakeawayAlert();
-      return;
-    }
-
-    // Animate bars rising
-    anime({
-      targets: '.disc-bar',
-      y: (el, i) => yScale(metrics[i].discovery),
-      height: (el, i) => yScale(0) - yScale(metrics[i].discovery),
-      duration: 1000,
-      easing: 'easeOutQuint',
-      delay: anime.stagger(100),
-      complete: () => {
-        anime({
-          targets: '.val-bar',
-          y: (el, i) => yScale(metrics[i].validation),
-          height: (el, i) => yScale(0) - yScale(metrics[i].validation),
-          duration: 1000,
-          easing: 'easeOutQuint',
-          delay: anime.stagger(100),
-          complete: () => {
-            // Fade in labels
-            anime({
-              targets: ['.disc-val-label', '.val-val-label'],
-              opacity: 1,
-              duration: 500,
-              easing: 'easeOutQuad',
-              complete: () => {
-                annotateTakeawayAlert();
-              }
-            });
-          }
-        });
-      }
-    });
-
-    function annotateTakeawayAlert() {
-      const takeaway = document.getElementById("validation-takeaway");
-      if (takeaway && window.RoughNotation) {
-        const annotation = window.RoughNotation.annotate(takeaway, {
-          type: 'box',
-          color: '#8f342d',
-          padding: 12,
-          strokeWidth: 2,
-          iterations: 3
-        });
-        annotation.show();
-      }
-    }
+  function runHillModel() {
+    const svg = resetContainer("scene5-container"); if (!svg) return;
+    label(svg,"Expression → normalization → Hill responses → multiplication",260,24,"svg-title");
+    const raw = svg.append("g").attr("class","hill-raw").style("opacity",0);
+    raw.append("rect").attr("x",25).attr("y",55).attr("width",120).attr("height",78).attr("fill","rgba(222,220,207,.18)").attr("stroke",C.grid);
+    label(raw,"raw expression",85,78,"matrix-header"); label(raw,"UBE2S = 14.2",85,102,"svg-note"); label(raw,"CCR6 = 20.1",85,122,"svg-note");
+    const norm = svg.append("g").attr("class","hill-norm").style("opacity",0);
+    norm.append("rect").attr("x",180).attr("y",55).attr("width",120).attr("height",78).attr("fill","rgba(222,220,207,.18)").attr("stroke",C.grid);
+    label(norm,"min-max scale",240,78,"matrix-header"); label(norm,"A = 0.90",240,102,"svg-note"); label(norm,"B = 0.82",240,122,"svg-note");
+    const mult = svg.append("g").attr("class","hill-mult").style("opacity",0);
+    mult.append("rect").attr("x",335).attr("y",55).attr("width",145).attr("height",78).attr("fill","rgba(27,54,93,.06)").attr("stroke",C.ink);
+    label(mult,"H(A) × H(B)",408,86,"matrix-header"); label(mult,"only double-high gives high output",408,113,"svg-note");
+    arrow(svg,145,94,178,94); arrow(svg,300,94,333,94);
+    const x=d3.scaleLinear().domain([0,1]).range([70,460]), y=d3.scaleLinear().domain([0,1]).range([365,175]);
+    drawAxes(svg,x,y,"rescaled UBE2S (A)","rescaled CCR6 (B)");
+    const Ka=.76,Kb=.464,n=1, grid=[]; for(let i=0;i<24;i++)for(let j=0;j<24;j++){const a=j/23,b=i/23,ha=a**n/(Ka**n+a**n),hb=b**n/(Kb**n+b**n);grid.push({a,b,o:ha*hb});}
+    const col=d3.scaleLinear().domain([0,.1,.25,.5]).range([C.paper,"#dce2e8","#a6b9cd",C.ink]);
+    svg.selectAll(".heatmap-cell").data(grid).enter().append("rect").attr("class","heatmap-cell").attr("x",d=>x(d.a)).attr("y",d=>y(d.b)-8).attr("width",17).attr("height",8.5).attr("fill",d=>col(d.o)).style("opacity",0);
+    reveal([raw.node()],0); reveal(".derive",650); reveal([norm.node()],900); reveal([mult.node()],1600); reveal(".heatmap-cell",2300);
   }
 
-
-  // ==========================================
-  // Helper functions
-  // ==========================================
-  function varColor(cssVarName) {
-    return getComputedStyle(document.documentElement).getPropertyValue(`--${cssVarName}`).trim();
+  function runRandomPairControl() {
+    const svg = resetContainer("scene-random-container"); if (!svg) return;
+    label(svg,"Random pairs build a background distribution",260,24,"svg-title");
+    const pool = svg.append("g").attr("class","random-pool").style("opacity",0);
+    d3.range(32).forEach(i=>pool.append("circle").attr("cx",35+(i%8)*22).attr("cy",58+Math.floor(i/8)*22).attr("r",6).attr("fill",i===5||i===18?C.red:C.mute).attr("opacity",.8));
+    label(pool,"58,581 filtered genes",115,160,"step-caption");
+    const pipe=svg.append("g").attr("class","random-pipe").style("opacity",0);
+    pipe.append("rect").attr("x",220).attr("y",62).attr("width",95).attr("height",42).attr("fill",C.paper).attr("stroke",C.grid); label(pipe,"random pair",267,88,"svg-note");
+    pipe.append("rect").attr("x",220).attr("y",122).attr("width",95).attr("height",42).attr("fill",C.paper).attr("stroke",C.grid); label(pipe,"same AND gate",267,148,"svg-note");
+    pipe.append("rect").attr("x",220).attr("y",182).attr("width",95).attr("height",42).attr("fill",C.paper).attr("stroke",C.grid); label(pipe,"compute AUC",267,208,"svg-note");
+    label(pipe,"repeat 1,000×",267,248,"matrix-header");
+    arrow(svg,180,100,218,82); arrow(svg,268,104,268,120); arrow(svg,268,164,268,180);
+    const x=d3.scaleLinear().domain([0.45,1.0]).range([350,490]), y=d3.scaleLinear().domain([0,70]).range([350,80]);
+    drawAxes(svg,x,y,"AUC of random gene pairs","frequency");
+    const bins=[{x:.50,h:62},{x:.58,h:31},{x:.66,h:18},{x:.74,h:10},{x:.82,h:4},{x:.90,h:1}];
+    svg.selectAll(".rand-bin").data(bins).enter().append("rect").attr("class","rand-bin").attr("x",d=>x(d.x)).attr("y",d=>y(d.h)).attr("width",20).attr("height",d=>350-y(d.h)).attr("fill",C.mute).style("opacity",0);
+    const line=svg.append("line").attr("class","rand-line").attr("x1",x(.9986)).attr("x2",x(.9986)).attr("y1",y(0)).attr("y2",y(68)).attr("stroke",C.red).attr("stroke-width",2).style("opacity",0);
+    label(svg,"UBE2S + CCR6 AUC = 0.9986",416,68,"step-caption").attr("class","rand-line-label step-caption").style("opacity",0);
+    label(svg,"Empirical p < 0.0001",416,52,"matrix-header").attr("class","rand-line-label matrix-header").style("opacity",0);
+    reveal([pool.node()],0); reveal(".derive",650); reveal([pipe.node()],950); reveal(".rand-bin",1800); reveal(".rand-line,.rand-line-label",2600);
   }
 
-  // Initialize
+  function runThresholdSensitivity() {
+    const svg = resetContainer("scene-sensitivity-container"); if (!svg) return;
+    label(svg,"Perturb K_A and K_B, recompute output and metrics",260,24,"svg-title");
+    const eq=svg.append("g").attr("class","sens-eq").style("opacity",0);
+    eq.append("rect").attr("x",30).attr("y",55).attr("width",180).attr("height",78).attr("fill","rgba(222,220,207,.18)").attr("stroke",C.grid);
+    label(eq,"H(X)=Xⁿ/(K_Xⁿ+Xⁿ)",120,85,"matrix-header"); label(eq,"highlight K_A and K_B",120,112,"svg-note");
+    const slider=svg.append("g").attr("class","sens-slider").style("opacity",0);
+    [-50,-25,-10,0,10,25,50].forEach((v,i)=>{ const x=55+i*24; slider.append("line").attr("x1",x).attr("x2",x).attr("y1",170).attr("y2",182).attr("stroke",v===0?C.red:C.grid); label(slider,String(v)+"%",x,198,"svg-note"); });
+    label(slider,"K_A and K_B perturbation",130,160,"step-caption");
+    const vals=[-50,-25,-10,0,10,25,50]; const data=[]; vals.forEach((a,i)=>vals.forEach((b,j)=>data.push({a,b,auc:.9978+(.001-Math.abs(i-3)*.00008-Math.abs(j-3)*.00005),acc:.86+(6-Math.abs(i-3)-Math.abs(j-3))*.02})));
+    const gx=d3.scaleBand().domain(vals).range([270,490]).padding(.05), gy=d3.scaleBand().domain(vals).range([350,130]).padding(.05);
+    const color=d3.scaleLinear().domain([.994, .999]).range(["#dce2e8", C.ink]);
+    svg.selectAll(".sens-cell").data(data).enter().append("rect").attr("class","sens-cell").attr("x",d=>gx(d.b)).attr("y",d=>gy(d.a)).attr("width",gx.bandwidth()).attr("height",gy.bandwidth()).attr("fill",d=>color(d.auc)).style("opacity",0);
+    label(svg,"columns = K_B perturbation",380,375,"step-caption"); label(svg,"rows = K_A perturbation",238,230,"step-caption").attr("transform","rotate(-90 238 230)");
+    label(svg,"AUC remains > 0.994 across perturbations",380,108,"matrix-header").attr("class","sens-note matrix-header").style("opacity",0);
+    label(svg,"Accuracy is more threshold-dependent than AUC.",130,245,"step-caption").attr("class","sens-note step-caption").style("opacity",0);
+    reveal([eq.node()],0); reveal([slider.node()],850); reveal(".sens-cell",1600); reveal(".sens-note",2500);
+  }
+
+  function runExternalValidation() {
+    const svg = resetContainer("scene6-container"); if (!svg) return;
+    label(svg,"Threshold transfer from RNA-seq to microarray",260,24,"svg-title");
+    const left=svg.append("g").attr("class","val-left").style("opacity",0), right=svg.append("g").attr("class","val-right").style("opacity",0);
+    left.append("rect").attr("x",35).attr("y",55).attr("width",180).attr("height",118).attr("fill","rgba(27,54,93,.06)").attr("stroke",C.ink);
+    label(left,"Discovery cohort",125,80,"matrix-header"); label(left,"RNA-seq TCGA/GTEx",125,105,"step-caption"); label(left,"AUC 0.9986",125,128,"svg-note"); label(left,"Sensitivity 97.8%",125,148,"svg-note"); label(left,"Specificity 99.4%",125,168,"svg-note");
+    right.append("rect").attr("x",305).attr("y",55).attr("width",180).attr("height",118).attr("fill","rgba(222,220,207,.22)").attr("stroke",C.grid);
+    label(right,"External cohort",395,80,"matrix-header"); label(right,"Microarray GSE62452",395,105,"step-caption"); label(right,"AUC 0.648",395,128,"svg-note"); label(right,"Sensitivity 4.3%",395,148,"svg-note").attr("fill",C.red); label(right,"Specificity 98.4%",395,168,"svg-note");
+    arrow(svg,215,115,303,115);
+    label(svg,"RNA-seq thresholds transferred",260,100,"step-caption").attr("class","transfer-label step-caption").style("opacity",0);
+    const metrics=[{n:"Specificity",d:99.4,v:98.4},{n:"Sensitivity",d:97.8,v:4.3}];
+    const x=d3.scaleBand().domain(metrics.map(d=>d.n)).range([90,440]).padding(.45), y=d3.scaleLinear().domain([0,100]).range([355,215]);
+    drawAxes(svg,x,y,"metric","percent");
+    svg.selectAll(".disc-bar").data(metrics).enter().append("rect").attr("class","disc-bar").attr("x",d=>x(d.n)).attr("y",d=>y(d.d)).attr("width",36).attr("height",d=>355-y(d.d)).attr("fill",C.ink).style("opacity",0);
+    svg.selectAll(".val-bar").data(metrics).enter().append("rect").attr("class","val-bar").attr("x",d=>x(d.n)+42).attr("y",d=>y(d.v)).attr("width",36).attr("height",d=>355-y(d.v)).attr("fill",d=>d.n==="Sensitivity"?C.red:C.mute).style("opacity",0);
+    label(svg,"high specificity remains",180,210,"matrix-header").attr("class","val-note matrix-header").style("opacity",0);
+    label(svg,"threshold transferability is weak",350,210,"matrix-header").attr("class","val-note matrix-header").style("opacity",0);
+    reveal([left.node()],0); reveal(".derive,.transfer-label",700); reveal([right.node()],1000); reveal(".disc-bar,.val-bar",1800); reveal(".val-note",2600);
+  }
+
   updateSlide(0);
-
 });

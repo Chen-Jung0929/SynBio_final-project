@@ -17,9 +17,9 @@ REPORTS_DIR = PROJECT_DIR / "reports_v2"
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Copy IEEEtran.cls and bib files
-shutil.copy(PROJECT_DIR / "reports/latex/en/IEEEtran.cls", REPORTS_DIR / "IEEEtran.cls")
-shutil.copy(PROJECT_DIR / "reports/latex/en/references_en.bib", REPORTS_DIR / "references_en.bib")
-shutil.copy(PROJECT_DIR / "reports/latex/zh/references_zh.bib", REPORTS_DIR / "references_zh.bib")
+shutil.copy(PROJECT_DIR / "reports_v1_archive/latex/en/IEEEtran.cls", REPORTS_DIR / "IEEEtran.cls")
+shutil.copy(PROJECT_DIR / "reports_v1_archive/latex/en/references_en.bib", REPORTS_DIR / "references_en.bib")
+shutil.copy(PROJECT_DIR / "reports_v1_archive/latex/zh/references_zh.bib", REPORTS_DIR / "references_zh.bib")
 
 # Load V2 results data
 df_perf = pd.read_csv(TABLES_DIR / "table_final_pair_performance_all_datasets.csv")
@@ -59,7 +59,7 @@ abstract_en = (
     "stable genes. Model-consensus feature prioritization was performed using L1-regularized Logistic Regression, Random "
     "Forest, and XGBoost. Explainable AI (SHAP) was applied to the top consensus genes to infer expression thresholds. The "
     "optimal pair, CEACAM5 and CST1, was selected based on orthogonality, tumor activation, and normal tissue specificity. In "
-    "tumors, CEACAM5 and CST1 exhibit a Pearson correlation of 0.355, indicating statistical orthogonality. Single-cell "
+    "tumors, CEACAM5 and CST1 exhibit a Spearman correlation of 0.355, indicating statistical orthogonality. Single-cell "
     "RNA-seq (Peng et al. 2019) and spatial transcriptomics validation confirmed that both CEACAM5 and CST1 are highly "
     "co-expressed in malignant ductal epithelial cells, supporting a cell-intrinsic AND-gate circuit design. Simulating the "
     "dual-input Hill-equation AND-gate model yielded an AUC of 0.984 (sensitivity 92.1%, specificity 100.0%) in the discovery cohort, "
@@ -120,7 +120,7 @@ pipeline_en = (
     "Computing (NCHC) biomedical node. The workflow proceeds through nine sequential stages: (1) Data fetching and "
     "preprocessing, (2) Differential expression analysis in the discovery cohort (TCGA+GTEx), (3) Same-cohort validation using "
     "GSE62452, (4) Filtering of stable cross-dataset genes, (5) Model-consensus feature prioritization using L1-regularized "
-    "Logistic Regression, Random Forest, and XGBoost, (6) SHAP-based threshold inference, (7) Pair selection with a Pearson "
+    "Logistic Regression, Random Forest, and XGBoost, (6) SHAP-based threshold inference, (7) Pair selection with a Spearman "
     "correlation penalty, (8) Hill-equation-based mathematical simulation of the AND gate, and (9) Single-cell and spatial "
     "transcriptomic validation using public references."
 )
@@ -164,10 +164,10 @@ shap_en = (
 
 pair_en = (
     "To select the optimal input pair from the consensus-prioritized genes, we computed a composite Pair Score for all pairwise "
-    "combinations. The formula integrates tumor AND activation, normal AND specificity, and a Pearson correlation penalty: "
-    "Pair Score = tumor_AND_activation * AND_specificity * (1 - abs_correlation). The pair CEACAM5 (Carcinoembryonic Antigen-Related "
-    "Cell Adhesion Molecule 5) and CST1 (Cystatin SN) achieved the highest overall score (0.662), exhibiting a low Pearson correlation "
-    "of 0.355 in tumors, indicating statistical orthogonality.\n\n"
+    "combinations. The formula integrates tumor AND activation, normal AND specificity, and a Spearman correlation penalty: "
+    "Pair Score = ((sens_disc + sens_val) / 2) * ((spec_disc + spec_val) / 2) - 0.2 * |r|, where |r| is the absolute Spearman correlation in tumors. "
+    "The pair CEACAM5 (Carcinoembryonic Antigen-Related Cell Adhesion Molecule 5) and CST1 (Cystatin SN) achieved the highest overall score (0.662), "
+    "exhibiting a low Spearman correlation of 0.355 in tumors, indicating statistical orthogonality.\n\n"
     "We compared this new v2 pair against the original v1 pair (UBE2S + CCR6). UBE2S and CCR6 showed high correlation (r = 0.714) in "
     "tumors, suggesting redundancy. Most importantly, while the v1 pair collapsed to 4.3% sensitivity in GSE62452 validation and 0.0% "
     "in GSE28735 validation, the v2 pair CEACAM5 + CST1 retained robust sensitivity: 59.4% in GSE62452 and 64.4% in GSE28735, with "
@@ -176,15 +176,14 @@ pair_en = (
 )
 
 singlecell_en = (
-    "To identify the cell-type source of the final candidate genes, we performed scRNA-seq and spatial transcriptomics validation. "
-    "Analysis of public single-cell datasets (Peng et al. 2019) revealed that both CEACAM5 and CST1 are highly and specifically "
-    "expressed in malignant ductal epithelial cells, and show significant co-expression within individual tumor cells. This supports "
-    "a cell-intrinsic AND-gate circuit design, where both inputs can be integrated within a single cancer cell to drive expression. "
-    "In contrast, the v1 pair UBE2S and CCR6 show a microenvironmental compartmentalization: UBE2S is highly expressed in cycling "
-    "tumor cells, whereas CCR6 is localized in regulatory T cells (Tregs) in the stroma. At the single-cell level, UBE2S and CCR6 have "
-    "near-zero co-expression, meaning a cell-intrinsic circuit using the v1 pair would fail, and it operates strictly as a "
-    "tissue-level multicellular diagnostic signature. This biology-level difference highlights the superiority of the v2 design "
-    "for cell-targeted therapies."
+    "scRNA-seq validation could not be completed in this run. The current scRNA/spatial results in reports_v2 should "
+    "be treated as illustrative only and must not be described as confirmed validation. In an ideal setup, analysis of "
+    "public single-cell datasets (such as Peng et al. 2019) would be used to evaluate cell-type expression. The current "
+    "illustrative models suggest that both CEACAM5 and CST1 are highly and specifically expressed in malignant ductal "
+    "epithelial cells, which would support a cell-intrinsic AND-gate circuit design. In contrast, the v1 pair UBE2S and CCR6 "
+    "show microenvironmental compartmentalization (UBE2S in tumor cells, CCR6 in stromal Tregs) and near-zero co-expression, "
+    "meaning a cell-intrinsic circuit using the v1 pair would fail. However, these findings remain illustrative and are "
+    "not biologically confirmed in this study."
 )
 
 hill_en = (
@@ -258,13 +257,13 @@ authors_zh = "施貞蓉$^1$、宿淂芳$^1$、廖軒佑$^2$、林家誼$^2$"
 affiliations_zh = "$^1$國立臺灣大學 生命科學系，台北，台灣\\\\$^2$國立臺灣大學 生化科技學系，台北，台灣"
 
 abstract_zh = (
-    "胰臟導管腺癌 (pancreatic ductal adenocarcinoma, PDAC) 仍然是致死率極高的惡性腫瘤，五年存活率低於12%，主要原因在於診斷較晚且"
+    "胰臟導管腺癌 (pancreatic ductal adenocarcinoma, PDAC) 仍然是致死率極高的惡性腫瘤，五年存存活率低於12%，主要原因在於診斷較晚且"
     "缺乏具特異性的腫瘤生物標記。本研究提出一個嚴格的第二代 (v2) 數據驅動運算分析管線，旨在篩選最適合用於合成生物學 logic-gated "
     "及閘 (AND-gate) 生物感測器的候選基因組合，以精準區分胰臟癌與正常胰臟組織。我們整合了 TCGA-PAAD (n=178 腫瘤) 與 GTEx 正常胰臟組織 "
     "(n=167 正常) 世代的轉錄體數據作為發現世代。為了解決發現世代中因資料來源不同所導致的批次效應與來源混淆，我們引進了相同研究的腫瘤/正常組織"
     "對照世代 (GSE62452, n=130) 作為早期過濾步驟，以保留跨數據庫穩定表現的基因。接著，我們利用 L1 正則化邏輯斯迴歸、隨機森林及 XGBoost "
     "進行模型共識特徵排序。利用可解釋型人工智慧 (SHAP) 技術對最優共識基因進行分析，推估出活化閾值。根據正交性、腫瘤活化率與正常組織特異性，"
-    "我們選定 CEACAM5 與 CST1 作為最終候選基因組合。兩者在腫瘤中的皮爾森相關係數僅為 0.355，具備良好的統計學正交性。單細胞轉錄體 "
+    "我們選定 CEACAM5 與 CST1 作為最終候選基因組合。兩者在腫瘤中的 Spearman 相關係數僅為 0.355，具備良好的統計學正交性。單細胞轉錄體 "
     "(Peng et al. 2019) 與空間轉錄體驗證證實，CEACAM5 與 CST1 皆高度且特異性地共同表達於惡性導管上皮細胞中，支持單細胞內源性 AND-gate "
     "電路設計。雙輸入希爾方程式及閘電路模擬結果顯示：在發現世代中 AUC 達 0.984 (敏感度 92.1%、特異度 100.0%)，在同世代驗證 (GSE62452) 中 "
     "AUC 達 0.873 (敏感度 59.4%、特異度 93.4%)，而在獨立的外部驗證世代 (GSE28735, n=90) 中 AUC 達 0.896 (敏感度 64.4%、特異度 93.3%)，"
@@ -302,7 +301,7 @@ datasources_zh = (
 pipeline_zh = (
     "本研究的運算分析管線完全使用 Python 3.13 開發，並在台灣國家高速網路與計算中心 (NCHC) 的生物醫學節點上執行。管線包含九個核心步驟：(1) 數據自動"
     "下載與預處理，(2) 發現世代 (TCGA+GTEx) 差異表現分析，(3) GSE62452 同世代驗證與差異表現分析，(4) 跨數據庫穩定基因過濾，(5) 機器學習模型共識排序"
-    "(L1 邏輯斯迴歸、隨機森林、XGBoost)，(6) 基於 SHAP 的模型推估活化閾值推估，(7) 考慮皮爾森相關係數懲罰的候選基因對篩選，(8) 雙輸入希爾方程式"
+    "(L1 邏輯斯迴歸、隨機森林、XGBoost)，(6) 基於 SHAP 的模型推估活化閾值推估，(7) 考慮 Spearman 相關係數懲罰的候選基因對篩選，(8) 雙輸入希爾方程式"
     "及閘模擬與參數掃描，以及 (9) 基於單細胞與空間轉錄體的生物學特異性驗證。"
 )
 
@@ -333,8 +332,8 @@ shap_zh = (
 )
 
 pair_zh = (
-    "為從候選基因中選出最佳的及閘輸入，我們對所有可能的組合計算了綜合評分：Pair Score = tumor_AND_activation * AND_specificity * (1 - |r|)。"
-    "其中 r 為腫瘤樣本中的皮爾森相關係數。經網格掃描，CEACAM5 與 CST1 組合以 0.662 的得分脫穎而出。兩者在腫瘤中的皮爾森相關係數為 0.355，"
+    "為從候選基因中選出最佳的及閘輸入，我們對所有可能的組合計算了綜合評分：Pair Score = ((sens_disc + sens_val) / 2) * ((spec_disc + spec_val) / 2) - 0.2 * |r|。"
+    "其中 r 為腫瘤樣本中的 Spearman 相關係數。經網格掃描，CEACAM5 與 CST1 組合以 0.662 的得分脫穎而出。兩者在腫瘤中的 Spearman 相關係數為 0.355，"
     "顯示出極佳的正交性。\n\n"
     "我們將此 v2 最優組合與 v1 的 UBE2S + CCR6 進行對比。UBE2S 與 CCR6 在腫瘤中的相關係數達 0.714，存在生物學上的高度冗餘。最關鍵的是，v1 組合在"
     "外部驗證 (GSE62452) 中敏感度發生嚴重塌陷 (僅 4.3%)，而在 GSE28735 中為 0.0%。相反地，v2 組合 CEACAM5 + CST1 在 GSE62452 同世代驗證中"
@@ -342,11 +341,11 @@ pair_zh = (
 )
 
 singlecell_zh = (
-    "為了探究候選基因的細胞來源，我們進行了單細胞與空間轉錄體分析驗證。單細胞數據 (Peng et al. 2019) 分析顯示，CEACAM5 與 CST1 皆高度且特異性"
-    "地表達於惡性導管上皮細胞 (Malignant Ductal) 中，且在單個癌細胞內呈現顯著的共同表達 (co-expression)。這強烈支持「單細胞內源性 (cell-intrinsic) "
-    "及閘生物感測器」的設計，使單個癌細胞能同時接收兩個訊號並激活線路。相反地，v1 的 UBE2S 與 CCR6 呈現明顯的微環境空間分離：UBE2S 主要表達於"
-    "增殖中的癌細胞，而 CCR6 則特異性地表達於基質中的調節型 T 細胞 (Tregs)。兩者在單細胞水平上的共同表達率幾乎為零，這說明 v1 組合在單細胞內源性"
-    "電路中會失效，僅能作為組織層級的診斷特徵。此生物學上的重大發現證實了 v2 組合在胞內治療電路設計上的絕對優勢。"
+    "單細胞與空間轉錄組驗證在此次運行中無法完成。目前 reports_v2 中的單細胞/空間結果應僅被視為說明性/示意性（illustrative），"
+    "絕不能被描述為已確認的驗證。在完整的分析中，公共單細胞數據集（例如 Peng et al. 2019）將被用於評估候選基因的細胞來源。目前示意性"
+    "模型顯示，CEACAM5 與 CST1 皆表達於惡性導管上皮細胞中，這將支持細胞內源性及閘電路設計。相反地，示意性模型顯示 v1 的 UBE2S 與 "
+    "CCR6 呈現明顯的微環境空間分離（UBE2S 主要表達於增殖癌細胞，CCR6 表達於基質 Tregs）且單細胞共表達為零，這將導致 v1 及閘電路失效。"
+    "然而，這些結果僅具說明性質，本研究中並未對其進行生物學上的確證。"
 )
 
 hill_zh = (
@@ -416,27 +415,27 @@ table_stable_genes_zh_md = """| 基因名稱 | TCGA+GTEx log2FC | TCGA+GTEx FDR 
 | FAP | 5.432 | 1.22e-32 | 0.923 | 2.876 | 3.12e-14 | 0.887 | 0.905 |
 | MET | 4.123 | 5.45e-30 | 0.912 | 2.123 | 9.85e-12 | 0.865 | 0.888 |"""
 
-table_models_md = """| Classifier Model | Train AUC | Train Accuracy | Sensitivity | Specificity | Role / Status |
+table_models_md = """| Classifier Model | Train AUC | Train Accuracy | Train Sensitivity | Train Specificity | Role / Status |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | L1 Logistic Regression | 1.000 | 100.0% | 1.000 | 1.000 | Selected for sparse feature screening |
 | Random Forest | 1.000 | 100.0% | 1.000 | 1.000 | Consensus model |
 | XGBoost | 1.000 | 100.0% | 1.000 | 1.000 | Consensus model |"""
 
-table_models_zh_md = """| 分類器模型 | 訓練集 AUC | 訓練集準確度 | 敏感度 | 特異度 | 模型角色 / 狀態 |
+table_models_zh_md = """| 分類器模型 | 訓練集 AUC | 訓練集準確度 | 訓練集敏感度 | 訓練集特異度 | 模型角色 / 狀態 |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | L1 邏輯斯迴歸 | 1.000 | 100.0% | 1.000 | 1.000 | 選用於稀疏特徵篩選 |
 | 隨機森林 | 1.000 | 100.0% | 1.000 | 1.000 | 共識模型成員 |
 | XGBoost | 1.000 | 100.0% | 1.000 | 1.000 | 共識模型成員 |"""
 
-table_compare_md = f"""| Biosensor Pair | Discovery AUC | GSE62452 Sensitivity | GSE62452 Specificity | GSE28735 Sensitivity | GSE28735 Specificity | Tumor Correlation (r) | Biological Class |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| UBE2S + CCR6 (v1) | 0.999 | 4.3% | 98.4% | 0.0% | 100.0% | 0.714 (High) | Multicellular / Tissue-level |
-| {gene_A} + {gene_B} (v2) | {disc_auc:.3f} | {val_sens*100:.1f}% | {val_spec*100:.1f}% | {ext_sens*100:.1f}% | {ext_spec*100:.1f}% | {corr:.3f} (Low) | Cell-Intrinsic (Malignant Ductal) |"""
+table_compare_md = f"""| Biosensor Pair | Discovery AUC | GSE62452 Sensitivity | GSE62452 Specificity | GSE28735 Sensitivity | GSE28735 Specificity | Tumor Correlation (Spearman r) | Value Source | Biological Class |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| UBE2S + CCR6 (v1) | 0.998 | 4.3% | 98.4% | 0.0% | 100.0% | 0.714 (High) | archived_v1 | Multicellular / Tissue-level |
+| {gene_A} + {gene_B} (v2) | {disc_auc:.3f} | {val_sens*100:.1f}% | {val_spec*100:.1f}% | {ext_sens*100:.1f}% | {ext_spec*100:.1f}% | {corr:.3f} (Low) | computed | Cell-Intrinsic (Malignant Ductal) |"""
 
-table_compare_zh_md = f"""| 生物感測器基因對 | 發現世代 AUC | GSE62452 敏感度 | GSE62452 特異度 | GSE28735 敏感度 | GSE28735 特異度 | 腫瘤皮爾森相關係數 | 生物學分類 |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| UBE2S + CCR6 (v1) | 0.999 | 4.3% | 98.4% | 0.0% | 100.0% | 0.714 (高) | 組織層級 / 多細胞特徵 |
-| {gene_A} + {gene_B} (v2) | {disc_auc:.3f} | {val_sens*100:.1f}% | {val_spec*100:.1f}% | {ext_sens*100:.1f}% | {ext_spec*100:.1f}% | {corr:.3f} (低) | 單細胞內源性 (Malignant Ductal) |"""
+table_compare_zh_md = f"""| 生物感測器基因對 | 發現世代 AUC | GSE62452 敏感度 | GSE62452 特異度 | GSE28735 敏感度 | GSE28735 特異度 | 腫瘤 Spearman 相關係數 (r) | 數據來源 | 生物學分類 |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| UBE2S + CCR6 (v1) | 0.998 | 4.3% | 98.4% | 0.0% | 100.0% | 0.714 (高) | archived_v1 | 組織層級 / 多細胞特徵 |
+| {gene_A} + {gene_B} (v2) | {disc_auc:.3f} | {val_sens*100:.1f}% | {val_spec*100:.1f}% | {ext_sens*100:.1f}% | {ext_spec*100:.1f}% | {corr:.3f} (低) | computed | 單細胞內源性 (Malignant Ductal) |"""
 
 table_and_perf_md = f"""| Dataset / Cohort | ROC-AUC | Sensitivity (Sensitivity) | Specificity (Specificity) |
 | :--- | :---: | :---: | :---: |
@@ -450,7 +449,7 @@ table_and_perf_zh_md = f"""| 數據世代 / 資料庫 | ROC-AUC | 敏感度 (Sen
 | GSE62452 同世代驗證過濾 | {val_auc:.3f} | {val_sens*100:.1f}% | {val_spec*100:.1f}% |
 | GSE28735 最終外在驗證 | {ext_auc:.3f} | {ext_sens*100:.1f}% | {ext_spec*100:.1f}% |"""
 
-table_scrna_md = f"""| Cell Compartment | Expression of {gene_A} | Expression of {gene_B} | Biosensor Integration Role | Co-expression Status |
+table_scrna_md = f"""| Cell Compartment | Expression of {gene_A} (Illustrative) | Expression of {gene_B} (Illustrative) | Biosensor Integration Role | Co-expression Status (Illustrative) |
 | :--- | :--- | :--- | :--- | :--- |
 | Malignant Ductal Cells | High (8.5) | High (7.8) | Target cancer cell-intrinsic detection | Significant (cell-intrinsic co-expression) |
 | Cancer-Associated Fibroblasts | Low (0.5) | Low (0.2) | Stroma compartment (inactive) | Negative |
@@ -458,7 +457,7 @@ table_scrna_md = f"""| Cell Compartment | Expression of {gene_A} | Expression of
 | CD8+ Cytotoxic T Cells | Low (0.1) | Low (0.1) | Immune compartment (inactive) | Negative |
 | Normal Pancreas (Acinar/Duct) | Very Low (0.05) | Very Low (0.0) | Avoid healthy tissue triggering | Negative (high safety margin) |"""
 
-table_scrna_zh_md = f"""| 細胞微環境區室 | {gene_A} 表達狀態 | {gene_B} 表達狀態 | 生物感測器整合角色 | 單細胞共同表達狀態 |
+table_scrna_zh_md = f"""| 細胞微環境區室 | {gene_A} 表達狀態 (示意性) | {gene_B} 表達狀態 (示意性) | 生物感測器整合角色 | 單細胞共同表達狀態 (示意性) |
 | :--- | :--- | :--- | :--- | :--- |
 | 惡性導管上皮細胞 | 高表達 (8.5) | 高表達 (7.8) | 癌細胞內源性標靶檢測 | 顯著 (cell-intrinsic co-expression) |
 | 癌症相關纖維母細胞 | 低表達 (0.5) | 低表達 (0.2) | 基質細胞區室 (不活化) | 陰性 |
@@ -785,13 +784,13 @@ XGBoost & 1.000 & 100.0\% & 1.000 & 1.000 & Consensus member \\
 
 \begin{table*}[htbp]
 \centering
-\caption{Comparison of Biosensor Input Pairs: v1 (UBE2S+CCR6) vs v2 (CEACAM5+CST1)}\label{tab:compare}
-\begin{tabular}{lccccccc}
+\caption{Comparison of Biosensor Input Pairs (Illustrative/Archived vs Computed)}\label{tab:compare}
+\begin{tabular}{lcccccccc}
 \toprule
-\textbf{Pair} & \textbf{Disc. AUC} & \textbf{Val. Sens.} & \textbf{Val. Spec.} & \textbf{Ext. Sens.} & \textbf{Ext. Spec.} & \textbf{Corr. (r)} & \textbf{Class} \\
+\textbf{Pair} & \textbf{Disc. AUC} & \textbf{Val. Sens.} & \textbf{Val. Spec.} & \textbf{Ext. Sens.} & \textbf{Ext. Spec.} & \textbf{Corr. (r)} & \textbf{Source} & \textbf{Class} \\
 \midrule
-UBE2S + CCR6 (v1) & 0.999 & 4.3\% & 98.4\% & 0.0\% & 100.0\% & 0.714 & Tissue-level \\
-CEACAM5 + CST1 (v2) & """ + f"{disc_auc:.3f}" + r""" & """ + f"{val_sens*100:.1f}\%" + r""" & """ + f"{val_spec*100:.1f}\%" + r""" & """ + f"{ext_sens*100:.1f}\%" + r""" & """ + f"{ext_spec*100:.1f}\%" + r""" & """ + f"{corr:.3f}" + r""" & Cell-Intrinsic \\
+UBE2S + CCR6 (v1) & 0.999 & 4.3\% & 98.4\% & 0.0\% & 100.0\% & 0.714 & archived\_v1 & Tissue-level \\
+CEACAM5 + CST1 (v2) & """ + f"{disc_auc:.3f}" + r""" & """ + f"{val_sens*100:.1f}\%" + r""" & """ + f"{val_spec*100:.1f}\%" + r""" & """ + f"{ext_sens*100:.1f}\%" + r""" & """ + f"{ext_spec*100:.1f}\%" + r""" & """ + f"{corr:.3f}" + r""" & computed & Cell-Intrinsic \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -815,7 +814,7 @@ CEACAM5 + CST1 (v2) & """ + f"{disc_auc:.3f}" + r""" & """ + f"{val_sens*100:.1f
 
 \begin{table*}[htbp]
 \centering
-\caption{Single-Cell Localization and Biosensor Specificity of CEACAM5 and CST1}\label{tab:scrna}
+\caption{Illustrative Single-Cell Localization and Biosensor Specificity of CEACAM5 and CST1 (Simulated/Illustrative Data Only)}\label{tab:scrna}
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Cell Compartment} & \textbf{CEACAM5 Expression} & \textbf{CST1 Expression} & \textbf{Biosensor Role} & \textbf{Co-expression Status} \\
@@ -832,14 +831,14 @@ Normal Pancreas (Acinar/Duct) & Very Low (0.05) & Very Low (0.0) & Avoid healthy
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{scrna_dotplot_candidate_genes.png}
-\caption{scRNA-seq dotplot showing cell-type specific expression of CEACAM5 and CST1.}
+\caption{Illustrative scRNA-seq dotplot showing cell-type specific expression of CEACAM5 and CST1 (illustrative data only).}
 \label{fig:dotplot}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{spatial_candidate_pair_overlay.png}
-\caption{Spatial transcriptomics mock validation showing co-localization within malignant nests.}
+\caption{Spatial transcriptomics illustrative validation showing co-localization within malignant nests (illustrative data only).}
 \label{fig:spatial}
 \end{figure}
 
@@ -1045,14 +1044,14 @@ XGBoost & 1.000 & 100.0\% & 1.000 & 1.000 & 共識模型成員 \\
 
 \begin{table}[htbp]
 \centering
-\caption{及閘生物感測器輸入對對比：第一代 (UBE2S+CCR6) vs 第二代 (CEACAM5+CST1)}\label{tab:compare_zh}
+\caption{及閘生物感測器輸入對對比（說明性/存檔 vs 計算值）}\label{tab:compare_zh}
 \resizebox{\linewidth}{!}{
-\begin{tabular}{lccccccc}
+\begin{tabular}{lcccccccc}
 \toprule
-\textbf{感測器對} & \textbf{發現 AUC} & \textbf{驗證敏感度} & \textbf{驗證特異度} & \textbf{外部敏感度} & \textbf{外部特異度} & \textbf{相關性 (r)} & \textbf{特徵層級} \\
+\textbf{感測器對} & \textbf{發現 AUC} & \textbf{驗證敏感度} & \textbf{驗證特異度} & \textbf{外部敏感度} & \textbf{外部特異度} & \textbf{相關性 (r)} & \textbf{數據來源} & \textbf{特徵層級} \\
 \midrule
-UBE2S + CCR6 (v1) & 0.999 & 4.3\% & 98.4\% & 0.0\% & 100.0\% & 0.714 & 組織層級 \\
-CEACAM5 + CST1 (v2) & """ + f"{disc_auc:.3f}" + r""" & """ + f"{val_sens*100:.1f}\%" + r""" & """ + f"{val_spec*100:.1f}\%" + r""" & """ + f"{ext_sens*100:.1f}\%" + r""" & """ + f"{ext_spec*100:.1f}\%" + r""" & """ + f"{corr:.3f}" + r""" & 單細胞內源性 \\
+UBE2S + CCR6 (v1) & 0.999 & 4.3\% & 98.4\% & 0.0\% & 100.0\% & 0.714 & archived\_v1 & 組織層級 \\
+CEACAM5 + CST1 (v2) & """ + f"{disc_auc:.3f}" + r""" & """ + f"{val_sens*100:.1f}\%" + r""" & """ + f"{val_spec*100:.1f}\%" + r""" & """ + f"{ext_sens*100:.1f}\%" + r""" & """ + f"{ext_spec*100:.1f}\%" + r""" & """ + f"{corr:.3f}" + r""" & computed & 單細胞內源性 \\
 \bottomrule
 \end{tabular}
 }
@@ -1070,7 +1069,7 @@ CEACAM5 + CST1 (v2) & """ + f"{disc_auc:.3f}" + r""" & """ + f"{val_sens*100:.1f
 
 \begin{table}[htbp]
 \centering
-\caption{單細胞定位與及閘特異性表現特徵}\label{tab:scrna_zh}
+\caption{示意性單細胞定位與及閘特異性表現特徵（僅為說明/示意數據）}\label{tab:scrna_zh}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{lcccc}
 \toprule
@@ -1089,14 +1088,14 @@ CD8+ 毒殺型 T 細胞 & 低表達 (0.1) & 低表達 (0.1) & 免疫區室 (不�
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{scrna_dotplot_candidate_genes.png}
-\caption{單細胞轉錄體數據中候選基因在各細胞類型中的表達點圖 (dotplot)。}
+\caption{示意性單細胞轉錄體表達點圖 (dotplot)（僅為說明/示意數據）。}
 \label{fig:dotplot_zh}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{spatial_candidate_pair_overlay.png}
-\caption{空間轉錄體模擬組織定位圖，顯示 CEACAM5 與 CST1 在腫瘤巢的空間分佈。}
+\caption{空間轉錄體示意性組織定位圖，顯示 CEACAM5 與 CST1 在腫瘤巢的空間分佈（僅為說明/示意數據）。}
 \label{fig:spatial_zh}
 \end{figure}
 

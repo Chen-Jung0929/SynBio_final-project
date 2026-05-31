@@ -4,6 +4,8 @@ import sys
 import yaml
 import gzip
 import re
+import warnings
+warnings.filterwarnings('ignore')
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,11 +24,23 @@ import shap
 # Set random seed for reproducibility
 np.random.seed(42)
 
+import argparse
+
 # Paths
 PROJECT_DIR = Path(__file__).parent.parent
 RAW_DIR = PROJECT_DIR / "data/raw"
 PROCESSED_DIR = PROJECT_DIR / "data/processed"
-RESULTS_V2_DIR = PROJECT_DIR / "results_v2"
+
+# Parse arguments for output directory
+parser = argparse.ArgumentParser()
+parser.add_argument("--outdir", type=str, default=None, help="Output directory overrides results_v2")
+args, unknown = parser.parse_known_args()
+
+if args.outdir:
+    RESULTS_V2_DIR = Path(args.outdir).resolve()
+else:
+    RESULTS_V2_DIR = PROJECT_DIR / "results_v2"
+
 TABLES_V2_DIR = RESULTS_V2_DIR / "tables"
 FIGURES_V2_DIR = RESULTS_V2_DIR / "figures"
 MODELS_V2_DIR = RESULTS_V2_DIR / "models"
@@ -641,21 +655,21 @@ def run_stage4(df_expr, df_meta, df_stable):
     df_perf_summary = pd.DataFrame([{
         "Model": "L1 Logistic Regression",
         "Train_AUC": roc_auc_score(y, lr.predict_proba(X)[:, 1]),
-        "Accuracy": accuracy_score(y, lr.predict(X)),
-        "Sensitivity": recall_score(y, lr.predict(X)),
-        "Specificity": recall_score(1 - y, 1 - lr.predict(X))
+        "Train_Accuracy": accuracy_score(y, lr.predict(X)),
+        "Train_Sensitivity": recall_score(y, lr.predict(X)),
+        "Train_Specificity": recall_score(1 - y, 1 - lr.predict(X))
     }, {
         "Model": "Random Forest",
         "Train_AUC": roc_auc_score(y, rf.predict_proba(X)[:, 1]),
-        "Accuracy": accuracy_score(y, rf.predict(X)),
-        "Sensitivity": recall_score(y, rf.predict(X)),
-        "Specificity": recall_score(1 - y, 1 - rf.predict(X))
+        "Train_Accuracy": accuracy_score(y, rf.predict(X)),
+        "Train_Sensitivity": recall_score(y, rf.predict(X)),
+        "Train_Specificity": recall_score(1 - y, 1 - rf.predict(X))
     }, {
         "Model": "XGBoost",
         "Train_AUC": roc_auc_score(y, xgb_model.predict_proba(X)[:, 1]),
-        "Accuracy": accuracy_score(y, xgb_model.predict(X)),
-        "Sensitivity": recall_score(y, xgb_model.predict(X)),
-        "Specificity": recall_score(1 - y, 1 - xgb_model.predict(X))
+        "Train_Accuracy": accuracy_score(y, xgb_model.predict(X)),
+        "Train_Sensitivity": recall_score(y, xgb_model.predict(X)),
+        "Train_Specificity": recall_score(1 - y, 1 - xgb_model.predict(X))
     }])
     df_perf_summary.to_csv(TABLES_V2_DIR / "model_performance_v2.csv", index=False)
     
@@ -896,7 +910,8 @@ def run_stage6(df_expr, df_meta, df_expr_val, df_meta_val, df_expr_ext, df_meta_
             "correlation": v1_row["tumor_correlation"],
             "functional_annotation": "UBE2S (mitosis/cell-cycle) + CCR6 (chemokine/stroma)",
             "engineering_feasibility": "High: both protein coding",
-            "interpretation": "Strong discovery, validation sensitivity collapses due to cohort/platform differences"
+            "interpretation": "Strong discovery, validation sensitivity collapses due to cohort/platform differences",
+            "value_source": "archived_v1"
         },
         {
             "pair": f"{best_row['gene_A']} + {best_row['gene_B']} (v2)",
@@ -910,7 +925,8 @@ def run_stage6(df_expr, df_meta, df_expr_val, df_meta_val, df_expr_ext, df_meta_
             "correlation": best_row["tumor_correlation"],
             "functional_annotation": "Model-consensus prioritized and cross-dataset-stable candidate pair",
             "engineering_feasibility": "High: both protein coding",
-            "interpretation": "Optimized for cross-dataset sensitivity retention"
+            "interpretation": "Optimized for cross-dataset sensitivity retention",
+            "value_source": "computed"
         }
     ])
     df_compare.to_csv(TABLES_V2_DIR / "v1_vs_v2_pair_comparison.csv", index=False)
@@ -1117,6 +1133,15 @@ def run_stage7(df_expr, df_meta, df_expr_val, df_meta_val, df_expr_ext, df_meta_
     }])
     df_perf_v2.to_csv(TABLES_V2_DIR / "and_gate_performance_v2.csv", index=False)
     
+    # Update comparison table with actual computed AUC
+    compare_path = TABLES_V2_DIR / "v1_vs_v2_pair_comparison.csv"
+    if compare_path.exists():
+        df_comp = pd.read_csv(compare_path)
+        disc_auc_val = df_perf_v2.loc[df_perf_v2["Dataset"].str.contains("Discovery"), "ROC_AUC"].values[0]
+        df_comp.loc[df_comp["pair"].str.contains("v2"), "discovery_AUC"] = disc_auc_val
+        df_comp.to_csv(compare_path, index=False)
+        print(f"[+] Updated comparison table with computed v2 discovery AUC ({disc_auc_val:.3f})")
+        
     return df_perf_v2
 
 # ==============================================================================
@@ -1127,15 +1152,15 @@ def run_stage8(best_row):
     
     # Save search log
     with open(REPORTS_V2_DIR / "SCRNA_SPATIAL_DATASET_SEARCH_LOG.md", "w") as f:
-        f.write("# Single-Cell and Spatial Transcriptomics Dataset Search Log\n\n")
+        f.write("# Single-Cell and Spatial Transcriptomics Dataset Search Log (Audit Update)\n\n")
         f.write("We systematically searched public single-cell and spatial repositories (GEO, cellxgene, UCSC Cell Browser) for pancreatic ductal adenocarcinoma dataset resources.\n\n")
         f.write("## Datasets Queried\n\n")
         f.write("1. **CRA001160 (Peng et al., Cell Research 2019)**:\n")
         f.write("   * Type: scRNA-seq of 24 primary PDAC tumors and 11 control pancreases.\n")
-        f.write("   * Status: **ACCEPTED** as single-cell validation reference. Processed average expression statistics were used to map cellular origins.\n")
+        f.write("   * Status: **NOT ACCESSED** in this run. scRNA-seq validation could not be completed in this run. The current scRNA/spatial results in reports_v2 should be treated as illustrative only and must not be described as confirmed validation.\n\n")
         f.write("2. **UCSC Cell Browser (pdac-atlas)**:\n")
         f.write("   * Type: Spatial transcriptomic sections of human PDAC tumors.\n")
-        f.write("   * Status: **ACCEPTED** as spatial validation reference. We evaluated the spatial co-localization of cell-cycle and chemokine compartments.\n")
+        f.write("   * Status: **NOT ACCESSED** in this run. Spatial validation could not be completed in this run. The current spatial results in reports_v2 should be treated as illustrative only and must not be described as confirmed validation.\n")
         
     gene_a = best_row["gene_A"]
     gene_b = best_row["gene_B"]

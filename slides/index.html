@@ -205,185 +205,176 @@
       </div>
     </section>
 
-    <!-- Slide 7: Differential Expression Analysis -->
+    <!-- Slide 7: Volcano plot / DE analysis -->
     <section class="slide" id="slide-7">
       <div class="slide-content grid-2">
         <div class="col-text">
           <span class="slide-number">VII</span>
-          <h2 class="section-title">First-Pass Screening (Welch's t-test)</h2>
+          <h2 class="section-title">Volcano plot: from expression matrix to each gene-dot</h2>
           <hr class="section-divider">
-          <p class="body-text">
-            Differential expression (DE) comparing 178 tumors against 167 normal tissues identified 19,399 tumor-high candidate genes (log2FC &ge; 1.0, FDR &lt; 0.05).
-          </p>
-          <div class="bullet-box">
-            <div class="bullet-item">
-              <strong>Specificity Scoring:</strong> Prioritized genes using the product of single-gene AUC and log2 fold change.
-            </div>
-            <div class="bullet-item">
-              <strong>Top Candidates:</strong> Highlighted UBE2S and CCR6 as significant upregulated candidate genes.
-            </div>
+          <p class="body-text">This slide derives the volcano plot instead of only showing it: expression values are split into PDAC and normal groups, summarized as log2FC, tested for FDR, and then mapped into x/y coordinates.</p>
+          <div class="bullet-box compact">
+            <div class="bullet-item"><strong>Input:</strong> gene expression matrix, columns = samples.</div>
+            <div class="bullet-item"><strong>Visual mapping:</strong> x = tumor vs normal expression difference; y = statistical confidence; dot = one gene.</div>
+            <div class="bullet-item"><strong>Conclusion / limit:</strong> prioritizes tumor-high candidates; does not prove causality or protein-level sensorability.</div>
           </div>
+          <div class="control-panel"><button class="replay-btn" data-scene="scene3a">Replay derivation</button></div>
         </div>
-        <div class="col-visual centering">
-          <div class="card visual-card" id="scene3a-container">
-            <!-- D3 Volcano Plot -->
-          </div>
-        </div>
+        <div class="col-visual centering"><div class="card visual-card" id="scene3a-container"></div></div>
       </div>
     </section>
 
-    <!-- Slide 8: Machine Learning and SHAP (Animated Scene 3) -->
+    <!-- Slide 8: Machine learning as feature prioritization -->
     <section class="slide" id="slide-8">
       <div class="slide-content grid-2">
         <div class="col-text">
           <span class="slide-number">VIII</span>
-          <h2 class="section-title">ML Prioritization & SHAP Attribution</h2>
+          <h2 class="section-title">Machine learning as feature prioritization</h2>
           <hr class="section-divider">
-          <p class="body-text">
-            An L1-regularized Logistic Regression model achieved perfect cross-validation AUC (1.000). Features were prioritized using SHAP value attributions.
-          </p>
-          <div class="alert-box warning-border">
-            <span class="alert-title">Model Attribution vs. Causality</span>
-            <p id="shap-disclaimer">SHAP values reflect model feature importance, explaining how predictions are built. They do not directly prove biological causality.</p>
-          </div>
-          <div class="control-panel">
-            <button class="replay-btn" data-scene="scene3">Replay Scene 3</button>
-          </div>
+          <p class="body-text">The classifier is not presented as a diagnostic device. It is a computational filter that ranks genes by how much they help distinguish discovery-cohort PDAC from normal pancreas.</p>
+          <div class="alert-box warning-border"><span class="alert-title">Interpretation guardrail</span><p>Feature prioritization, not clinical diagnosis. Near-perfect AUC may reflect both biology and TCGA-vs-GTEx cohort effects.</p></div>
+          <div class="control-panel"><button class="replay-btn" data-scene="scene3">Replay ML flow</button></div>
         </div>
-        <div class="col-visual centering">
-          <div class="card visual-card" id="scene3-container">
-            <!-- D3 Push/Pull Visualizer -->
-          </div>
-        </div>
+        <div class="col-visual centering"><div class="card visual-card" id="scene3-container"></div></div>
       </div>
     </section>
 
-    <!-- Slide 9: Candidate Pair Selection (Animated Scene 4) -->
+    <!-- Slide 9: SHAP model attribution -->
     <section class="slide" id="slide-9">
       <div class="slide-content grid-2">
         <div class="col-text">
           <span class="slide-number">IX</span>
-          <h2 class="section-title">Selected Input Candidate: UBE2S + CCR6</h2>
+          <h2 class="section-title">SHAP: decomposing one model decision</h2>
           <hr class="section-divider">
-          <p class="body-text">
-            We evaluated all combinations of the top 100 SHAP genes using a composite Pair Score based on pairwise correlation and tumor activation rates.
-          </p>
-          <div class="bullet-box">
-            <div class="bullet-item">
-              <strong>UBE2S (Input A):</strong> Proliferation / cell-cycle axis.
-            </div>
-            <div class="bullet-item">
-              <strong>CCR6 (Input B):</strong> Immune stroma / chemokine receptor axis.
-            </div>
-            <div class="bullet-item">
-              <span id="corr-warn">Pearson correlation: r = 0.714.</span> Functionally divergent pathways, but statistically correlated in bulk tissue.
-            </div>
-          </div>
-          <div class="control-panel">
-            <button class="replay-btn" data-scene="scene4">Replay Scene 4</button>
-          </div>
+          <p class="body-text">SHAP values are introduced as a decomposition of the trained classifier output for a sample: which gene values push the probability toward PDAC, and which pull it toward normal.</p>
+          <div class="alert-box warning-border"><span class="alert-title">Required caution</span><p id="shap-disclaimer">SHAP explains the model decision. It does not prove biological causality.</p></div>
+          <div class="control-panel"><button class="replay-btn" data-scene="scene-shap">Replay SHAP derivation</button></div>
         </div>
-        <div class="col-visual centering">
-          <div class="card visual-card" id="scene4-container">
-            <!-- D3 2D Scatter plot and thresholds -->
-          </div>
-        </div>
+        <div class="col-visual centering"><div class="card visual-card" id="scene-shap-container"></div></div>
       </div>
     </section>
 
-    <!-- Slide 10: Hill-Equation Model (Animated Scene 5) -->
+    <!-- Slide 10: SHAP threshold inference -->
     <section class="slide" id="slide-10">
       <div class="slide-content grid-2">
         <div class="col-text">
           <span class="slide-number">X</span>
-          <h2 class="section-title">Mathematical Hill-Equation Modeling</h2>
+          <h2 class="section-title">SHAP threshold: where expression changes the model vote</h2>
           <hr class="section-divider">
-          <p class="body-text">
-            The AND gate is simulated using a dual-input Hill equation modeling continuous logic circuit activation kinetics.
-          </p>
-          <div id="hill-equation-container">
-            <!-- Equation progressively shown -->
-            <div class="equation-line" id="eq-main">
-              $$Output = P_{\text{basal}} + V_{\max} \cdot H(A) \cdot H(B)$$
-            </div>
-            <div class="equation-line" id="eq-sub" style="font-size: 0.9em; margin-top: 10px; color: #555;">
-              $$H(X) = \frac{[X]^n}{K_X^n + [X]^n}$$
-            </div>
-          </div>
-          <div class="note-box warning-border" style="margin-top: 15px;">
-            <span id="threshold-disclaimer">Model parameters K_A (0.760) and K_B (0.464) are transcriptomic thresholds, not physical dissociation constants.</span>
-          </div>
-          <div class="control-panel">
-            <button class="replay-btn" data-scene="scene5">Replay Scene 5</button>
-          </div>
+          <p class="body-text">The threshold is derived from a dependence plot: expression values are plotted against SHAP values and the crossing point at SHAP = 0 is treated as a model-inferred activation boundary.</p>
+          <div class="note-box warning-border"><strong>threshold = model-derived decision boundary</strong><br>not biochemical Kd</div>
+          <div class="control-panel"><button class="replay-btn" data-scene="scene-threshold">Replay threshold inference</button></div>
         </div>
-        <div class="col-visual centering">
-          <div class="card visual-card" id="scene5-container">
-            <!-- D3 Contour activation heatmap -->
-          </div>
-        </div>
+        <div class="col-visual centering"><div class="card visual-card" id="scene-threshold-container"></div></div>
       </div>
     </section>
 
-    <!-- Slide 11: Validation and Transferability (Animated Scene 6) -->
+    <!-- Slide 11: UBE2S + CCR6 scatter / pair selection -->
     <section class="slide" id="slide-11">
       <div class="slide-content grid-2">
         <div class="col-text">
           <span class="slide-number">XI</span>
-          <h2 class="section-title">Validation and Transferability</h2>
+          <h2 class="section-title">Pair selection: why UBE2S + CCR6 was selected</h2>
           <hr class="section-divider">
-          <p class="body-text">
-            The optimized AND gate was validated on the independent GSE62452 dataset. While specificity remains exceptionally high, sensitivity drops significantly due to platform differences (microarray vs. RNA-seq).
-          </p>
-          <div class="takeaway-badge-container">
-            <!-- Takeaway box highlighted by rough notation -->
-            <div id="validation-takeaway">
-              "high-specificity candidate" &ne; "validated biosensor"
-            </div>
+          <p class="body-text">Candidate genes are paired, each pair is scored by tumor double-high rate, normal double-high leakage, and a correlation penalty, and the selected pair is then inspected as a 2D AND-gate scatter.</p>
+          <div class="bullet-box compact">
+            <div class="bullet-item"><strong>AND ON:</strong> UBE2S high AND CCR6 high.</div>
+            <div class="bullet-item" id="corr-warn"><strong>Caution:</strong> Correlation = 0.714. Functionally divergent, but not statistically orthogonal.</div>
           </div>
-          <div class="control-panel" style="margin-top: 15px;">
-            <button class="replay-btn" data-scene="scene6">Replay Scene 6</button>
-          </div>
+          <div class="control-panel"><button class="replay-btn" data-scene="scene4">Replay pair scoring</button></div>
         </div>
-        <div class="col-visual centering">
-          <div class="card visual-card" id="scene6-container">
-            <!-- D3 side by side bar comparisons -->
-          </div>
-        </div>
+        <div class="col-visual centering"><div class="card visual-card" id="scene4-container"></div></div>
       </div>
     </section>
 
-    <!-- Slide 12: Future Directions & Conclusion -->
+    <!-- Slide 12: Hill-equation AND-gate modeling -->
     <section class="slide" id="slide-12">
       <div class="slide-content grid-2">
         <div class="col-text">
           <span class="slide-number">XII</span>
+          <h2 class="section-title">Hill equation: converting expression into AND-gate output</h2>
+          <hr class="section-divider">
+          <p class="body-text">Raw expression is normalized to 0–1, transformed through two Hill response curves, and multiplied so that the output becomes high only when both UBE2S and CCR6 are high.</p>
+          <div id="hill-equation-container">
+            <div class="equation-line"><strong>Output</strong> = P<sub>basal</sub> + V<sub>max</sub> · H(UBE2S) · H(CCR6)</div>
+            <div class="equation-line">H(X) = X<sup>n</sup> / (K<sub>X</sub><sup>n</sup> + X<sup>n</sup>)</div>
+          </div>
+          <div class="note-box warning-border"><span id="threshold-disclaimer">K_A and K_B are model-inferred expression thresholds. They are not biochemical dissociation constants.</span></div>
+          <div class="control-panel"><button class="replay-btn" data-scene="scene5">Replay Hill transformation</button></div>
+        </div>
+        <div class="col-visual centering"><div class="card visual-card" id="scene5-container"></div></div>
+      </div>
+    </section>
+
+    <!-- Slide 13: Random-pair control -->
+    <section class="slide" id="slide-13">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">XIII</span>
+          <h2 class="section-title">Random-pair control: is UBE2S + CCR6 better than chance?</h2>
+          <hr class="section-divider">
+          <p class="body-text">This negative control asks whether two random genes from the filtered gene universe could routinely achieve the same AND-gate AUC.</p>
+          <div class="bullet-box compact">
+            <div class="bullet-item">If many random pairs perform similarly, our candidate is not special.</div>
+            <div class="bullet-item">If UBE2S + CCR6 lies beyond the random background, it supports non-random prioritization.</div>
+            <div class="bullet-item"><strong>Caution:</strong> This control tests statistical non-randomness, not biological causality.</div>
+          </div>
+          <div class="control-panel"><button class="replay-btn" data-scene="scene-random">Replay random-pair control</button></div>
+        </div>
+        <div class="col-visual centering"><div class="card visual-card" id="scene-random-container"></div></div>
+      </div>
+    </section>
+
+    <!-- Slide 14: Threshold sensitivity analysis -->
+    <section class="slide" id="slide-14">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">XIV</span>
+          <h2 class="section-title">Threshold sensitivity: what if the inferred K values are wrong?</h2>
+          <hr class="section-divider">
+          <p class="body-text">Because SHAP-derived K values are model-inferred rather than experimentally measured, we perturb K_A and K_B by ±10%, ±25%, and ±50%, then recompute output, AUC, and accuracy.</p>
+          <div class="bullet-box compact">
+            <div class="bullet-item">AUC stability means ranking remains robust.</div>
+            <div class="bullet-item">Accuracy changes mean the final ON/OFF decision still requires calibration.</div>
+            <div class="bullet-item"><strong>Caution:</strong> This is computational robustness, not biochemical affinity validation.</div>
+          </div>
+          <div class="control-panel"><button class="replay-btn" data-scene="scene-sensitivity">Replay sensitivity analysis</button></div>
+        </div>
+        <div class="col-visual centering"><div class="card visual-card" id="scene-sensitivity-container"></div></div>
+      </div>
+    </section>
+
+    <!-- Slide 15: External validation and interpretation -->
+    <section class="slide" id="slide-15">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">XV</span>
+          <h2 class="section-title">External validation: dataset/platform shift changes interpretation</h2>
+          <hr class="section-divider">
+          <p class="body-text">Discovery thresholds learned from RNA-seq are transferred to a microarray cohort. Specificity remains high, but sensitivity collapses, so the result is not a simple pass/fail story.</p>
+          <div class="takeaway-badge-container"><div id="validation-takeaway">high-specificity computational candidate<br>not a validated sensitive PDAC detector</div></div>
+          <div class="control-panel"><button class="replay-btn" data-scene="scene6">Replay validation comparison</button></div>
+        </div>
+        <div class="col-visual centering"><div class="card visual-card" id="scene6-container"></div></div>
+      </div>
+    </section>
+
+    <!-- Slide 16: Future Directions & Conclusion -->
+    <section class="slide" id="slide-16">
+      <div class="slide-content grid-2">
+        <div class="col-text">
+          <span class="slide-number">XVI</span>
           <h2 class="section-title">Summary & Wet-Lab Translation</h2>
           <hr class="section-divider">
-          <p class="body-text">
-            Our unbiased computational pipeline prioritized candidate pairs for a logic-gated synthetic biosensor. Wet-lab validation is the next critical step.
-          </p>
+          <p class="body-text">The revised logic separates validation modules: random-pair control tests chance, threshold sensitivity tests parameter uncertainty, and external validation tests dataset/platform shift.</p>
           <div class="bullet-box">
-            <div class="bullet-item">
-              <strong>Synthetic Promoters:</strong> Drive orthogonal transcription factors in split-transactivator configurations.
-            </div>
-            <div class="bullet-item">
-              <strong>RNA-Based Sensors:</strong> Leverage toehold switches for direct intracellular transcript sensing.
-            </div>
-            <div class="bullet-item">
-              <strong>In Vitro Validation:</strong> Test circuit activation in target PDAC cell lines (PANC-1) vs. healthy epithelia (HPDE).
-            </div>
+            <div class="bullet-item"><strong>What we have:</strong> a high-specificity computational candidate pair and transparent derivation of each figure.</div>
+            <div class="bullet-item"><strong>What remains:</strong> platform calibration, protein/RNA sensor design, and wet-lab validation in PDAC and healthy cell models.</div>
+            <div class="bullet-item"><strong>Design guardrail:</strong> computational prioritization is not biological causality.</div>
           </div>
         </div>
         <div class="col-visual centering">
-          <div class="card summary-card">
-            <h3>Design Takeaway</h3>
-            <div class="summary-points">
-              <div class="summary-point">Unbiased Data-Driven Discovery</div>
-              <div class="summary-point">Safety via Pathway Orthogonality</div>
-              <div class="summary-point">Rigorous Transferability Benchmarking</div>
-            </div>
-          </div>
+          <div class="card summary-card"><h3>Validation logic</h3><div class="summary-points"><div class="summary-point">Against chance: random-pair background</div><div class="summary-point">Against parameter uncertainty: K sensitivity</div><div class="summary-point">Against platform shift: external microarray validation</div></div></div>
         </div>
       </div>
     </section>
@@ -393,30 +384,13 @@
   <!-- Presentation Nav Bar and Progress -->
   <div id="controls-container">
     <button class="nav-btn" id="prev-btn" aria-label="Previous Slide">← Previous</button>
-    <div id="slide-indicator">Slide 1 / 12</div>
+    <div id="slide-indicator">Slide 1 / 16</div>
     <button class="nav-btn" id="next-btn" aria-label="Next Slide">Next →</button>
   </div>
 
   <div id="progress-bar-container">
     <div id="progress-bar"></div>
   </div>
-
-  <!-- Load MathJax (Optional, offline fallback handles formatting in plain text if required) -->
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-  
-  <!-- Fallback for offline MathJax support -->
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']]
-      },
-      svg: {
-        fontCache: 'global'
-      }
-    };
-  </script>
 
   <!-- Scripts -->
   <script src="scripts/anime.min.js"></script>

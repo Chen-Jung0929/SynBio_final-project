@@ -3,9 +3,7 @@
    Warm Parchment (#f5f4ed) and Ink-Blue (#1B365D) Visual Language
    ========================================================================== */
 
-/* Font Definitions */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
-
+/* Font Definitions: offline-safe system serif stack; no network font dependency. */
 :root {
   --canvas-bg: #f5f4ed;
   --ink-blue: #1B365D;
@@ -640,4 +638,86 @@ svg text {
   position: absolute;
   left: 0;
   color: var(--ink-blue);
+}
+
+
+/* Explanatory computation slide additions */
+.bullet-box.compact {
+  gap: 9px;
+}
+
+.bullet-box.compact .bullet-item {
+  font-size: 0.9em;
+}
+
+.visual-card {
+  min-height: 480px;
+}
+
+.visual-card svg {
+  width: 100%;
+  height: 100%;
+}
+
+.step-caption {
+  font-family: var(--font-sans);
+  font-size: 0.78em;
+  fill: #5c5a55;
+}
+
+.svg-title {
+  font-family: var(--font-display) !important;
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--ink-blue);
+}
+
+.svg-note {
+  font-family: var(--font-sans) !important;
+  font-size: 10px;
+  fill: #666;
+}
+
+.matrix-cell {
+  fill: rgba(222, 220, 207, 0.25);
+  stroke: var(--warm-gray-border);
+}
+
+.matrix-header {
+  font-family: var(--font-sans) !important;
+  font-size: 9px;
+  fill: var(--ink-blue);
+  font-weight: 700;
+}
+
+.pipeline-chip {
+  display: inline-block;
+  border: 1px solid var(--warm-gray-border);
+  padding: 3px 8px;
+  margin: 2px;
+  font-family: var(--font-sans);
+  font-size: 0.8em;
+}
+
+#validation-takeaway {
+  font-size: 1.05em;
+  line-height: 1.35;
+  text-align: center;
+  text-transform: none;
+}
+
+@media (max-width: 900px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .card {
+    height: 420px;
+  }
+  .section-title {
+    font-size: 1.6em;
+  }
+  .body-text {
+    font-size: 0.98em;
+  }
 }

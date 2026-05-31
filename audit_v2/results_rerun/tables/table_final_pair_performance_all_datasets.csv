@@ -1,0 +1,4 @@
+Cohort/Dataset,Sensitivity,Specificity,ROC-AUC
+TCGA + GTEx Discovery,0.921,1.000,0.984
+GSE62452 Same-Cohort Validation,0.594,0.934,0.873
+GSE28735 External Validation,0.644,0.933,0.896

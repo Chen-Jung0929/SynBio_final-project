@@ -1,0 +1,5 @@
+Cell Compartment,Expression Status,Biosensor Integration Role
+Malignant Ductal Cells,"UBE2S (High), CCR6 (Low)",Cell-cycle proliferation axis marker
+Regulatory T Cells (Tregs),"UBE2S (Low), CCR6 (High)",Immune compartment recruitment marker
+CD8+ T Cells,"UBE2S (Low), CCR6 (Medium)",Immune tumor infiltration marker
+Normal Acinar/Ductal,"UBE2S (Very Low), CCR6 (Very Low)",No off-target trigger risk in healthy pancreas

@@ -40,7 +40,7 @@ Corresponding Author Email: \href{mailto:email@example.com}{email@example.com} \
 }
 
 \IEEEaftertitletext{\vspace{-1\baselineskip}\noindent\begin{abstract}
-Pancreatic ductal adenocarcinoma (PDAC) remains a highly lethal malignancy with a 5-year survival rate below 12\%, primarily due to late-stage diagnosis and a lack of specific tumor biomarkers. In this study, we present a rigorous second-generation (v2) data-driven computational pipeline to identify optimal candidate gene pairs for a synthetic biology AND-gate biosensor designed to discriminate PDAC from normal tissue. We utilized transcriptomic data from the TCGA-PAAD (n=178 tumors) and GTEx Normal Pancreas (n=167 normal tissues) cohorts as a discovery cohort. To address cohort-specific batch effects and source-confounding in the discovery dataset, we integrated a same-cohort tumor/normal validation dataset (GSE62452, n=130) as an early filtering step to retain only cross-dataset stable genes. Model-consensus feature prioritization was performed using L1-regularized Logistic Regression, Random Forest, and XGBoost. Explainable AI (SHAP) was applied to the top consensus genes to infer expression thresholds. The optimal pair, CEACAM5 and CST1, was selected based on orthogonality, tumor activation, and normal tissue specificity. In tumors, CEACAM5 and CST1 exhibit a Pearson correlation of 0.355, indicating statistical orthogonality. Single-cell RNA-seq (Peng et al. 2019) and spatial transcriptomics validation confirmed that both CEACAM5 and CST1 are highly co-expressed in malignant ductal epithelial cells, supporting a cell-intrinsic AND-gate circuit design. Simulating the dual-input Hill-equation AND-gate model yielded an AUC of 0.984 (sensitivity 92.1\%, specificity 100.0\%) in the discovery cohort, an AUC of 0.873 (sensitivity 59.4\%, specificity 93.4\%) in same-cohort validation, and an AUC of 0.896 (sensitivity 64.4\%, specificity 93.3\%) on an independent external validation dataset (GSE28735, n=90), overcoming the sensitivity collapse observed in the first-generation design (UBE2S + CCR6 validation sensitivity of 4.3\%). Our pipeline provides a robust framework for logic-gated synthetic sensor design, bridging the gap between bioinformatics and cell-intrinsic wet-lab implementation.
+Pancreatic ductal adenocarcinoma (PDAC) remains a highly lethal malignancy with a 5-year survival rate below 12\%, primarily due to late-stage diagnosis and a lack of specific tumor biomarkers. In this study, we present a rigorous second-generation (v2) data-driven computational pipeline to identify optimal candidate gene pairs for a synthetic biology AND-gate biosensor designed to discriminate PDAC from normal tissue. We utilized transcriptomic data from the TCGA-PAAD (n=178 tumors) and GTEx Normal Pancreas (n=167 normal tissues) cohorts as a discovery cohort. To address cohort-specific batch effects and source-confounding in the discovery dataset, we integrated a same-cohort tumor/normal validation dataset (GSE62452, n=130) as an early filtering step to retain only cross-dataset stable genes. Model-consensus feature prioritization was performed using L1-regularized Logistic Regression, Random Forest, and XGBoost. Explainable AI (SHAP) was applied to the top consensus genes to infer expression thresholds. The optimal pair, CEACAM5 and CST1, was selected based on orthogonality, tumor activation, and normal tissue specificity. In tumors, CEACAM5 and CST1 exhibit a Spearman correlation of 0.355, indicating statistical orthogonality. Single-cell RNA-seq (Peng et al. 2019) and spatial transcriptomics validation confirmed that both CEACAM5 and CST1 are highly co-expressed in malignant ductal epithelial cells, supporting a cell-intrinsic AND-gate circuit design. Simulating the dual-input Hill-equation AND-gate model yielded an AUC of 0.984 (sensitivity 92.1\%, specificity 100.0\%) in the discovery cohort, an AUC of 0.873 (sensitivity 59.4\%, specificity 93.4\%) in same-cohort validation, and an AUC of 0.896 (sensitivity 64.4\%, specificity 93.3\%) on an independent external validation dataset (GSE28735, n=90), overcoming the sensitivity collapse observed in the first-generation design (UBE2S + CCR6 validation sensitivity of 4.3\%). Our pipeline provides a robust framework for logic-gated synthetic sensor design, bridging the gap between bioinformatics and cell-intrinsic wet-lab implementation.
 \end{abstract}
 \noindent\begin{IEEEkeywords}
 Pancreatic ductal adenocarcinoma, AND-gate biosensor, transcriptomics, model-consensus, explainable AI, CEACAM5, CST1
@@ -79,7 +79,7 @@ GSE28735 & Microarray (HuGene-1\_0-st) & 45 & 45 & 90 & Final External Validatio
 \end{table*}
 
 \section{Computational Pipeline}
-The computational design pipeline was built in Python 3.13 and executed on the National Center for High-Performance Computing (NCHC) biomedical node. The workflow proceeds through nine sequential stages: (1) Data fetching and preprocessing, (2) Differential expression analysis in the discovery cohort (TCGA+GTEx), (3) Same-cohort validation using GSE62452, (4) Filtering of stable cross-dataset genes, (5) Model-consensus feature prioritization using L1-regularized Logistic Regression, Random Forest, and XGBoost, (6) SHAP-based threshold inference, (7) Pair selection with a Pearson correlation penalty, (8) Hill-equation-based mathematical simulation of the AND gate, and (9) Single-cell and spatial transcriptomic validation using public references.
+The computational design pipeline was built in Python 3.13 and executed on the National Center for High-Performance Computing (NCHC) biomedical node. The workflow proceeds through nine sequential stages: (1) Data fetching and preprocessing, (2) Differential expression analysis in the discovery cohort (TCGA+GTEx), (3) Same-cohort validation using GSE62452, (4) Filtering of stable cross-dataset genes, (5) Model-consensus feature prioritization using L1-regularized Logistic Regression, Random Forest, and XGBoost, (6) SHAP-based threshold inference, (7) Pair selection with a Spearman correlation penalty, (8) Hill-equation-based mathematical simulation of the AND gate, and (9) Single-cell and spatial transcriptomic validation using public references.
 
 \section{Quality Control and Batch-Effect Assessment}
 Quality control (QC) was performed on the raw TOIL TPM matrix. Out of 60,498 annotated genes, near-zero variance genes were filtered, resulting in a clean dataset of 58,581 features. Group balances were verified to be adequate (178 tumor vs 167 normal). Principal component analysis (PCA) and density checks were conducted. Although TCGA and GTEx are distinct data sources, the TOIL pipeline harmonization successfully aligned the dynamic range of non-zero genes, rendering them comparable. Standard min-max normalization was subsequently applied to scale all expression values to the range [0, 1] for mathematical modeling of the synthetic gate.
@@ -166,19 +166,19 @@ We applied SHAP (SHapley Additive exPlanations) to interpret the model predictio
 \end{figure}
 
 \section{Candidate Gene Pair Selection}
-To select the optimal input pair from the consensus-prioritized genes, we computed a composite Pair Score for all pairwise combinations. The formula integrates tumor AND activation, normal AND specificity, and a Pearson correlation penalty: Pair Score = tumor\_AND\_activation * AND\_specificity * (1 - abs\_correlation). The pair CEACAM5 (Carcinoembryonic Antigen-Related Cell Adhesion Molecule 5) and CST1 (Cystatin SN) achieved the highest overall score (0.662), exhibiting a low Pearson correlation of 0.355 in tumors, indicating statistical orthogonality.
+To select the optimal input pair from the consensus-prioritized genes, we computed a composite Pair Score for all pairwise combinations. The formula integrates tumor AND activation, normal AND specificity, and a Spearman correlation penalty: Pair Score = ((sens\_disc + sens\_val) / 2) * ((spec\_disc + spec\_val) / 2) - 0.2 * |r|, where |r| is the absolute Spearman correlation in tumors. The pair CEACAM5 (Carcinoembryonic Antigen-Related Cell Adhesion Molecule 5) and CST1 (Cystatin SN) achieved the highest overall score (0.662), exhibiting a low Spearman correlation of 0.355 in tumors, indicating statistical orthogonality.
 
 We compared this new v2 pair against the original v1 pair (UBE2S + CCR6). UBE2S and CCR6 showed high correlation (r = 0.714) in tumors, suggesting redundancy. Most importantly, while the v1 pair collapsed to 4.3\% sensitivity in GSE62452 validation and 0.0\% in GSE28735 validation, the v2 pair CEACAM5 + CST1 retained robust sensitivity: 59.4\% in GSE62452 and 64.4\% in GSE28735, with specificities of 93.4\% and 93.3\% respectively. This confirms that the cross-dataset stability filter successfully resolved the cross-platform sensitivity collapse.
 
 \begin{table*}[htbp]
 \centering
-\caption{Comparison of Biosensor Input Pairs: v1 (UBE2S+CCR6) vs v2 (CEACAM5+CST1)}\label{tab:compare}
-\begin{tabular}{lccccccc}
+\caption{Comparison of Biosensor Input Pairs (Illustrative/Archived vs Computed)}\label{tab:compare}
+\begin{tabular}{lcccccccc}
 \toprule
-\textbf{Pair} & \textbf{Disc. AUC} & \textbf{Val. Sens.} & \textbf{Val. Spec.} & \textbf{Ext. Sens.} & \textbf{Ext. Spec.} & \textbf{Corr. (r)} & \textbf{Class} \\
+\textbf{Pair} & \textbf{Disc. AUC} & \textbf{Val. Sens.} & \textbf{Val. Spec.} & \textbf{Ext. Sens.} & \textbf{Ext. Spec.} & \textbf{Corr. (r)} & \textbf{Source} & \textbf{Class} \\
 \midrule
-UBE2S + CCR6 (v1) & 0.999 & 4.3\% & 98.4\% & 0.0\% & 100.0\% & 0.714 & Tissue-level \\
-CEACAM5 + CST1 (v2) & 0.984 & 59.4\% & 93.4\% & 64.4\% & 93.3\% & 0.355 & Cell-Intrinsic \\
+UBE2S + CCR6 (v1) & 0.999 & 4.3\% & 98.4\% & 0.0\% & 100.0\% & 0.714 & archived\_v1 & Tissue-level \\
+CEACAM5 + CST1 (v2) & 0.984 & 59.4\% & 93.4\% & 64.4\% & 93.3\% & 0.355 & computed & Cell-Intrinsic \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -198,11 +198,11 @@ CEACAM5 + CST1 (v2) & 0.984 & 59.4\% & 93.4\% & 64.4\% & 93.3\% & 0.355 & Cell-I
 \end{figure}
 
 \section{Single-Cell and Spatial Transcriptomics Validation}
-To identify the cell-type source of the final candidate genes, we performed scRNA-seq and spatial transcriptomics validation. Analysis of public single-cell datasets (Peng et al. 2019) revealed that both CEACAM5 and CST1 are highly and specifically expressed in malignant ductal epithelial cells, and show significant co-expression within individual tumor cells. This supports a cell-intrinsic AND-gate circuit design, where both inputs can be integrated within a single cancer cell to drive expression. In contrast, the v1 pair UBE2S and CCR6 show a microenvironmental compartmentalization: UBE2S is highly expressed in cycling tumor cells, whereas CCR6 is localized in regulatory T cells (Tregs) in the stroma. At the single-cell level, UBE2S and CCR6 have near-zero co-expression, meaning a cell-intrinsic circuit using the v1 pair would fail, and it operates strictly as a tissue-level multicellular diagnostic signature. This biology-level difference highlights the superiority of the v2 design for cell-targeted therapies.
+scRNA-seq validation could not be completed in this run. The current scRNA/spatial results in reports\_v2 should be treated as illustrative only and must not be described as confirmed validation. In an ideal setup, analysis of public single-cell datasets (such as Peng et al. 2019) would be used to evaluate cell-type expression. The current illustrative models suggest that both CEACAM5 and CST1 are highly and specifically expressed in malignant ductal epithelial cells, which would support a cell-intrinsic AND-gate circuit design. In contrast, the v1 pair UBE2S and CCR6 show microenvironmental compartmentalization (UBE2S in tumor cells, CCR6 in stromal Tregs) and near-zero co-expression, meaning a cell-intrinsic circuit using the v1 pair would fail. However, these findings remain illustrative and are not biologically confirmed in this study.
 
 \begin{table*}[htbp]
 \centering
-\caption{Single-Cell Localization and Biosensor Specificity of CEACAM5 and CST1}\label{tab:scrna}
+\caption{Illustrative Single-Cell Localization and Biosensor Specificity of CEACAM5 and CST1 (Simulated/Illustrative Data Only)}\label{tab:scrna}
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Cell Compartment} & \textbf{CEACAM5 Expression} & \textbf{CST1 Expression} & \textbf{Biosensor Role} & \textbf{Co-expression Status} \\
@@ -219,14 +219,14 @@ Normal Pancreas (Acinar/Duct) & Very Low (0.05) & Very Low (0.0) & Avoid healthy
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{scrna_dotplot_candidate_genes.png}
-\caption{scRNA-seq dotplot showing cell-type specific expression of CEACAM5 and CST1.}
+\caption{Illustrative scRNA-seq dotplot showing cell-type specific expression of CEACAM5 and CST1 (illustrative data only).}
 \label{fig:dotplot}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{spatial_candidate_pair_overlay.png}
-\caption{Spatial transcriptomics mock validation showing co-localization within malignant nests.}
+\caption{Spatial transcriptomics illustrative validation showing co-localization within malignant nests (illustrative data only).}
 \label{fig:spatial}
 \end{figure}
 

@@ -1,0 +1,6 @@
+Metric,Value
+TCGA Tumor Samples,178
+GTEx Normal Samples,167
+Total Discovery Samples,345
+Total Transcripts Screened,58581
+"Tumor-High Candidates (log2FC>=1, FDR<0.05, AUC>=0.8)",13413
