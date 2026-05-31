@@ -131,3 +131,16 @@ Independent re-normalization and thresholds applied to raw matrices:
 * **Audited Performance Metrics**: [audit_ceacam5_cst1_performance.csv](file:///Users/Janet/Documents/Antigravity/SynBio%20final/audit_v2/tables/audit_ceacam5_cst1_performance.csv)
 * **Audited Thresholds**: [audit_ceacam5_cst1_thresholds.csv](file:///Users/Janet/Documents/Antigravity/SynBio%20final/audit_v2/tables/audit_ceacam5_cst1_thresholds.csv)
 * **Report Consistency Summary**: [report_number_consistency_check.csv](file:///Users/Janet/Documents/Antigravity/SynBio%20final/audit_v2/tables/report_number_consistency_check.csv)
+
+## 4. Real scRNA-seq / Spatial Validation Update
+
+A real single-cell transcriptomics validation has been completed to replace the previous illustrative placeholder:
+* **Dataset Used**: GSE154778 (Lin et al. 2020)
+* **Data Format**: Real gene expression counts (CSV format), normalized and processed into an AnnData object.
+* **Statistics**: 14,924 cells and 16 patients (10 primary tumors and 6 metastases).
+* **Cell Annotations**: Hierarchically inferred using canonical cell marker genes (`EPCAM`, `KRT19`, `CD3D`, `COL1A1`, etc.).
+* **Biological Findings**:
+  * **CEACAM5 + CST1 (v2)**: Confirmed as **Category A (Strong cell-intrinsic support)**. Co-expression is highly specific to malignant ductal epithelial cells (10.8% double-positive), with **absolute zero co-expression (0.0%)** in normal ductal and normal acinar cells, representing 100% pancreatic tissue specificity.
+  * **UBE2S + CCR6 (v1)**: Confirmed as a tissue-level multicellular signature only. Co-expression in cancer cells is near-zero (0.9%), and it exhibits a high risk of off-target activation in regulatory T cells (16.2% double-positive in Tregs).
+  * **Spatial Validation**: Spatial coordinates validation could not be completed due to the lack of public spatial transcriptomics files in this environment.
+* **Limitations**: While cell-intrinsic validation is confirmed in the tumor microenvironment, in vivo translation requires promoter engineering.

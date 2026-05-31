@@ -1,0 +1,2 @@
+dataset_id,platform,spot_count,gene_count,status,notes
+None_Completed,N/A,0,0,Not completed. No public Visium or Stereo-seq PDAC spatial datasets with integrated coordination files are accessible for direct download in this environment.,Spatial validation could not be completed in this run due to lack of local raw/intermediate spatial data files.

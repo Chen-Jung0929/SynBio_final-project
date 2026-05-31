@@ -1,0 +1,2 @@
+dataset_id,n_cells,n_genes,n_patients,n_tumor_cells,n_normal_cells,available_cell_type_column,normalization_used,notes
+GSE154778 / Lin et al. 2020,14924,22217,16,1925,12999,cell_type (marker-inferred),"sc.pp.normalize_total(target_sum=1e4), log1p","Contains patient samples: ['MET01', 'MET02', 'MET03', 'MET04', 'MET05', 'MET06', 'P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10']"
