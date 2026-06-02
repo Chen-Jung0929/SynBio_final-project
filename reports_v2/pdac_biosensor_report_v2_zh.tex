@@ -25,75 +25,75 @@
 \usepackage[style=numeric,backend=biber]{biblatex}
 \addbibresource{references_zh.bib}
 
-\title{以無偏差轉錄體剖析進行胰臟腫瘤微環境之邏輯閘生物感測器的數據驅動設計 (第二代)}
-\author{施貞蓉$^1$、宿淂芳$^1$、廖軒佑$^2$、林家誼$^2$}
-\date{$^1$國立臺灣大學 生命科學系，台北，台灣\\$^2$國立臺灣大學 生化科技學系，台北，台灣}
+\title{�H�L���t������R�i���Ŧ�~�F�L���Ҥ��޿�h�ͪ��P�������ƾ��X�ʳ]�p (�ĤG�N)}
+\author{�I�s�T$^1$�B�J����$^1$�B���a��$^2$�B�L�a��$^2$}
+\date{$^1$��߻O�W�j�� �ͩR��Ǩt�A�x�_�A�x�W\\$^2$��߻O�W�j�� �ͤƬ�޾Ǩt�A�x�_�A�x�W}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-胰臟導管腺癌 (pancreatic ductal adenocarcinoma, PDAC) 仍然是致死率極高的惡性腫瘤，五年存存活率低於12\%，主要原因在於診斷較晚且缺乏具特異性的腫瘤生物標記。本研究提出一個嚴格的第二代 (v2) 數據驅動運算分析管線，旨在篩選最適合用於合成生物學 logic-gated 及閘 (AND-gate) 生物感測器的候選基因組合，以精準區分胰臟癌與正常胰臟組織。我們整合了 TCGA-PAAD (n=178 腫瘤) 與 GTEx 正常胰臟組織 (n=167 正常) 世代的轉錄體數據作為發現世代。為了解決發現世代中因資料來源不同所導致的批次效應與來源混淆，我們引進了相同研究的腫瘤/正常組織對照世代 (GSE62452, n=130) 作為早期過濾步驟，以保留跨數據庫穩定表現的基因。接著，我們利用 L1 正則化邏輯斯迴歸、隨機森林及 XGBoost 進行模型共識特徵排序。利用可解釋型人工智慧 (SHAP) 技術對最優共識基因進行分析，推估出活化閾值。根據正交性、腫瘤活化率與正常組織特異性，我們選定 CEACAM5 與 CST1 作為最終候選基因組合。兩者在腫瘤中的 Spearman 相關係數僅為 0.355，具備良好的統計學正交性。單細胞轉錄體 (Peng et al. 2019) 與空間轉錄體驗證證實，CEACAM5 與 CST1 皆高度且特異性地共同表達於惡性導管上皮細胞中，支持單細胞內源性 AND-gate 電路設計。雙輸入希爾方程式及閘電路模擬結果顯示：在發現世代中 AUC 達 0.984 (敏感度 92.1\%、特異度 100.0\%)，在同世代驗證 (GSE62452) 中 AUC 達 0.873 (敏感度 59.4\%、特異度 93.4\%)，而在獨立的外部驗證世代 (GSE28735, n=90) 中 AUC 達 0.896 (敏感度 64.4\%、特異度 93.3\%)，成功克服了第一代設計 (UBE2S + CCR6 驗證敏感度僅 4.3\%) 的敏感度塌陷問題。本研究為合成生物感測器的邏輯閘設計提供了一套穩健且具跨平台轉移性的運算框架。
+��Ŧ�ɺ޸��� (pancreatic ductal adenocarcinoma, PDAC) ���M�O�P���v�������c�ʸ~�F�A���~�s�s���v�C��12\%�A�D�n��]�b��E�_���ߥB�ʥF��S���ʪ��~�F�ͪ��аO�C����s���X�@���Y�檺�ĤG�N (v2) �ƾ��X�ʹB����R�޽u�A���b�z��̾A�X�Ω�X���ͪ��� logic-gated �ιh (AND-gate) �ͪ��P�������Կ��]�զX�A�H��ǰϤ���Ŧ���P���`��Ŧ��´�C�ڭ̾�X�F TCGA-PAAD (n=178 �~�F) �P GTEx ���`��Ŧ��´ (n=167 ���`) �@�N�������ƾڧ@���o�{�@�N�C���F�ѨM�o�{�@�N���]��ƨӷ����P�ҾɭP���妸�����P�ӷ��V�c�A�ڭ̤޶i�F�ۦP��s���~�F/���`��´��ӥ@�N (GSE62452, n=130) �@�������L�o�B�J�A�H�O�d��ƾڮwí�w���{����]�C���ۡA�ڭ̧Q�� L1 ���h���޿贵�j�k�B�H���˪L�� XGBoost �i��ҫ��@�ѯS�x�ƧǡC�Q�Υi�������H�u���z (SHAP) �޳N����u�@�Ѱ�]�i����R�A�����X�����H�ȡC�ھڥ���ʡB�~�F���Ʋv�P���`��´�S���ʡA�ڭ̿�w CEACAM5 �P CST1 �@���̲׭Կ��]�զX�C��̦b�~�F���� Spearman �����Y�ƶȬ� 0.355�A��ƨ}�n���έp�ǥ���ʡC��ӭM����� (Peng et al. 2019) �P�Ŷ�����������ҹ�ACEACAM5 �P CST1 �Ұ��ץB�S���ʦa�@�P���F��c�ʾɺޤW�ֲӭM���A�����ӭM������ AND-gate �q���]�p�C����J�ƺ���{���ιh�q���������G��ܡG�b�o�{�@�N�� AUC �F 0.984 (�ӷP�� 92.1\%�B�S���� 100.0\%)�A�b�P�@�N���� (GSE62452) �� AUC �F 0.873 (�ӷP�� 59.4\%�B�S���� 93.4\%)�A�Ӧb�W�ߪ��~�����ҥ@�N (GSE28735, n=90) �� AUC �F 0.896 (�ӷP�� 64.4\%�B�S���� 93.3\%)�A���\�J�A�F�Ĥ@�N�]�p (UBE2S + CCR6 ���ұӷP�׶� 4.3\%) ���ӷP�׶򳴰��D�C����s���X���ͪ��P�������޿�h�]�p���ѤF�@�Mí���B��󥭥x�ಾ�ʪ��B��ج[�C
 \end{abstract}
 
-\section{前言}
-胰臟導管腺癌 (PDAC) 的病理特徵包括隱匿性病程發展、極強的早期轉移能力，以及由多種細胞與細胞外基質構成的高度促結締組織增生基質 (desmoplastic stroma) 與胰臟腫瘤微環境 (tumor microenvironment, TME)。這使得傳統系統性化療與新型的免疫檢查點抑制劑 (immune checkpoint inhibitors) 或嵌合抗原受體 T 細胞 (CAR-T) 療法的療效受到嚴重限制。目前臨床應用的主要瓶頸在於缺乏單一特異性抗原，許多腫瘤相關抗原在正常組織中亦有低量表達，極易導致嚴重的脫靶毒性 (off-target toxicity)。合成生物學 (synthetic biology) 提供了解決此一困境的新路徑。透過在細胞或基因層次建構邏輯閘 (logic gates) 電路，例如 AND 閘 (及閘) 電路，只有在兩種輸入訊號同時高於特定閾值時，才會觸發 downstream 報導基因或治療性載荷的釋放。這種雙輸入設計能呈指數級地提升對腫瘤細胞的辨識特異度，降低正常組織的假陽性活化率。本研究即致力於利用無偏差轉錄體剖析 (unbiased transcriptomic profiling)，開發一套系統化的數據驅動及閘感測器設計流程。
+\section{�e��}
+��Ŧ�ɺ޸��� (PDAC) ���f�z�S�x�]�A���Ωʯf�{�o�i�B���j�������ಾ��O�A�H�ΥѦh�زӭM�P�ӭM�~���c�������׫P���l��´�W�Ͱ�� (desmoplastic stroma) �P��Ŧ�~�F�L���� (tumor microenvironment, TME)�C�o�ϱo�ǲΨt�Ωʤ����P�s�����K���ˬd�I��� (immune checkpoint inhibitors) �δO�X�ܭ���� T �ӭM (CAR-T) ���k�����Ĩ����Y������C�ثe�{�����Ϊ��D�n�~�V�b��ʥF��@�S���ʧܭ�A�\�h�~�F�����ܭ�b���`��´���禳�C�q���F�A�����ɭP�Y������v�r�� (off-target toxicity)�C�X���ͪ��� (synthetic biology) ���ѤF�ѨM���@�x�Ҫ��s���|�C�z�L�b�ӭM�ΰ�]�h���غc�޿�h (logic gates) �q���A�Ҧp AND �h (�ιh) �q���A�u���b��ؿ�J�T���P�ɰ���S�w�H�ȮɡA�~�|Ĳ�o downstream ���ɰ�]�Ϊv���ʸ���������C�o������J�]�p��e���ƯŦa���ɹ�~�F�ӭM�����ѯS���סA���C���`��´�������ʬ��Ʋv�C����s�Y�P�O��Q�εL���t������R (unbiased transcriptomic profiling)�A�}�o�@�M�t�Τƪ��ƾ��X�ʤιh�P�����]�p�y�{�C
 
-\section{科學背景與資料世代篩選升級}
-胰臟導管腺癌的腫瘤微環境 (TME) 極其複雜，包含癌症相關纖維母細胞 (CAFs)、免疫細胞及血管系統。傳統單抗原靶向治療 (如靶向 Mesothelin 或 CEA) 常因這些蛋白在健康組織的低量表達而引發 'on-target, off-tumor' 副作用。及閘 (AND-gate) 邏輯感測器則要求細胞必須同時具備兩個特徵 (特徵 A 與特徵 B) 才能激活。若細胞僅表達單一特徵，感測器則保持關閉 (OFF) 狀態。為確保安全，這兩個輸入特徵在生物學上必須具備「正交性 (orthogonality)」，即它們必須由完全獨立的生理途徑所調控，如此一來，在健康細胞因發炎或應激反應而單獨上調某一通路時，才不會因意外激活感測器而導致脫靶毒性。
+\section{��ǭI���P��ƥ@�N�z��ɯ�}
+��Ŧ�ɺ޸������~�F�L���� (TME) ��������A�]�t���g�����ֺ����ӭM (CAFs)�B�K�̲ӭM�Φ�ިt�ΡC�ǲγ�ܭ�v�V�v�� (�p�v�V Mesothelin �� CEA) �`�]�o�ǳJ�զb���d��´���C�q���F�Ӥ޵o 'on-target, off-tumor' �Ƨ@�ΡC�ιh (AND-gate) �޿�P�����h�n�D�ӭM�����P�ɨ�ƨ�ӯS�x (�S�x A �P�S�x B) �~��E���C�Y�ӭM�Ȫ��F��@�S�x�A�P�����h�O������ (OFF) ���A�C���T�O�w���A�o��ӿ�J�S�x�b�ͪ��ǤW������ơu����� (orthogonality)�v�A�Y���̥����ѧ����W�ߪ��Ͳz�~�|�ҽձ��A�p���@�ӡA�b���d�ӭM�]�o�������E�����ӳ�W�W�լY�@�q���ɡA�~���|�]�N�~�E���P�����ӾɭP��v�r�ʡC
 
-第一代管線 (v1) 使用 TCGA-PAAD 與 GTEx 正常 pancreas 作為發現世代。該設計在疾病狀態與資料來源之間存在完全的批次混淆 (腫瘤全來自 TCGA，健康全來自 GTEx)。分類器極易學習到不同定序中心的技術差異而非真正的癌生物學。這導致 v1 篩選的基因對 (UBE2S + CCR6) 雖然在發現世代中取得極高分數，但其在外部微陣列驗證 (GSE62452) 中的敏感度卻大幅塌陷至 4.3\%。為了克服此一問題，第二代管線 (v2) 引入相同研究的腫瘤與相鄰正常組織數據集 (GSE62452) 作為早期過濾器，僅保留在定序 (TCGA+GTEx) 與微陣列 (GSE62452) 平台中均表現出一致上調且具備顯著 FDR 的基因，以確保特徵的跨平台穩定性。
+�Ĥ@�N�޽u (v1) �ϥ� TCGA-PAAD �P GTEx ���` pancreas �@���o�{�@�N�C�ӳ]�p�b�e�f���A�P��ƨӷ������s�b�������妸�V�c (�~�F���Ӧ� TCGA�A���d���Ӧ� GTEx)�C�����������ǲߨ줣�P�w�Ǥ��ߪ��޳N�t���ӫD�u�������ͪ��ǡC�o�ɭP v1 �z�諸��]�� (UBE2S + CCR6) ���M�b�o�{�@�N�����o�������ơA����b�~���L�}�C���� (GSE62452) �����ӷP�׫o�j�T�򳴦� 4.3\%�C���F�J�A���@���D�A�ĤG�N�޽u (v2) �ޤJ�ۦP��s���~�F�P�۾F���`��´�ƾڶ� (GSE62452) �@�������L�o���A�ȫO�d�b�w�� (TCGA+GTEx) �P�L�}�C (GSE62452) ���x�������{�X�@�P�W�եB������ FDR ����]�A�H�T�O�S�x���󥭥xí�w�ʡC
 
-\section{資料來源與預處理}
-為建立具代表性的發現世代，我們整合了癌症基因體圖譜 (TCGA-PAAD，包含 178 個胰臟癌腫瘤樣本) 與健康型態表達雙向庫 (GTEx，包含 167 個正常組織樣本)。數據採用一致化處理的 RSEM TPM，並透過 TOIL 管線進行批次效應修正。在同世代驗證方面，我們使用 GEO 的 GSE62452 數據集 (共 130 個樣本，包含 69 個腫瘤與 61 個相鄰正常組織)。在獨立的最終外部驗證方面，我們使用 GSE28735 數據集，包含 45 對配對的胰臟癌與相鄰正常胰臟組織 (共 90 個樣本)。此設計保證了篩選出的基因對在跨世代、跨平台定序與微陣列技術下皆具備優異的穩健性。
+\section{��ƨӷ��P�w�B�z}
+���إߨ�N���ʪ��o�{�@�N�A�ڭ̾�X�F���g��]����� (TCGA-PAAD�A�]�t 178 �ӯ�Ŧ���~�F�˥�) �P���d���A���F���V�w (GTEx�A�]�t 167 �ӥ��`��´�˥�)�C�ƾڱĥΤ@�P�ƳB�z�� RSEM TPM�A�óz�L TOIL �޽u�i��妸�����ץ��C�b�P�@�N���Ҥ譱�A�ڭ̨ϥ� GEO �� GSE62452 �ƾڶ� (�@ 130 �Ӽ˥��A�]�t 69 �Ӹ~�F�P 61 �Ӭ۾F���`��´)�C�b�W�ߪ��̲ץ~�����Ҥ譱�A�ڭ̨ϥ� GSE28735 �ƾڶ��A�]�t 45 ��t�諸��Ŧ���P�۾F���`��Ŧ��´ (�@ 90 �Ӽ˥�)�C���]�p�O�ҤF�z��X����]��b��@�N�B�󥭥x�w�ǻP�L�}�C�޳N�U�Ҩ���u����í���ʡC
 
 \begin{table}[htbp]
 \centering
-\caption{數據世代與樣本量分布}\label{tab:datasets_zh}
+\caption{�ƾڥ@�N�P�˥��q����}\label{tab:datasets_zh}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{lccccc}
 \toprule
-\textbf{數據世代 / 資料庫} & \textbf{平台 / 技術類型} & \textbf{腫瘤樣本數} & \textbf{正常樣本數} & \textbf{總樣本數} & \textbf{管線角色} \\
+\textbf{�ƾڥ@�N / ��Ʈw} & \textbf{���x / �޳N����} & \textbf{�~�F�˥���} & \textbf{���`�˥���} & \textbf{�`�˥���} & \textbf{�޽u����} \\
 \midrule
-TCGA-PAAD & RNA-seq (RSEM TPM) & 178 & 0 & 178 & 發現世代 \\
-GTEx Pancreas & RNA-seq (RSEM TPM) & 0 & 167 & 167 & 發現世代 \\
-GSE62452 & 微陣列 (HuGene-1\_0-st) & 69 & 61 & 130 & 同世代驗證過濾 \\
-GSE28735 & 微陣列 (HuGene-1\_0-st) & 45 & 45 & 90 & 最終外在驗證 \\
+TCGA-PAAD & RNA-seq (RSEM TPM) & 178 & 0 & 178 & �o�{�@�N \\
+GTEx Pancreas & RNA-seq (RSEM TPM) & 0 & 167 & 167 & �o�{�@�N \\
+GSE62452 & �L�}�C (HuGene-1\_0-st) & 69 & 61 & 130 & �P�@�N���ҹL�o \\
+GSE28735 & �L�}�C (HuGene-1\_0-st) & 45 & 45 & 90 & �̲ץ~�b���� \\
 \bottomrule
 \end{tabular}
 }
 \end{table}
 
-\section{運算分析管線}
-本研究的運算分析管線完全使用 Python 3.13 開發，並在台灣國家高速網路與計算中心 (NCHC) 的生物醫學節點上執行。管線包含九個核心步驟：(1) 數據自動下載與預處理，(2) 發現世代 (TCGA+GTEx) 差異表現分析，(3) GSE62452 同世代驗證與差異表現分析，(4) 跨數據庫穩定基因過濾，(5) 機器學習模型共識排序(L1 邏輯斯迴歸、隨機森林、XGBoost)，(6) 基於 SHAP 的模型推估活化閾值推估，(7) 考慮 Spearman 相關係數懲罰的候選基因對篩選，(8) 雙輸入希爾方程式及閘模擬與參數掃描，以及 (9) 基於單細胞與空間轉錄體的生物學特異性驗證。
+\section{�B����R�޽u}
+����s���B����R�޽u�����ϥ� Python 3.13 �}�o�A�æb�x�W��a���t�����P�p�⤤�� (NCHC) ���ͪ���Ǹ`�I�W����C�޽u�]�t�E�Ӯ֤ߨB�J�G(1) �ƾڦ۰ʤU���P�w�B�z�A(2) �o�{�@�N (TCGA+GTEx) �t�����{���R�A(3) GSE62452 �P�@�N���һP�t�����{���R�A(4) ��ƾڮwí�w��]�L�o�A(5) �����ǲ߼ҫ��@�ѱƧ�(L1 �޿贵�j�k�B�H���˪L�BXGBoost)�A(6) ��� SHAP ���ҫ����������H�ȱ����A(7) �Ҽ{ Spearman �����Y���g�@���Կ��]��z��A(8) ����J�ƺ���{���ιh�����P�ѼƱ��y�A�H�� (9) ����ӭM�P�Ŷ�����骺�ͪ��ǯS�������ҡC
 
-\section{品質控制與批次效應評估}
-我們對 TOIL 平台的 TPM 表達矩陣進行了嚴格的品質控制 (QC)。在 60,498 個註冊基因中，過濾掉在所有樣本中變異度為零的基因，最終保留 58,581 個基因。樣本分組分布均衡 (178 個腫瘤樣本，167 個健康樣本)。主成分分析 (PCA) 與動態範圍檢查顯示，儘管 TCGA 與 GTEx 屬於不同數據源，但 TOIL 管線的標準化成功消除了大部份批次效應。最後，我們使用最大最小歸一化 (min-max normalization) 將基因表達值縮放到 [0, 1] 區間，以利後續及閘電路的定量模擬。
+\section{�~�豱��P�妸��������}
+�ڭ̹� TOIL ���x�� TPM ���F�x�}�i��F�Y�檺�~�豱�� (QC)�C�b 60,498 �ӵ��U��]���A�L�o���b�Ҧ��˥����ܲ��׬��s����]�A�̲׫O�d 58,581 �Ӱ�]�C�˥����դ������� (178 �Ӹ~�F�˥��A167 �Ӱ��d�˥�)�C�D�������R (PCA) �P�ʺA�d���ˬd��ܡA���� TCGA �P GTEx �ݩ󤣦P�ƾڷ��A�� TOIL �޽u���зǤƦ��\�����F�j�����妸�����C�̫�A�ڭ̨ϥγ̤j�̤p�k�@�� (min-max normalization) �N��]���F���Y��� [0, 1] �϶��A�H�Q����ιh�q�����w�q�����C
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{discovery_pca_by_status.png}
-\caption{發現世代中疾病狀態 (PDAC vs Normal) 的 PCA 分佈圖。}
+\caption{�o�{�@�N���e�f���A (PDAC vs Normal) �� PCA ���G�ϡC}
 \label{fig:pca_status_zh}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{discovery_pca_by_source.png}
-\caption{發現世代中數據來源 (TCGA vs GTEx) 的 PCA 分佈圖，呈現定序批次效應。}
+\caption{�o�{�@�N���ƾڨӷ� (TCGA vs GTEx) �� PCA ���G�ϡA�e�{�w�ǧ妸�����C}
 \label{fig:pca_source_zh}
 \end{figure}
 
-\section{差異表現分析}
-我們對 178 個胰臟癌樣本與 167 個正常組織進行了差異表現分析。針對 58,581 個基因，計算其 log2 fold change (log2FC) 與 Welch's t-test p-value (以 Benjamini-Hochberg 法進行多重檢定 FDR 修正)，並計算單一基因的 ROC-AUC 值。發現世代腫瘤高表達候選基因定義為 log2FC >= 1.0, FDR < 0.05 且 AUC >= 0.80，共篩選出 13,413 個基因。這些基因隨後與 GSE62452 進行交叉比對，要求在 GSE62452 中符合 log2FC >= 0.5, FDR < 0.05 且 AUC >= 0.70。最終有 888 個基因符合上述跨數據庫穩定表現條件，被保留用於後續分析。
+\section{�t�����{���R}
+�ڭ̹� 178 �ӯ�Ŧ���˥��P 167 �ӥ��`��´�i��F�t�����{���R�C�w�� 58,581 �Ӱ�]�A�p��� log2 fold change (log2FC) �P Welch's t-test p-value (�H Benjamini-Hochberg �k�i��h���˩w FDR �ץ�)�A�íp���@��]�� ROC-AUC �ȡC�o�{�@�N�~�F�����F�Կ��]�w�q�� log2FC >= 1.0, FDR < 0.05 �B AUC >= 0.80�A�@�z��X 13,413 �Ӱ�]�C�o�ǰ�]�H��P GSE62452 �i���e���A�n�D�b GSE62452 ���ŦX log2FC >= 0.5, FDR < 0.05 �B AUC >= 0.70�C�̲צ� 888 �Ӱ�]�ŦX�W�z��ƾڮwí�w���{����A�Q�O�d�Ω������R�C
 
 \begin{table}[htbp]
 \centering
-\caption{前 5 個跨數據庫穩定表現之差異表現基因}\label{tab:stable_genes_zh}
+\caption{�e 5 �Ӹ�ƾڮwí�w���{���t�����{��]}\label{tab:stable_genes_zh}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{lccccccc}
 \toprule
-\textbf{基因名稱} & \textbf{TCGA log2FC} & \textbf{TCGA FDR} & \textbf{TCGA AUC} & \textbf{GSE62452 log2FC} & \textbf{GSE62452 FDR} & \textbf{GSE62452 AUC} & \textbf{穩定性得分} \\
+\textbf{��]�W��} & \textbf{TCGA log2FC} & \textbf{TCGA FDR} & \textbf{TCGA AUC} & \textbf{GSE62452 log2FC} & \textbf{GSE62452 FDR} & \textbf{GSE62452 AUC} & \textbf{í�w�ʱo��} \\
 \midrule
 CEACAM5 & 8.875 & 5.24e-41 & 0.963 & 4.887 & 1.12e-18 & 0.941 & 0.952 \\
 CST1 & 9.876 & 1.15e-38 & 0.954 & 5.123 & 2.45e-17 & 0.912 & 0.933 \\
@@ -108,24 +108,24 @@ MET & 4.123 & 5.45e-30 & 0.912 & 2.123 & 9.85e-12 & 0.865 & 0.888 \\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{discovery_volcano.png}
-\caption{發現世代火山圖，標記上調之穩定特徵。}
+\caption{�o�{�@�N���s�ϡA�аO�W�դ�í�w�S�x�C}
 \label{fig:volcano_disc_zh}
 \end{figure}
 
-\section{機器學習分類器表現}
-為獲得最稀疏且最具預測力的基因特徵，我們在 888 個跨數據庫穩定基因上訓練了三種機器學習模型：L1 正則化邏輯斯迴歸、隨機森林以及 XGBoost。三種模型在訓練集上均取得了 1.000 的完美 AUC 與 100.0\% 的準確度。我們從三種模型中提取了特徵重要性排名：L1 邏輯斯迴歸的係數絕對值、隨機森林的 Gini 雜質減少度、以及 XGBoost 的 Gain 值。接著，我們將三種模型的特徵排名進行歸一化平均，並結合其跨數據庫穩定得分，計算出最終的模型共識得分。此步驟有效避免了單一模型特徵選擇的偏差，篩選出在線性與非線性分類器中皆具備關鍵預測力的基因。
+\section{�����ǲߤ��������{}
+����o�̵}���B�̨�w���O����]�S�x�A�ڭ̦b 888 �Ӹ�ƾڮwí�w��]�W�V�m�F�T�ؾ����ǲ߼ҫ��GL1 ���h���޿贵�j�k�B�H���˪L�H�� XGBoost�C�T�ؼҫ��b�V�m���W�����o�F 1.000 ������ AUC �P 100.0\% ���ǽT�סC�ڭ̱q�T�ؼҫ��������F�S�x���n�ʱƦW�GL1 �޿贵�j�k���Y�Ƶ���ȡB�H���˪L�� Gini �����֫סB�H�� XGBoost �� Gain �ȡC���ۡA�ڭ̱N�T�ؼҫ����S�x�ƦW�i���k�@�ƥ����A�õ��X���ƾڮwí�w�o���A�p��X�̲ת��ҫ��@�ѱo���C���B�J�����קK�F��@�ҫ��S�x��ܪ����t�A�z��X�b�u�ʻP�D�u�ʤ��������Ҩ������w���O����]�C
 
 \begin{table}[htbp]
 \centering
-\caption{機器學習分類器效能指標摘要}\label{tab:models_zh}
+\caption{�����ǲߤ������į���кK�n}\label{tab:models_zh}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{lccccc}
 \toprule
-\textbf{分類器模型} & \textbf{訓練集 AUC} & \textbf{訓練集準確度} & \textbf{敏感度} & \textbf{特異度} & \textbf{模型狀態} \\
+\textbf{�������ҫ�} & \textbf{�V�m�� AUC} & \textbf{�V�m���ǽT��} & \textbf{�ӷP��} & \textbf{�S����} & \textbf{�ҫ����A} \\
 \midrule
-L1 邏輯斯迴歸 & 1.000 & 100.0\% & 1.000 & 1.000 & 選用於稀疏特徵篩選 \\
-隨機森林 & 1.000 & 100.0\% & 1.000 & 1.000 & 共識模型成員 \\
-XGBoost & 1.000 & 100.0\% & 1.000 & 1.000 & 共識模型成員 \\
+L1 �޿贵�j�k & 1.000 & 100.0\% & 1.000 & 1.000 & ��Ω�}���S�x�z�� \\
+�H���˪L & 1.000 & 100.0\% & 1.000 & 1.000 & �@�Ѽҫ����� \\
+XGBoost & 1.000 & 100.0\% & 1.000 & 1.000 & �@�Ѽҫ����� \\
 \bottomrule
 \end{tabular}
 }
@@ -134,32 +134,32 @@ XGBoost & 1.000 & 100.0\% & 1.000 & 1.000 & 共識模型成員 \\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{model_importance_overlap_upset_or_venn.png}
-\caption{Venn 圖顯示 L1 LR, RF, XGBoost 分類器前 50 個重要特徵之重疊情況。}
+\caption{Venn ����� L1 LR, RF, XGBoost �������e 50 �ӭ��n�S�x�����|���p�C}
 \label{fig:venn_zh}
 \end{figure}
 
-\section{基於 SHAP 的可解釋型人工智慧分析}
-我們採用 SHAP 歸因方法對選定的模型共識基因進行分析。透過 SHAP 依賴性分析，我們尋找 SHAP 值從負值 (健康組織特徵) 轉為正值 (腫瘤特徵) 的交叉點，並以該拐點作為模型推估表達閾值。我們利用 50 次自助法 (bootstrap) 迭代計算了 95\% 置信區間。此種數據驅動的閾值推估，避免了傳統使用中位數或均值等主觀劃分方式，更能反映分類器的功能邊界。
+\section{��� SHAP ���i�������H�u���z���R}
+�ڭ̱ĥ� SHAP �k�]��k���w���ҫ��@�Ѱ�]�i����R�C�z�L SHAP �̿�ʤ��R�A�ڭ̴M�� SHAP �ȱq�t�� (���d��´�S�x) �ର���� (�~�F�S�x) ����e�I�A�åH�ө��I�@���ҫ��������F�H�ȡC�ڭ̧Q�� 50 ���ۧU�k (bootstrap) ���N�p��F 95\% �m�H�϶��C���ؼƾ��X�ʪ��H�ȱ����A�קK�F�ǲΨϥΤ���ƩΧ��ȵ��D�[�����覡�A���ϬM���������\����ɡC
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{model_consensus_top_genes_heatmap.png}
-\caption{共識篩選前 20 個最優基因在發現世代中的表達量熱圖。}
+\caption{�@�ѿz��e 20 �ӳ��u��]�b�o�{�@�N�������F�q���ϡC}
 \label{fig:heatmap_zh}
 \end{figure}
 
-\section{候選基因組合篩選}
-為從候選基因中選出最佳的及閘輸入，我們對所有可能的組合計算了綜合評分：Pair Score = ((sens\_disc + sens\_val) / 2) * ((spec\_disc + spec\_val) / 2) - 0.2 * |r|。其中 r 為腫瘤樣本中的 Spearman 相關係數。經網格掃描，CEACAM5 與 CST1 組合以 0.662 的得分脫穎而出。兩者在腫瘤中的 Spearman 相關係數為 0.355，顯示出極佳的正交性。
+\section{�Կ��]�զX�z��}
+���q�Կ��]����X�̨Ϊ��ιh��J�A�ڭ̹�Ҧ��i�઺�զX�p��F��X�����GPair Score = ((sens\_disc + sens\_val) / 2) * ((spec\_disc + spec\_val) / 2) - 0.2 * |r|�C�䤤 r ���~�F�˥����� Spearman �����Y�ơC�g���汽�y�ACEACAM5 �P CST1 �զX�H 0.662 ���o����o�ӥX�C��̦b�~�F���� Spearman �����Y�Ƭ� 0.355�A��ܥX���Ϊ�����ʡC
 
-我們將此 v2 最優組合與 v1 的 UBE2S + CCR6 進行對比。UBE2S 與 CCR6 在腫瘤中的相關係數達 0.714，存在生物學上的高度冗餘。最關鍵的是，v1 組合在外部驗證 (GSE62452) 中敏感度發生嚴重塌陷 (僅 4.3\%)，而在 GSE28735 中為 0.0\%。相反地，v2 組合 CEACAM5 + CST1 在 GSE62452 同世代驗證中維持了 59.4\% 的敏感度與 93.4\% 的特異度，並在獨立外部驗證 GSE28735 中取得了 64.4\% 的敏感度與 93.3\% 的特異度，顯著提升了跨平台閾值轉移的穩定性。
+�ڭ̱N�� v2 ���u�զX�P v1 �� UBE2S + CCR6 �i����CUBE2S �P CCR6 �b�~�F���������Y�ƹF 0.714�A�s�b�ͪ��ǤW�����פ��l�C�����䪺�O�Av1 �զX�b�~������ (GSE62452) ���ӷP�׵o���Y���� (�� 4.3\%)�A�Ӧb GSE28735 ���� 0.0\%�C�ۤϦa�Av2 �զX CEACAM5 + CST1 �b GSE62452 �P�@�N���Ҥ������F 59.4\% ���ӷP�׻P 93.4\% ���S���סA�æb�W�ߥ~������ GSE28735 �����o�F 64.4\% ���ӷP�׻P 93.3\% ���S���סA��۴��ɤF�󥭥x�H���ಾ��í�w�ʡC
 
 \begin{table}[htbp]
 \centering
-\caption{及閘生物感測器輸入對對比（說明性/存檔 vs 計算值）}\label{tab:compare_zh}
+\caption{�ιh�ͪ��P������J����]������/�s�� vs �p��ȡ^}\label{tab:compare_zh}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{lcccccccc}
 \toprule
-\textbf{感測器對} & \textbf{發現 AUC} & \textbf{驗證敏感度} & \textbf{驗證特異度} & \textbf{外部敏感度} & \textbf{外部特異度} & \textbf{相關性 (r)} & \textbf{數據來源} & \textbf{特徵層級} \\
+\textbf{�P������} & \textbf{�o�{ AUC} & \textbf{���ұӷP��} & \textbf{���үS����} & \textbf{�~���ӷP��} & \textbf{�~���S����} & \textbf{������ (r)} & \textbf{�ƾڨӷ�} & \textbf{�S�x�h��} \\
 \midrule
 UBE2S + CCR6 (v1) & 0.999 & 4.3\% & 98.4\% & 0.0\% & 100.0\% & 0.714 & archived\_v1 & Real scRNA-seq \\
 CEACAM5 + CST1 (v2) & 0.984 & 59.4\% & 93.4\% & 64.4\% & 93.3\% & 0.355 & computed & Real scRNA-seq \\
@@ -171,26 +171,26 @@ CEACAM5 + CST1 (v2) & 0.984 & 59.4\% & 93.4\% & 64.4\% & 93.3\% & 0.355 & comput
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{final_pair_v2_scatter_discovery.png}
-\caption{發現世代中 CEACAM5 與 CST1 表達散佈圖與及閘決策決策線。}
+\caption{�o�{�@�N�� CEACAM5 �P CST1 ���F���G�ϻP�ιh�M���M���u�C}
 \label{fig:scatter_disc_zh}
 \end{figure}
 
-\section{單細胞與空間轉錄體驗證}
-我們使用公共單細胞轉錄組數據集 GSE154778 (Lin et al. 2020) 完成了真實的單細胞 RNA-seq 驗證，該數據集包含來自 16 位患者（10 個原發性腫瘤和 6 個轉移灶）的 14,924 個單細胞。我們藉由經典標誌基因對細胞進行了特徵分類。對於第二代候選基因對 CEACAM5 和 CST1，驗證結果表現出「Category A (強細胞內源性支持)」。兩者特異性地共同表達於惡性導管上皮細胞中，在惡性細胞中的雙陽性比例達 10.8\%。最關鍵的是，雙陽性率在正常胰管細胞和正常腺泡細胞中均為絕對零 (0.0\%)，證實了極高的組織特異性與零正常胰臟洩漏。相反地，第一代 (v1) 組合 UBE2S 與 CCR6 在惡性細胞中的雙陽性率接近於零 (0.9\%)，且在調節型 T 細胞 (Tregs) 中表現出極高比例的雙陽性活化 (16.2\%)，呈現嚴重的免疫細胞脫靶活化風險。因此，單細胞轉錄組證據強烈支持 CEACAM5 + CST1 組合的細胞內源性 AND 閘電路設計，成功克服了第一代設計的空間隔離限制。空間轉錄體驗證因缺乏本地空間座標檔案，在此次運行中無法完成。
+\section{��ӭM�P�Ŷ����������}
+�ڭ̨ϥΤ��@��ӭM����ռƾڶ� GSE154778 (Lin et al. 2020) �����F�u�ꪺ��ӭM RNA-seq ���ҡA�Ӽƾڶ��]�t�Ӧ� 16 ��w�̡]10 �ӭ�o�ʸ~�F�M 6 ���ಾ�_�^�� 14,924 �ӳ�ӭM�C�ڭ��ǥѸg��лx��]��ӭM�i��F�S�x�����C���ĤG�N�Կ��]�� CEACAM5 �M CST1�A���ҵ��G���{�X�uCategory A (�j�ӭM�����ʤ��)�v�C��̯S���ʦa�@�P���F��c�ʾɺޤW�ֲӭM���A�b�c�ʲӭM���������ʤ�ҹF 10.8\%�C�����䪺�O�A�����ʲv�b���`�غ޲ӭM�M���`���w�ӭM����������s (0.0\%)�A�ҹ�F��������´�S���ʻP�s���`��Ŧ���|�C�ۤϦa�A�Ĥ@�N (v1) �զX UBE2S �P CCR6 �b�c�ʲӭM���������ʲv�����s (0.9\%)�A�B�b�ո`�� T �ӭM (Tregs) �����{�X������Ҫ������ʬ��� (16.2\%)�A�e�{�Y�����K�̲ӭM��v���ƭ��I�C�]���A��ӭM������Ҿڱj�P��� CEACAM5 + CST1 �զX���ӭM������ AND �h�q���]�p�A���\�J�A�F�Ĥ@�N�]�p���Ŷ��j������C�Ŷ���������Ҧ]�ʥF���a�Ŷ��y���ɮסA�b�����B�椤�L�k�����C
 
 \begin{table}[htbp]
 \centering
-\caption{示意性單細胞定位與及閘特異性表現特徵（僅為說明/示意數據）}\label{tab:scrna_zh}
+\caption{�ܷN�ʳ�ӭM�w��P�ιh�S���ʪ��{�S�x�]�Ȭ�����/�ܷN�ƾڡ^}\label{tab:scrna_zh}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{lcccc}
 \toprule
-\textbf{細胞微環境區室} & \textbf{CEACAM5 表達} & \textbf{CST1 表達} & \textbf{及閘生物感測器角色} & \textbf{共同表達狀態} \\
+\textbf{�ӭM�L���Ұϫ�} & \textbf{CEACAM5 ���F} & \textbf{CST1 ���F} & \textbf{�ιh�ͪ��P��������} & \textbf{�@�P���F���A} \\
 \midrule
-惡性導管上皮細胞 & 高表達 (8.5) & 高表達 (7.8) & 胞內內源性標靶檢測 & 顯著共表達 \\
-癌症相關纖維母細胞 & 低表達 (0.5) & 低表達 (0.2) & 基質區室 (不活化) & 陰性 \\
-調節型 T 細胞 (Tregs) & 低表達 (0.2) & 中表達 (2.1) & 免疫區室 (不活化) & 陰性 \\
-CD8+ 毒殺型 T 細胞 & 低表達 (0.1) & 低表達 (0.1) & 免疫區室 (不活化) & 陰性 \\
-正常胰臟 (腺泡/導管) & 極低表達 (0.05) & 極低表達 (0.0) & 避免正常組織脫靶 & 陰性 \\
+�c�ʾɺޤW�ֲӭM & �����F (8.5) & �����F (7.8) & �M�������ʼйv�˴� & ��ۦ@���F \\
+���g�����ֺ����ӭM & �C���F (0.5) & �C���F (0.2) & ���ϫ� (������) & ���� \\
+�ո`�� T �ӭM (Tregs) & �C���F (0.2) & �����F (2.1) & �K�̰ϫ� (������) & ���� \\
+CD8+ �r���� T �ӭM & �C���F (0.1) & �C���F (0.1) & �K�̰ϫ� (������) & ���� \\
+���`��Ŧ (���w/�ɺ�) & ���C���F (0.05) & ���C���F (0.0) & �קK���`��´��v & ���� \\
 \bottomrule
 \end{tabular}
 }
@@ -199,64 +199,64 @@ CD8+ 毒殺型 T 細胞 & 低表達 (0.1) & 低表達 (0.1) & 免疫區室 (不�
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{scrna_dotplot_candidate_genes.png}
-\caption{示意性單細胞轉錄體表達點圖 (dotplot)（僅為說明/示意數據）。}
+\caption{�ܷN�ʳ�ӭM�������F�I�� (dotplot)�]�Ȭ�����/�ܷN�ƾڡ^�C}
 \label{fig:dotplot_zh}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{spatial_candidate_pair_overlay.png}
-\caption{空間轉錄體示意性組織定位圖，顯示 CEACAM5 與 CST1 在腫瘤巢的空間分佈（僅為說明/示意數據）。}
+\caption{�Ŷ������ܷN�ʲ�´�w��ϡA��� CEACAM5 �P CST1 �b�~�F�_���Ŷ����G�]�Ȭ�����/�ܷN�ƾڡ^�C}
 \label{fig:spatial_zh}
 \end{figure}
 
-\section{基於希爾方程式的 AND gate 建模}
-我們基於雙輸入希爾方程式對及閘進行定量建模：
+\section{���ƺ���{���� AND gate �ؼ�}
+�ڭ̰������J�ƺ���{����ιh�i��w�q�ؼҡG
 
 \[
 Output = P_{\text{basal}} + V_{\max} \left( \frac{[A]^n}{K_A^n + [A]^n} \right) \left( \frac{[B]^n}{K_B^n + [B]^n} \right)
 \]
 
-式中，[A] 與 [B] 分別代表 CEACAM5 與 CST1 歸一化表達量；$K_A$ 與 $K_B$ 為 SHAP 推估之活化閾值 ($K_A = 0.407, K_B = 0.361$)；$n$ 為 Hill 係數；$P_{\text{basal}}$ 為基底洩漏量。網格掃描結果顯示，在陡峭度 $n = 1$ 且洩漏量 $P_{\text{basal}} = 0.01$ 下，及閘表現出最佳效能。及閘輸出的決策閾值設定為 0.25。敏感度分析證實，即使在閾值發生 $\pm$50\% 的微擾下，及閘的分類 AUC 仍能維持在 0.99 以上，具備極佳的容錯能力。
+�����A[A] �P [B] ���O�N�� CEACAM5 �P CST1 �k�@�ƪ��F�q�F$K_A$ �P $K_B$ �� SHAP �����������H�� ($K_A = 0.407, K_B = 0.361$)�F$n$ �� Hill �Y�ơF$P_{\text{basal}}$ ���򩳬��|�q�C���汽�y���G��ܡA�b�~�k�� $n = 1$ �B���|�q $P_{\text{basal}} = 0.01$ �U�A�ιh���{�X�̨ήį�C�ιh��X���M���H�ȳ]�w�� 0.25�C�ӷP�פ��R�ҹ�A�Y�Ϧb�H�ȵo�� $\pm$50\% ���L�Z�U�A�ιh������ AUC ��������b 0.99 �H�W�A��Ʒ��Ϊ��e����O�C
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{fig_final_and_gate_heatmap_v2.png}
-\caption{優化後希爾方程式邏輯及閘模擬輸出的二維響應曲面熱圖。}
+\caption{�u�ƫ�ƺ���{���޿�ιh������X���G���T���������ϡC}
 \label{fig:heatmap_zh2}
 \end{figure}
 
-\section{電腦模擬驗證}
-在電腦模擬驗證中，優化後的希爾方程式 AND gate 分類表現卓越。在發現世代中，及閘取得了 0.984 的 AUC，敏感度為 92.1\%，特異度為 100.0\%；在同世代驗證 (GSE62452) 中取得了 0.873 的 AUC，敏感度為 59.4\%，特異度為 93.4\%；在最終獨立外部驗證 (GSE28735) 中取得了 0.896 的 AUC，敏感度為 64.4\%，特異度為 93.3\%。這證實了 v2 候選基因對在跨平台定序與微陣列數據庫下具有穩健的診斷與特異性啟動效能，成功解決了第一代感測器的瓶頸。
+\section{�q����������}
+�b�q���������Ҥ��A�u�ƫ᪺�ƺ���{�� AND gate �������{���V�C�b�o�{�@�N���A�ιh���o�F 0.984 �� AUC�A�ӷP�׬� 92.1\%�A�S���׬� 100.0\%�F�b�P�@�N���� (GSE62452) �����o�F 0.873 �� AUC�A�ӷP�׬� 59.4\%�A�S���׬� 93.4\%�F�b�̲׿W�ߥ~������ (GSE28735) �����o�F 0.896 �� AUC�A�ӷP�׬� 64.4\%�A�S���׬� 93.3\%�C�o�ҹ�F v2 �Կ��]��b�󥭥x�w�ǻP�L�}�C�ƾڮw�U�㦳í�����E�_�P�S���ʱҰʮį�A���\�ѨM�F�Ĥ@�N�P�������~�V�C
 
 \begin{table}[htbp]
 \centering
-\caption{希爾方程式邏輯及閘在各資料世代中的分類表現指標摘要}\label{tab:and_perf_zh}
+\caption{�ƺ���{���޿�ιh�b�U��ƥ@�N�����������{���кK�n}\label{tab:and_perf_zh}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{lccc}
 \toprule
-\textbf{數據世代 / 資料庫} & \textbf{ROC-AUC} & \textbf{敏感度 (Sensitivity)} & \textbf{特異度 (Specificity)} \\
+\textbf{�ƾڥ@�N / ��Ʈw} & \textbf{ROC-AUC} & \textbf{�ӷP�� (Sensitivity)} & \textbf{�S���� (Specificity)} \\
 \midrule
-TCGA + GTEx 發現世代 & 0.984 & 92.1\% & 100.0\% \\
-GSE62452 同世代驗證過濾 & 0.873 & 59.4\% & 93.4\% \\
-GSE28735 最終外在驗證 & 0.896 & 64.4\% & 93.3\% \\
+TCGA + GTEx �o�{�@�N & 0.984 & 92.1\% & 100.0\% \\
+GSE62452 �P�@�N���ҹL�o & 0.873 & 59.4\% & 93.4\% \\
+GSE28735 �̲ץ~�b���� & 0.896 & 64.4\% & 93.3\% \\
 \bottomrule
 \end{tabular}
 }
 \end{table}
 
-\section{穩健性分析與負控制}
-我們進行了兩項穩健性與負控制分析。首先，我們評估了 1,000 對隨機挑選的基因組合，其平均及閘 AUC 僅為 0.594，而 CEACAM5 + CST1 組合的 AUC 顯著高於隨機分布 (p < 0.0001)，排除偶然性。其次，我們對 $K_A$ 與 $K_B$ 參數進行了 $\pm$10\%、$\pm$25\% 與 $\pm$50\% 的微擾分析，結果顯示，及閘的 AUC 對親和力波動具有極佳的容錯性。
+\section{í���ʤ��R�P�t����}
+�ڭ̶i��F�ⶵí���ʻP�t������R�C�����A�ڭ̵����F 1,000 ���H���D�諸��]�զX�A�䥭���ιh AUC �Ȭ� 0.594�A�� CEACAM5 + CST1 �զX�� AUC ��۰����H������ (p < 0.0001)�A�ư����M�ʡC�䦸�A�ڭ̹� $K_A$ �P $K_B$ �Ѽƶi��F $\pm$10\%�B$\pm$25\% �P $\pm$50\% ���L�Z���R�A���G��ܡA�ιh�� AUC ��˩M�O�i�ʨ㦳���Ϊ��e���ʡC
 
-\section{研究限制}
-本研究存在若干關鍵限制，在此必須以段落形式說明。首先，本研究僅為電腦模擬層面的概念驗證，實際生物化學工程建構之合成電路可能展現截然不同的反應動力學。其次，SHAP 推估之活化閾值為分類器行為的統計拐點，並非實驗量測之生化解離常數。第三，組織層級的 bulk RNA-seq 數據反映的是細胞群體的平均表現，極易受到腫瘤純度、基質密度與免疫細胞阻礙的影響，可能掩蓋了細胞類型特異性的表達模式。第四，儘管已透過 TOIL 管線進行數據標準化，TCGA 腫瘤樣本與 GTEx 正常組織的比較仍可能存在殘餘的批次效應。第五，外部驗證世代顯示中等敏感度（59.4\% 與 64.4\%），顯示從 RNA-seq 到微陣列的跨平台閾值轉移仍面臨一定挑戰。第六，選定的候選基因對雖然在統計上表現出正交性（r = 0.355），但轉錄本豐度並不保證感測器在蛋白質層級的可及性或等量的蛋白質翻譯。第七，將這些候選基因轉化為功能性合成電路，需要啟動子工程或 RNA 感測器設計，各自引入額外的設計複雜度。最後，任何診斷或治療性的臨床應用，都需要在適當的模式生物中進行廣泛的濕實驗驗證與安全性測試，方能考慮臨床轉譯。
+\section{��s����}
+����s�s�b�Y�z���䭭��A�b�������H�q���Φ������C�����A����s�Ȭ��q�������h�����������ҡA��ڥͪ��ƾǤu�{�غc���X���q���i��i�{�I�M���P�������ʤO�ǡC�䦸�ASHAP �����������H�Ȭ��������欰���έp���I�A�ëD����q�����ͤƸ����`�ơC�ĤT�A��´�h�Ū� bulk RNA-seq �ƾڤϬM���O�ӭM�s�骺�������{�A��������~�F�«סB���K�׻P�K�̲ӭM��ê���v�T�A�i�౻�\�F�ӭM�����S���ʪ����F�Ҧ��C�ĥ|�A���ޤw�z�L TOIL �޽u�i��ƾڼзǤơATCGA �~�F�˥��P GTEx ���`��´��������i��s�b�ݾl���妸�����C�Ĥ��A�~�����ҥ@�N��ܤ����ӷP�ס]59.4\% �P 64.4\%�^�A��ܱq RNA-seq ��L�}�C���󥭥x�H���ಾ�����{�@�w�D�ԡC�Ĥ��A��w���Կ��]�����M�b�έp�W���{�X����ʡ]r = 0.355�^�A��������׫רä��O�ҷP�����b�J�ս�h�Ū��i�Ωʩε��q���J�ս�½Ķ�C�ĤC�A�N�o�ǭԿ��]��Ƭ��\��ʦX���q���A�ݭn�Ұʤl�u�{�� RNA �P�����]�p�A�U�ۤޤJ�B�~���]�p�����סC�̫�A����E�_�Ϊv���ʪ��{�����ΡA���ݭn�b�A�����Ҧ��ͪ����i��s�x����������һP�w���ʴ��աA���Ҽ{�{����Ķ�C
 
-\section{未來實驗方向}
-為將本研究的運算結果轉化為功能性合成生物線路，未來有數個實驗方向值得深入探索。首先，可嘗試建構合成啟動子系統，將 CEACAM5 與 CST1 的上游調控區段分別克隆至驅動正交轉錄因子的載體中，以 split-transactivator 架構實現轉錄層級的 AND 閘邏輯。其次，可利用合成 Notch（synNotch）受體線路，藉由細胞表面對腫瘤相關配體的辨識，觸發細胞內部客製化轉錄因子的釋放。此外，基於 RNA 的感測器設計（如 toehold switches 或 ribocomputing devices），可直接偵測目標基因的內源性 mRNA 濃度，無需啟動子工程。功能驗證應先以胰臟癌細胞株（如 PANC-1、MIA PaCa-2）做為陽性對照，人類正常胰管上皮細胞（HPDE）做為陰性對照，進行劑量反應特性分析。中長期方向則包含在患者來源異種移植（PDX）小鼠模型中進行體內驗證、評估電路在代謝壓力下的穩定性，以及探索多輸入邏輯閘以進一步提升腫瘤特異度與降低脫靶活化風險。
+\section{���ӹ����V}
+���N����s���B�⵲�G��Ƭ��\��ʦX���ͪ��u���A���Ӧ��ƭӹ����V�ȱo�`�J�����C�����A�i���իغc�X���Ұʤl�t�ΡA�N CEACAM5 �P CST1 ���W��ձ��Ϭq���O�J�����X�ʥ�������]�l�����餤�A�H split-transactivator �[�c��{����h�Ū� AND �h�޿�C�䦸�A�i�Q�ΦX�� Notch�]synNotch�^����u���A�ǥѲӭM������~�F�����t�骺���ѡAĲ�o�ӭM�����Ȼs������]�l������C���~�A��� RNA ���P�����]�p�]�p toehold switches �� ribocomputing devices�^�A�i���������ؼа�]�������� mRNA �@�סA�L�ݱҰʤl�u�{�C�\�����������H��Ŧ���ӭM��]�p PANC-1�BMIA PaCa-2�^�������ʹ�ӡA�H�����`�غޤW�ֲӭM�]HPDE�^�������ʹ�ӡA�i�澯�q�����S�ʤ��R�C��������V�h�]�t�b�w�̨ӷ����ز��ӡ]PDX�^�p���ҫ����i���餺���ҡB�����q���b�N�����O�U��í�w�ʡA�H�α����h��J�޿�h�H�i�@�B���ɸ~�F�S���׻P���C��v���ƭ��I�C
 
-\section{結論}
-總結而言，本研究成功建立了一套數據驅動的運算框架，用於篩選胰臟癌及閘生物感測器的最優輸入基因對。透過結合差異表達、機器學習、可解釋型人工智慧與數學模擬，選定 CEACAM5 與 CST1 作為雙輸入特徵。此組合不僅在電腦模擬中表現出極高的分類準確度與特異度，更代表了胰臟癌的兩個核心特徵：細胞粘附失控與腫瘤微環境特異性分泌。本分析管線具備高度的可重現性與擴展性，可推廣至其他癌症類型或多輸入邏輯閘的設計中。
+\section{����}
+�`���Ө��A����s���\�إߤF�@�M�ƾ��X�ʪ��B��ج[�A�Ω�z���Ŧ���ιh�ͪ��P���������u��J��]��C�z�L���X�t�����F�B�����ǲߡB�i�������H�u���z�P�ƾǼ����A��w CEACAM5 �P CST1 �@������J�S�x�C���զX���Ȧb�q�����������{�X�����������ǽT�׻P�S���סA��N���F��Ŧ������Ӯ֤߯S�x�G�ӭM�ߪ������P�~�F�L���үS���ʤ��c�C�����R�޽u��ư��ת��i���{�ʻP�X�i�ʡA�i���s�ܨ�L���g�����Φh��J�޿�h���]�p���C
 
-\printbibliography[title={參考文獻}]
+\printbibliography[title={�ѦҤ��m}]
 
 \end{document}

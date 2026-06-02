@@ -4,47 +4,48 @@
 
 ### Overview
 
-This project implements a fully automated, data-driven computational pipeline to identify candidate gene pairs for a synthetic biology **AND-gate biosensor** targeting **pancreatic ductal adenocarcinoma (PDAC)**. The pipeline integrates differential expression analysis, machine learning classification, explainable AI (SHAP), orthogonality scoring, and Hill-equation-based mathematical modeling.
+This project implements a fully automated, data-driven computational pipeline to identify optimal candidate gene pairs for a synthetic biology **AND-gate biosensor** targeting **pancreatic ductal adenocarcinoma (PDAC)**. The second-generation (v2) pipeline integrates differential expression analysis, same-cohort validation, machine learning classification (Lasso, RF, XGBoost), explainable AI (SHAP), orthogonality scoring, Hill-equation-based mathematical modeling, and single-cell transcriptomics validation.
 
 ### Key Result
 
-**Selected AND-gate pair: UBE2S (cell cycle) AND CCR6 (immune microenvironment)**
+**Selected AND-gate pair: CEACAM5 (cell adhesion) AND CST1 (tumor microenvironment secretion)**
 
 | Metric | Value |
 |--------|-------|
-| Discovery AUC | **0.9986** |
-| Accuracy | **98.6%** |
-| Sensitivity | **97.8%** |
-| Specificity | **99.4%** |
-| Random pair p-value | **< 0.0001** |
+| Discovery AUC | **0.984** |
+| Validation AUC (GSE62452) | **0.873** |
+| External AUC (GSE28735) | **0.896** |
+| Sensitivity (Discovery) | **92.1%** |
+| Specificity (Discovery) | **100.0%** |
+| Orthogonality (Tumor Spearman r) | **0.355 (Low correlation)** |
+| Single-Cell Co-expression (Tumor vs Normal) | **10.8% vs 0.0%** |
 
 ### Pipeline Architecture
 
 ```
-TCGA-PAAD + GTEx Data → Preprocessing → Differential Expression → ML Classification
-→ SHAP Analysis → Orthogonality Scoring → AND Gate Modeling → Validation & Plotting
+TCGA-PAAD + GTEx Data → Preprocessing & DE Analysis
+↳ Same-cohort Validation (GSE62452) → Stable Gene Filtering
+  ↳ Model-Consensus Selection (Lasso, RF, XGBoost)
+    ↳ SHAP Threshold Inference → Orthogonality Scoring
+      ↳ AND Gate Modeling & External Validation (GSE28735)
+        ↳ Single-cell RNA-seq Validation (GSE154778) & Report Generation
 ```
 
 ### Project Structure
 
 ```
-├── src/                          # Source code
-│   ├── config.yaml               # Centralized configuration
-│   ├── data_download.py          # Data acquisition
-│   ├── preprocessing.py          # Sample extraction & filtering
-│   ├── differential_expression.py # DE analysis
-│   ├── model_training.py         # ML pipeline (LogReg, RF, XGB)
-│   ├── shap_analysis.py          # SHAP XAI & threshold inference
-│   ├── orthogonality_analysis.py # Pair scoring & selection
-│   ├── and_gate_model.py         # Hill equation simulation
-│   ├── plotting.py               # Figure generation
-│   └── validation.py             # Controls & external validation
-├── results/
-│   ├── tables/                   # All result CSVs
-│   └── figures/                  # All generated plots
-├── reports/
-│   ├── final_report_draft.md     # Comprehensive final report
-│   └── method_summary.md         # Concise methods summary
+├── analysis_v2/                  # Core V2 analysis pipeline and report generation
+│   ├── pipeline_v2.py            # Main pipeline script
+│   └── generate_reports_v2.py    # Report compiler
+├── scrna_validation/             # Single-cell RNA-seq validation pipeline
+│   ├── scripts/                  # scRNA analysis scripts
+│   ├── tables/                   # scRNA result tables
+│   └── figures/                  # scRNA validation plots
+├── results_v2/                   # Pipeline execution results (tables & figures)
+├── reports_v2/                   # Compiled final reports (EN/ZH, PDF/Docx/MD)
+├── src_v1_archive/               # Archived first-generation scripts
+├── reports_v1_archive/           # Archived first-generation reports
+├── results_v1_archive/           # Archived first-generation results
 ├── nchc_bridge.py                # NCHC SSH automation bridge
 ├── requirements.txt              # Python dependencies
 └── environment.yml               # Conda environment
@@ -52,8 +53,10 @@ TCGA-PAAD + GTEx Data → Preprocessing → Differential Expression → ML Class
 
 ### Data Sources
 
-- **Discovery**: TCGA-PAAD (n=178) + GTEx Normal Pancreas (n=167) via UCSC Xena
-- **Validation**: GSE62452 (n=130) from GEO
+- **Discovery Cohort**: TCGA-PAAD (n=178) + GTEx Normal Pancreas (n=167) via UCSC Xena
+- **Same-Cohort Validation**: GSE62452 (n=130) from GEO
+- **External Validation**: GSE28735 (n=90) from GEO
+- **Single-Cell Validation**: GSE154778 (n=14,924 cells) from GEO
 
 ### How to Reproduce
 
@@ -61,16 +64,20 @@ TCGA-PAAD + GTEx Data → Preprocessing → Differential Expression → ML Class
 # 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Run pipeline (in order)
-python3 src/data_download.py
-python3 src/preprocessing.py
-python3 src/differential_expression.py
-python3 src/model_training.py
-python3 src/shap_analysis.py
-python3 src/orthogonality_analysis.py
-python3 src/and_gate_model.py
-python3 src/validation.py
-python3 src/plotting.py
+# 2. Run the V2 Core Pipeline
+python3 analysis_v2/pipeline_v2.py
+
+# 3. Run Single-Cell RNA-seq Validation
+# Execute scripts sequentially in scrna_validation/scripts/
+python3 scrna_validation/scripts/01_search_scrna_spatial_datasets.py
+python3 scrna_validation/scripts/02_download_or_prepare_dataset.py
+python3 scrna_validation/scripts/03_process_scrna_dataset.py
+python3 scrna_validation/scripts/04_validate_ceacam5_cst1_scrna.py
+python3 scrna_validation/scripts/05_validate_ceacam5_cst1_spatial.py
+python3 scrna_validation/scripts/06_generate_scrna_spatial_report.py
+
+# 4. Generate Final Reports (Markdown, PDF, Docx)
+python3 analysis_v2/generate_reports_v2.py
 ```
 
 ### Compute Infrastructure
