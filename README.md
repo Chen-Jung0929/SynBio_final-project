@@ -3,9 +3,10 @@
 ## Current Branch Focus
 
 This branch tracks the transition from the third-generation (`v3`) unbiased
-pipeline into a fourth-generation (`v4`) biologically integrated search for
-candidate two-input synthetic-biology AND-gate biosensor signals for pancreatic
-ductal adenocarcinoma (PDAC).
+bulk-first pipeline into a fourth-generation (`v4`) biologically integrated
+audit, and now into a proposed fifth-generation (`v5`) single-cell-first search
+for candidate two-input synthetic-biology AND-gate biosensor signals for
+pancreatic ductal adenocarcinoma (PDAC).
 
 The current default v3 pair was:
 
@@ -13,16 +14,16 @@ The current default v3 pair was:
 PKM AND ADAM22
 ```
 
-The current draft v4 pair is:
+The current unbiased v4 audit-selected pair is:
 
 ```text
-OCIAD2 AND CEACAM5
+NMU AND CEP55
 ```
 
-V4 is now the active scientific direction because it integrates single-cell
-target-compartment co-expression into pair selection. The V4 result is promising
-but still under audit; it is not yet a completed or experimentally validated
-biosensor.
+After the circularity-sensitive V4 rerun, `OCIAD2 + CEACAM5` is no longer treated
+as a stable final candidate because `CEACAM5` had been entangled with the target
+annotation logic. The corrected V4 result is useful as an audit finding, but it
+is not yet a completed or experimentally validated biosensor.
 
 Key locked external validation result:
 
@@ -81,11 +82,11 @@ biologically validated biosensor.
 - The current claim should be: computationally prioritized candidate pair,
   not clinically deployable detector or experimentally validated circuit.
 
-The v4 draft improves the biological alignment by selecting `OCIAD2 + CEACAM5`,
-which has high malignant ductal / epithelial co-expression in the current scRNA
-prior. However, V4 still needs top-N stability, locked GSE28735 validation,
-patient-level target prevalence, circularity audit, uncertainty intervals, and
-wet-lab feasibility review.
+The v4 circularity-corrected audit selects `NMU + CEP55`, but this pair has a
+negative integrated scRNA score, low patient-level target prevalence, and
+unavailable locked GSE28735 validation until verified probe-to-gene mapping is
+added. The current claim should be: V4 exposed the limits of the bulk-first
+strategy and motivates a v5 single-cell-first discovery workflow.
 
 ## Main Files
 
@@ -96,9 +97,9 @@ wet-lab feasibility review.
 | `analysis_v3/pair_search_v3.py` | Pair scoring across candidate-gene spaces |
 | `analysis_v3/validation_v3.py` | Preliminary scRNA validation with marker-overlap audit |
 | `analysis_v3/audit_v3_outputs.py` | Integrity, row-count, true-lock, and anti-bias audit checks |
-| `analysis_v4/` | draft V4 scRNA-integrated candidate search scripts |
+| `analysis_v4/` | V4 scRNA-integrated audit and candidate-search scripts |
 | `reports_v3/` | v3 methods, results, limitations, final report, and AI review |
-| `reports_v4/` | V4 scientific narrative, audit, and collaboration handoff |
+| `reports_v4/` | V4 scientific narrative, audit, collaboration handoff, and V5 proposal |
 | `results_v3/tables/` | generated v3 tables |
 | `results_v3/audit/` | generated v3 audit tables |
 | `results_v4/tables/` | draft V4 pair-search outputs |
@@ -155,8 +156,9 @@ See:
 - `reports_v3/V3_LIMITATIONS.md`
 - `reports_v3/V3_AUDIT_REPORT.md`
 
-The immediate next step is not more cosmetic reporting. It is V4 hardening:
-finish top-N stability sweeps, recompute locked GSE28735 validation for
-`OCIAD2 + CEACAM5`, add patient-level target prevalence and circularity audit,
-then define the wet-lab feasibility path for sensing or implementing the two
-inputs.
+The immediate next step is not more cosmetic reporting. V4 now shows that the
+bulk-first search space does not produce a strong cell-level AND-gate candidate
+after circularity correction. The next scientific push is V5: discover candidate
+pairs directly from malignant epithelial single cells, reject off-target
+activation in stromal/immune/normal compartments, and only then validate the
+surviving pairs backward in bulk cohorts.

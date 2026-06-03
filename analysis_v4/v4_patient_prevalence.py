@@ -35,7 +35,8 @@ def main():
     df = df.loc[available_genes]
     
     adata = ad.AnnData(df.T)
-    sc.pp.filter_cells(adata, min_genes=50)
+    min_genes = max(1, min(10, adata.n_vars // 4))
+    sc.pp.filter_cells(adata, min_genes=min_genes)
     sc.pp.normalize_total(adata, target_sum=1e4)
     sc.pp.log1p(adata)
 
@@ -123,8 +124,15 @@ def main():
         pos_rate = df_prev['patient_is_positive'].mean() * 100
         print(f"\n[+] Patient prevalence for {gene_a}+{gene_b}: {pos_rate:.1f}%")
     else:
-        # Create a dummy row to avoid pipeline crash
-        pd.DataFrame([{"patient_is_positive": 0.0}]).to_csv(out_path, index=False)
+        pd.DataFrame([{
+            "patient_id": "NO_TARGET_COMPARTMENT_DETECTED",
+            "n_target_cells": 0,
+            f"{gene_a}_percent_expressing": 0.0,
+            f"{gene_b}_percent_expressing": 0.0,
+            "pair_coexpressing_percent": 0.0,
+            "patient_is_positive": 0,
+            "audit_status": "NO_TARGET_COMPARTMENT_DETECTED"
+        }]).to_csv(out_path, index=False)
         pos_rate = 0.0
         print(f"\n[-] No target cells found. Patient prevalence: 0.0%")
     print(f"[+] Wrote prevalence summary to {out_path}")

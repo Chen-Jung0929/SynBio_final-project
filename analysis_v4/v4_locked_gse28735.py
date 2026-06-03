@@ -3,8 +3,8 @@ import os
 import urllib.request
 import pandas as pd
 import numpy as np
+from io import StringIO
 from pathlib import Path
-from sklearn.metrics import roc_auc_score, roc_curve
 
 PROJECT_DIR = Path(__file__).parent.parent.resolve()
 V4_DIR = PROJECT_DIR / "analysis_v4"
@@ -13,6 +13,8 @@ V4_TABLES_DIR = PROJECT_DIR / "results_v4/tables"
 V4_AUDIT_DIR = PROJECT_DIR / "results_v4/audit"
 
 def wilson_score_interval(p, n, z=1.96):
+    if n == 0:
+        return np.nan, np.nan
     denominator = 1 + z**2/n
     center = p + z**2/(2*n)
     spread = z * np.sqrt(p*(1-p)/n + z**2/(4*n**2))
@@ -27,13 +29,22 @@ def download_and_parse_gse28735():
         print(f"[*] Downloading {url}...")
         urllib.request.urlretrieve(url, matrix_path)
         
-    print(f"[*] Parsing GSE28735...")
+    print("[*] Parsing GSE28735...")
     import gzip
     with gzip.open(matrix_path, 'rt', encoding='utf-8') as f:
         lines = f.readlines()
         
     meta_lines = [l for l in lines if l.startswith('!Sample_')]
-    data_lines = [l for l in lines if not l.startswith('!') and not l.startswith('#') and l.strip()]
+    table_lines = []
+    in_table = False
+    for line in lines:
+        if line.startswith("!series_matrix_table_begin"):
+            in_table = True
+            continue
+        if line.startswith("!series_matrix_table_end"):
+            break
+        if in_table and line.strip():
+            table_lines.append(line.replace('"', ''))
     
     sample_ids = []
     group_ids = []
@@ -45,13 +56,17 @@ def download_and_parse_gse28735():
             
     df_meta = pd.DataFrame({"sample_id": sample_ids, "group": group_ids})
     
-    headers = data_lines[0].strip().split('\t')
-    df_geo = pd.read_csv(matrix_path, sep='\t', skiprows=len(lines)-len(data_lines), header=0)
+    if not table_lines:
+        raise ValueError("Could not locate GSE28735 series matrix table.")
+
+    df_geo = pd.read_csv(StringIO("".join(table_lines)), sep='\t')
     df_geo.rename(columns={'ID_REF': 'Gene'}, inplace=True)
     
     return df_geo, df_meta
 
 def get_gene_expr(df_geo, gene_name):
+    if 'Gene' not in df_geo.columns:
+        return np.zeros(max(df_geo.shape[1] - 1, 0))
     row = df_geo[df_geo['Gene'] == gene_name]
     if row.empty:
         # Fallback: exact match failed, just return zeros to not crash
@@ -67,18 +82,34 @@ def main():
     print(f"[*] Evaluating {gene_a} + {gene_b} on GSE28735...")
     df_geo, df_meta = download_and_parse_gse28735()
     
-    # Gene symbol mapping is tough on raw probes, we assume the pipeline mapped them or we just search
-    # For this audit, we will do a simple exact match if available, or simulate if probe mappings are missing
+    # This audit only reports a locked result when both genes are found directly.
+    # If probe-to-symbol mapping is unavailable, the result is marked unavailable
+    # rather than simulated.
     expr_a = get_gene_expr(df_geo, gene_a)
     expr_b = get_gene_expr(df_geo, gene_b)
     
-    # Since we don't have the full probe mapping from v2, we'll extract the AND scores
-    # If expression is all zeros (gene not found by exact symbol), we'll print a warning
     if np.sum(expr_a) == 0 or np.sum(expr_b) == 0:
         print(f"[-] Warning: {gene_a} or {gene_b} not found exactly in GSE28735 ID_REF column.")
-        print(f"[-] Simulating validation threshold metric to satisfy pipeline constraint.")
-        # Simulating based on the known bulk performance (0.73)
-        tp, fn, fp, tn = 35, 10, 5, 40
+        print("[-] Locked validation is unavailable without a verified probe-to-gene mapping.")
+        records = [{
+            "dataset": "GSE28735",
+            "pair": f"{gene_a}+{gene_b}",
+            "audit_status": "UNAVAILABLE_PROBE_MAPPING_REQUIRED",
+            "sensitivity": np.nan,
+            "sens_95CI_lower": np.nan,
+            "sens_95CI_upper": np.nan,
+            "specificity": np.nan,
+            "spec_95CI_lower": np.nan,
+            "spec_95CI_upper": np.nan,
+            "TP": np.nan, "FN": np.nan, "FP": np.nan, "TN": np.nan,
+            "note": "Exact ID_REF gene-symbol match failed; no simulated validation metrics were emitted."
+        }]
+        df_val = pd.DataFrame(records)
+        out_path = V4_AUDIT_DIR / "v4_gse28735_validation.csv"
+        V4_AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+        df_val.to_csv(out_path, index=False)
+        print(f"[+] Wrote unavailable GSE28735 audit to {out_path}")
+        return
     else:
         # Scale to 0-1 range to match our thresholding logic
         a_scaled = (expr_a - np.min(expr_a)) / (np.max(expr_a) - np.min(expr_a) + 1e-9)
@@ -107,13 +138,15 @@ def main():
     records = [{
         "dataset": "GSE28735",
         "pair": f"{gene_a}+{gene_b}",
+        "audit_status": "PASS_EXACT_ID_REF_MATCH",
         "sensitivity": sens,
         "sens_95CI_lower": sens_lower,
         "sens_95CI_upper": sens_upper,
         "specificity": spec,
         "spec_95CI_lower": spec_lower,
         "spec_95CI_upper": spec_upper,
-        "TP": tp, "FN": fn, "FP": fp, "TN": tn
+        "TP": tp, "FN": fn, "FP": fp, "TN": tn,
+        "note": "Computed only because both genes were found by exact ID_REF match."
     }]
     
     df_val = pd.DataFrame(records)
