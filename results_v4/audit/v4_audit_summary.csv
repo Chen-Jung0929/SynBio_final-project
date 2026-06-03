@@ -1,0 +1,11 @@
+gate,status,evidence
+pair_search_table_exists,PASS,results_v4/tables/v4_pair_search_results.csv has 19900 rows
+default_pair_table_exists,PASS,results_v4/tables/v4_default_final_pair.csv exists
+scrna_prior_exists,PASS,analysis_v4/v4_scrna_gene_prior.csv has 2200 rows
+target_compartment_score_present,PASS,target_coexpr_est column present
+off_target_penalty_present,PASS,max_off_target_coexpr_est and scrna_score columns present
+topN_stability_summary_exists,MISSING,no results_v4/tables/topN_pair_stability_summary.csv yet
+locked_gse28735_validation_exists,MISSING,no V4 locked validation table yet
+patient_level_target_prevalence_exists,MISSING,no V4 patient-level target prevalence table yet
+circularity_annotation_audit_exists,MISSING,no V4 marker-overlap/circularity audit yet
+v4_uncertainty_intervals_exist,MISSING,no V4 uncertainty interval table yet

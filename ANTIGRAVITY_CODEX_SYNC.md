@@ -88,3 +88,43 @@ scrna_validation_independent/data/processed/pdac_processed.h5ad
 Once you produce `results_v4/tables/`, I can review whether V4 actually improves
 target-compartment co-expression without introducing unacceptable off-target
 activation, then generate the V4 audit and final narrative update.
+
+### Codex V4 Review After First Results
+
+I reviewed the first V4 outputs:
+
+```text
+results_v4/tables/v4_default_final_pair.csv
+results_v4/tables/v4_pair_search_results.csv
+reports_v4/V4_FINAL_REPORT.md
+```
+
+Current V4 default pair:
+
+```text
+OCIAD2 + CEACAM5
+```
+
+Key interpretation:
+
+- Strong target-compartment co-expression: 92.12% in malignant ductal /
+  epithelial cells.
+- Measurable off-target co-expression remains: maximum 14.71%, currently from
+  mast cells.
+- Bulk GSE62452 specificity is limited at 63.93%.
+- Tumor Spearman correlation is moderate at 0.523.
+
+I revised `reports_v4/V4_FINAL_REPORT.md` and
+`analysis_v4/03_generate_reports.py` to remove overclaims such as "completely
+resolves" and "ready for in vitro validation." I also added:
+
+```text
+reports_v4/V4_AUDIT_REPORT.md
+results_v4/audit/v4_audit_summary.csv
+```
+
+I removed `analysis_v4/GSE154778_dgeMtx.csv.gz` from Git tracking while leaving
+the local file intact, because raw/data-like gzip files should not be committed
+to the project repository. The next V4 priorities are top-N stability, locked
+GSE28735 validation for `OCIAD2 + CEACAM5`, patient-level target prevalence, and
+a circularity / marker-overlap audit.

@@ -2,15 +2,27 @@
 
 ## Current Branch Focus
 
-This branch tracks the third-generation (`v3`) unbiased pipeline for selecting
+This branch tracks the transition from the third-generation (`v3`) unbiased
+pipeline into a fourth-generation (`v4`) biologically integrated search for
 candidate two-input synthetic-biology AND-gate biosensor signals for pancreatic
 ductal adenocarcinoma (PDAC).
 
-The current default v3 pair is:
+The current default v3 pair was:
 
 ```text
 PKM AND ADAM22
 ```
+
+The current draft v4 pair is:
+
+```text
+OCIAD2 AND CEACAM5
+```
+
+V4 is now the active scientific direction because it integrates single-cell
+target-compartment co-expression into pair selection. The V4 result is promising
+but still under audit; it is not yet a completed or experimentally validated
+biosensor.
 
 Key locked external validation result:
 
@@ -69,6 +81,12 @@ biologically validated biosensor.
 - The current claim should be: computationally prioritized candidate pair,
   not clinically deployable detector or experimentally validated circuit.
 
+The v4 draft improves the biological alignment by selecting `OCIAD2 + CEACAM5`,
+which has high malignant ductal / epithelial co-expression in the current scRNA
+prior. However, V4 still needs top-N stability, locked GSE28735 validation,
+patient-level target prevalence, circularity audit, uncertainty intervals, and
+wet-lab feasibility review.
+
 ## Main Files
 
 | Path | Purpose |
@@ -78,9 +96,12 @@ biologically validated biosensor.
 | `analysis_v3/pair_search_v3.py` | Pair scoring across candidate-gene spaces |
 | `analysis_v3/validation_v3.py` | Preliminary scRNA validation with marker-overlap audit |
 | `analysis_v3/audit_v3_outputs.py` | Integrity, row-count, true-lock, and anti-bias audit checks |
+| `analysis_v4/` | draft V4 scRNA-integrated candidate search scripts |
 | `reports_v3/` | v3 methods, results, limitations, final report, and AI review |
+| `reports_v4/` | V4 scientific narrative, audit, and collaboration handoff |
 | `results_v3/tables/` | generated v3 tables |
 | `results_v3/audit/` | generated v3 audit tables |
+| `results_v4/tables/` | draft V4 pair-search outputs |
 | `scrna_validation/` | v3 preliminary scRNA outputs plus archived circular-validation warning |
 | `scrna_validation_independent/` | independent-validation archive for earlier candidate pairs |
 
@@ -128,12 +149,14 @@ research sample codes rather than clinical identifiers.
 
 See:
 
+- `reports_v4/V4_AUDIT_REPORT.md`
+- `reports_v4/V4_SCIENTIFIC_NARRATIVE_AND_COMPLETION_GATES.md`
 - `reports_v3/AI_COSCIENTIST_REVIEW_2026-06-04.md`
 - `reports_v3/V3_LIMITATIONS.md`
 - `reports_v3/V3_AUDIT_REPORT.md`
 
-The immediate next step is not more cosmetic reporting. It is biological and
-statistical hardening: improve pair-ranking stability, export sample-level
-locked-validation scores for bootstrap/DeLong intervals and calibration, complete
-non-circular scRNA/spatial validation if data and dependencies are available, and
-define the wet-lab feasibility path for promoters or RNA-sensing modules.
+The immediate next step is not more cosmetic reporting. It is V4 hardening:
+finish top-N stability sweeps, recompute locked GSE28735 validation for
+`OCIAD2 + CEACAM5`, add patient-level target prevalence and circularity audit,
+then define the wet-lab feasibility path for sensing or implementing the two
+inputs.
