@@ -202,3 +202,76 @@ off-target. I preserved that relaxation in code because it may be useful for
 exploration, but labeled it explicitly as
 `exploratory_relaxed_v5_0p60_target_0p10_pooled_offtarget` in the output/audit
 schema. A final V5 claim should report which threshold profile was used.
+
+---
+
+## Codex Handoff to Antigravity — 2026-06-04 01:18
+
+Antigravity, I am about to go offline / exhaust my active runtime quota. Please
+take over from here and continue pushing the project forward.
+
+Current Git state:
+
+```text
+branch: v4-unbiased-final
+latest pushed commit before this handoff: d75669b Label relaxed V5 discovery thresholds
+remote: origin/v4-unbiased-final
+```
+
+Important current interpretation:
+
+- V4 is now best treated as an audited failure of the bulk-first strategy, not
+  as a final candidate generator.
+- `NMU + CEP55` is the corrected V4 audit-selected pair, but it is not
+  wet-lab-ready: scRNA score is negative, patient-positive rate is low, and
+  GSE28735 locked validation is unavailable without verified probe mapping.
+- V5 scRNA-first discovery is the correct next direction.
+
+Files I updated and pushed for you to use:
+
+```text
+README.md
+reports_v4/V4_FINAL_REPORT.md
+reports_v4/V4_AUDIT_REPORT.md
+reports_v4/V5_PIPELINE_PROPOSAL.md
+reports_v4/CODEX_V5_SCRNA_FIRST_REVIEW.md
+analysis_v4/03_generate_reports.py
+analysis_v4/v4_locked_gse28735.py
+analysis_v4/v4_patient_prevalence.py
+analysis_v5/01_scrna_discovery.py
+analysis_v5/02_bulk_validation.py
+analysis_v5/03_generate_reports.py
+results_v4/audit/v4_audit_summary.csv
+results_v4/audit/v4_gse28735_validation.csv
+results_v4/tables/v4_patient_prevalence_summary.csv
+```
+
+Please continue with these concrete next steps:
+
+1. Run `python analysis_v5/01_scrna_discovery.py` and inspect
+   `results_v5/audit/v5_scrna_discovery_audit.csv`.
+2. If the current relaxed threshold profile yields no candidates, do not hide
+   that. Record it, then run a sensitivity sweep over target/off-target
+   thresholds instead of choosing a threshold by hand.
+3. If candidates exist, run `python analysis_v5/02_bulk_validation.py`.
+4. Generate `reports_v5/V5_FINAL_REPORT.md` with
+   `python analysis_v5/03_generate_reports.py`.
+5. Add a V5 audit report/table that explicitly states:
+   target prevalence, max off-target compartment, patient-positive rate,
+   annotation non-circularity, bulk backward validation status, and wet-lab
+   feasibility status.
+6. Do not commit the current untracked `results_v5/tables/v5_scrna_candidates.csv`
+   unless it is regenerated with the latest `analysis_v5/01_scrna_discovery.py`
+   and contains a real header/results. It was only a 2-byte empty artifact when
+   I last checked.
+
+Scientific guardrails to preserve:
+
+- Do not claim "clinically viable", "perfect biosensor", "fully prepared", or
+  "completely resolves" unless supported by direct evidence.
+- Do not simulate external validation metrics when mapping/data are missing.
+- Every threshold profile must be named in machine-readable output.
+- A strong V5 result still remains a computational hypothesis until wet-lab
+  sensing modality, dynamic range, and circuit feasibility are reviewed.
+
+Please take the baton from here.
