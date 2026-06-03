@@ -21,13 +21,22 @@ def load_scrna_prior(prior_path):
         return None
     df = pd.read_csv(prior_path)
     prior_dict = {}
+    fallback_target_cts = {
+        "malignant ductal / epithelial",
+        "epithelial / ductal tumor-origin cells",
+        "tumor-associated epithelial / putative malignant ductal epithelial",
+    }
     for _, row in df.iterrows():
         g = row['gene']
         ct = row['cell_type']
         pct = row['percent_expressing_fraction']
+        is_target = bool(row["is_target_compartment"]) if "is_target_compartment" in df.columns else ct in fallback_target_cts
         if g not in prior_dict:
             prior_dict[g] = {}
-        prior_dict[g][ct] = pct
+        prior_dict[g][ct] = {
+            "pct": pct,
+            "is_target": is_target,
+        }
     return prior_dict
 
 def calculate_scrna_score(gene_a, gene_b, prior_dict):
@@ -40,24 +49,16 @@ def calculate_scrna_score(gene_a, gene_b, prior_dict):
     dict_a = prior_dict[gene_a]
     dict_b = prior_dict[gene_b]
     
-    target_cts = ["epithelial / ductal tumor-origin cells", "tumor-associated epithelial / putative malignant ductal epithelial"]
     target_coexpr = 0
-    for ct in target_cts:
-        if ct in dict_a and ct in dict_b:
-            target_coexpr = max(target_coexpr, min(dict_a[ct], dict_b[ct]))
-            
-    off_target_cts = [
-        "Tregs", "CD8 T cells", "T cells", "B cells", "NK cells", 
-        "macrophages / monocytes", "acinar-like cells", "endocrine cells", 
-        "endothelial", "mast cells", "plasma cells"
-    ]
     max_off_target_coexpr = 0
-    for ct in off_target_cts:
-        if ct in dict_a and ct in dict_b:
-            max_off_target_coexpr = max(max_off_target_coexpr, min(dict_a[ct], dict_b[ct]))
+    for ct in set(dict_a).intersection(dict_b):
+        coexpr = min(dict_a[ct]["pct"], dict_b[ct]["pct"])
+        if dict_a[ct]["is_target"]:
+            target_coexpr = max(target_coexpr, coexpr)
+        else:
+            max_off_target_coexpr = max(max_off_target_coexpr, coexpr)
             
     # scRNA Score calculation
-    # target_coexpr is typically 0.01-0.20, off_target should be 0.
     scrna_bonus = target_coexpr
     scrna_penalty = 5.0 * max_off_target_coexpr
     

@@ -39,9 +39,9 @@ def main():
     df_consensus = pd.read_csv(V3_CONSENSUS_FILE)
     top_genes = df_consensus["gene"].head(200).tolist()
     
-    # We also need marker genes for cell-type classification!
+    # INDEPENDENT marker genes (removed CEACAM5, MUC1 to avoid circularity with top candidates)
     marker_genes = [
-        "EPCAM", "KRT19", "SOX9", "CEACAM5", "MUC1", "CFTR",
+        "EPCAM", "KRT19", "SOX9", "CFTR",
         "PRSS1", "CPA1", "REG1A", "AMY2A", "COL1A1", "COL1A2", 
         "DCN", "LUM", "ACTA2", "FAP", "PECAM1", "VWF", "KDR",
         "CD3D", "CD3E", "CD2", "CD8A", "CD8B", "FOXP3", "IL2RA", 
@@ -50,7 +50,6 @@ def main():
     ]
     all_needed = list(set(top_genes + marker_genes))
     
-    # Filter rows to only needed genes before transposing to save memory
     available_genes = [g for g in all_needed if g in df.index]
     df = df.loc[available_genes]
     
@@ -58,17 +57,19 @@ def main():
     adata = ad.AnnData(df.T)
     print(f"[+] AnnData shape: {adata.shape}")
 
-    sc.pp.filter_cells(adata, min_genes=50) # lower threshold since we heavily filtered genes
+    sc.pp.filter_cells(adata, min_genes=50)
     sc.pp.normalize_total(adata, target_sum=1e4)
     sc.pp.log1p(adata)
 
-    # Classify cells
+    # Extract patient/sample ID
+    adata.obs['patient_id'] = [x.split(":")[0] for x in adata.obs_names]
+    adata.obs['is_tumor'] = [x.startswith('P') or x.startswith('MET') for x in adata.obs['patient_id']]
+
     def get_valid_markers(gene_list):
         return [g for g in gene_list if g in adata.var_names]
 
     marker_defs = {
-        "malignant_ductal": get_valid_markers(["EPCAM", "KRT19", "SOX9", "CEACAM5", "MUC1"]),
-        "normal_ductal": get_valid_markers(["EPCAM", "KRT19", "CFTR"]),
+        "ductal": get_valid_markers(["EPCAM", "KRT19", "SOX9", "CFTR"]),
         "acinar": get_valid_markers(["PRSS1", "CPA1", "REG1A", "AMY2A"]),
         "fibroblast": get_valid_markers(["COL1A1", "COL1A2", "DCN", "LUM", "ACTA2", "FAP"]),
         "endothelial": get_valid_markers(["PECAM1", "VWF", "KDR"]),
@@ -98,7 +99,7 @@ def main():
     for idx, row in df_scores.iterrows():
         immune_score = max(row["t_cells"], row["b_cells"], row["macrophages"], row["mast_cells"])
         stromal_score = max(row["fibroblast"], row["endothelial"])
-        epi_score = max(row["malignant_ductal"], row["normal_ductal"], row["acinar"])
+        epi_score = max(row["ductal"], row["acinar"])
         
         max_cat = np.argmax([immune_score, stromal_score, epi_score])
         
@@ -124,25 +125,18 @@ def main():
             else:
                 cell_types.append("endothelial")
         else:
-            sub_cat = np.argmax([row["malignant_ductal"], row["normal_ductal"], row["acinar"]])
-            if sub_cat == 2:
+            sub_cat = np.argmax([row["ductal"], row["acinar"]])
+            if sub_cat == 1:
                 cell_types.append("normal acinar")
             else:
-                ceacam5_loc = adata.var_names.get_loc("CEACAM5") if "CEACAM5" in adata.var_names else -1
-                if ceacam5_loc != -1:
-                    val = adata.X[adata.obs_names.get_loc(idx), ceacam5_loc]
-                    if not isinstance(val, (float, np.float32, np.float64)):
-                        val = val.toarray()[0, 0]
-                    if val > 0.2:
-                        cell_types.append("malignant ductal / epithelial")
-                    else:
-                        cell_types.append("normal ductal")
+                is_tumor = adata.obs.loc[idx, 'is_tumor']
+                if is_tumor:
+                    cell_types.append("malignant ductal / epithelial")
                 else:
                     cell_types.append("normal ductal")
 
     adata.obs['cell_type'] = cell_types
 
-    # Compute percent expressing for top 200 genes
     print("[*] Computing cell-type percent expressing...")
     summary_records = []
     cts = sorted(adata.obs['cell_type'].unique())
@@ -166,18 +160,23 @@ def main():
             pct = np.mean(g_expr > 0)
             mean_e = np.mean(g_expr) if len(g_expr) > 0 else 0.0
             
+            # Additional V4 explicit fields requested by Codex
             summary_records.append({
-                "cell_type": ct,
                 "gene": g,
+                "cell_type": ct,
                 "mean_expression": mean_e,
                 "percent_expressing_fraction": pct,
-                "n_cells": n_cells_sub
+                "n_cells": n_cells_sub,
+                "is_target_compartment": 1 if ct == "malignant ductal / epithelial" else 0,
+                "is_off_target_compartment": 0 if ct == "malignant ductal / epithelial" else 1,
+                "source_h5ad": "GSE154778",
+                "annotation_version": "v4_unbiased_metadata"
             })
             
     df_prior = pd.DataFrame(summary_records)
     out_file = V4_DIR / "v4_scrna_gene_prior.csv"
     df_prior.to_csv(out_file, index=False)
-    print(f"[+] Wrote scRNA prior to {out_file}")
+    print(f"[+] Wrote unbiased scRNA prior to {out_file}")
 
 if __name__ == "__main__":
     main()
