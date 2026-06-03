@@ -1,0 +1,5 @@
+dataset,gene_A,gene_B,metric,estimate,ci_method,ci_low,ci_high,n_positive,n_negative,note
+GSE28735,PKM,ADAM22,sensitivity,0.8,Wilson score 95% CI,0.6617703088385799,0.8910387319216871,45,45,Computed from locked aggregate confusion matrix.
+GSE28735,PKM,ADAM22,specificity,0.8222222222222222,Wilson score 95% CI,0.6867017537354023,0.9070561048589585,45,45,Computed from locked aggregate confusion matrix.
+GSE28735,PKM,ADAM22,accuracy,0.8111111111111111,Wilson score 95% CI,0.7181637647568584,0.8785874015586717,45,45,Computed from locked aggregate confusion matrix.
+GSE28735,PKM,ADAM22,ROC_AUC,0.8587654320987654,Hanley-McNeil approximate 95% CI,0.7802785578717782,0.9372523063257526,45,45,Approximate SE=0.0400. Prefer bootstrap or DeLong CI after sample-level gate scores are exported.

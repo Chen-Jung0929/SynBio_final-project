@@ -23,6 +23,7 @@ def run_audit():
         (TABLES_DIR / "v3_default_final_pair.csv", "v3_default_final_pair.csv"),
         (TABLES_DIR / "topN_pair_stability_summary.csv", "topN_pair_stability_summary.csv"),
         (TABLES_DIR / "locked_gse28735_final_validation.csv", "locked_gse28735_final_validation.csv"),
+        (TABLES_DIR / "locked_gse28735_uncertainty_intervals.csv", "locked_gse28735_uncertainty_intervals.csv"),
         (TABLES_DIR / "elastic_net_hyperparameter_log.csv", "elastic_net_hyperparameter_log.csv"),
         (TABLES_DIR / "model_consensus_feature_ranking_v3.csv", "model_consensus_feature_ranking_v3.csv"),
         (TABLES_DIR / "threshold_instability_audit.csv", "threshold_instability_audit.csv"),

@@ -15,10 +15,21 @@ build/
 
 # Environment
 .env
+credentials.env
+credentials.json
+token.json
+oauth/
+*.pem
+*.key
 *.log
 *.tmp
 temp_workspace.zip
 temp_remote.zip
+
+# Project-local AI scientist run artifacts
+.ai_scientist/runs/
+.ai_scientist/tool_logs/
+.ai_scientist/feedback_box/
 
 # OS
 .DS_Store

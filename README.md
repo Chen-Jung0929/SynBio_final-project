@@ -1,82 +1,139 @@
-# SynBio Final Project: Logic-Gated Biosensor for PDAC
+# SynBio Final Project: PDAC Logic-Gated Biosensor Discovery
 
-## Data-Driven Design of a Logic-Gated Biosensor via Unbiased Transcriptomic Profiling of Pancreatic Tumor Microenvironment
+## Current Branch Focus
 
-### Overview
+This branch tracks the third-generation (`v3`) unbiased pipeline for selecting
+candidate two-input synthetic-biology AND-gate biosensor signals for pancreatic
+ductal adenocarcinoma (PDAC).
 
-This project implements a fully automated, data-driven computational pipeline to identify candidate gene pairs for a synthetic biology **AND-gate biosensor** targeting **pancreatic ductal adenocarcinoma (PDAC)**. The pipeline integrates differential expression analysis, machine learning classification, explainable AI (SHAP), orthogonality scoring, and Hill-equation-based mathematical modeling.
+The current default v3 pair is:
 
-### Key Result
+```text
+PKM AND ADAM22
+```
 
-**Selected AND-gate pair: UBE2S (cell cycle) AND CCR6 (immune microenvironment)**
+Key locked external validation result:
+
+| Dataset | Role | Result |
+|---|---|---|
+| TCGA + GTEx | Discovery | used for differential expression, model training, threshold estimation |
+| GSE62452 | same-cohort validation filter | used during candidate filtering and pair scoring |
+| GSE28735 | locked external validation | evaluated once after final pair freeze |
+
+GSE28735 locked validation for `PKM + ADAM22`:
 
 | Metric | Value |
-|--------|-------|
-| Discovery AUC | **0.9986** |
-| Accuracy | **98.6%** |
-| Sensitivity | **97.8%** |
-| Specificity | **99.4%** |
-| Random pair p-value | **< 0.0001** |
+|---|---:|
+| ROC-AUC | 0.8588 |
+| Sensitivity | 80.0% |
+| Specificity | 82.2% |
+| Tumor samples | 45 |
+| Normal samples | 45 |
 
-### Pipeline Architecture
+Approximate 95% intervals are now reported in
+`results_v3/tables/locked_gse28735_uncertainty_intervals.csv`. These intervals
+use aggregate locked-validation outputs. Future runs should export sample-level
+gate scores for bootstrap or DeLong intervals.
 
-```
-TCGA-PAAD + GTEx Data → Preprocessing → Differential Expression → ML Classification
-→ SHAP Analysis → Orthogonality Scoring → AND Gate Modeling → Validation & Plotting
-```
+## What Changed in v3
 
-### Project Structure
+- Replaced the earlier single-pair narrative with an unbiased three-model
+  ensemble workflow.
+- Uses SAGA Elastic Net Logistic Regression, Random Forest, and XGBoost for
+  model-consensus feature prioritization.
+- Estimates per-gene activation thresholds from model-derived attribution
+  behavior, then audits threshold instability.
+- Searches all gene pairs across top 20, 50, 100, and 200 consensus-gene
+  spaces.
+- Keeps GSE28735 as a true locked external validation cohort, evaluated only
+  after the default pair is frozen.
+- Adds row-count, access-sequence, GSE28735 parsing, top-N stability, and
+  scRNA marker-overlap audits.
+- Adds corrected single-cell validation notes that distinguish preliminary
+  marker-score validation from full unbiased scRNA annotation.
 
-```
-├── src/                          # Source code
-│   ├── config.yaml               # Centralized configuration
-│   ├── data_download.py          # Data acquisition
-│   ├── preprocessing.py          # Sample extraction & filtering
-│   ├── differential_expression.py # DE analysis
-│   ├── model_training.py         # ML pipeline (LogReg, RF, XGB)
-│   ├── shap_analysis.py          # SHAP XAI & threshold inference
-│   ├── orthogonality_analysis.py # Pair scoring & selection
-│   ├── and_gate_model.py         # Hill equation simulation
-│   ├── plotting.py               # Figure generation
-│   └── validation.py             # Controls & external validation
-├── results/
-│   ├── tables/                   # All result CSVs
-│   └── figures/                  # All generated plots
-├── reports/
-│   ├── final_report_draft.md     # Comprehensive final report
-│   └── method_summary.md         # Concise methods summary
-├── nchc_bridge.py                # NCHC SSH automation bridge
-├── requirements.txt              # Python dependencies
-└── environment.yml               # Conda environment
-```
+## Important Interpretation
 
-### Data Sources
+The v3 result is stronger than v2 in audit discipline, but it is not yet a
+biologically validated biosensor.
 
-- **Discovery**: TCGA-PAAD (n=178) + GTEx Normal Pancreas (n=167) via UCSC Xena
-- **Validation**: GSE62452 (n=130) from GEO
+- `PKM + ADAM22` is stable only in the larger top100/top200 search spaces.
+  The top20/top50 searches select `OCIAD2 + EDIL3`, so candidate choice remains
+  sensitive to the initial gene pool.
+- The top-20 pair overlap across search spaces is low, showing that pair-ranking
+  robustness still needs improvement.
+- Bulk-level locked validation is moderate, not near-perfect.
+- scRNA validation is preliminary. It suggests low immune/Treg co-expression,
+  but the putative malignant ductal epithelial double-positive rate is very low
+  and patient-variable.
+- The current claim should be: computationally prioritized candidate pair,
+  not clinically deployable detector or experimentally validated circuit.
 
-### How to Reproduce
+## Main Files
 
-```bash
-# 1. Install dependencies
+| Path | Purpose |
+|---|---|
+| `analysis_v3/pipeline_v3.py` | End-to-end v3 discovery, pair search, validation, audit generation |
+| `analysis_v3/threshold_estimation_v3.py` | Three-model threshold estimation and instability audit |
+| `analysis_v3/pair_search_v3.py` | Pair scoring across candidate-gene spaces |
+| `analysis_v3/validation_v3.py` | Preliminary scRNA validation with marker-overlap audit |
+| `analysis_v3/audit_v3_outputs.py` | Integrity, row-count, true-lock, and anti-bias audit checks |
+| `reports_v3/` | v3 methods, results, limitations, final report, and AI review |
+| `results_v3/tables/` | generated v3 tables |
+| `results_v3/audit/` | generated v3 audit tables |
+| `scrna_validation/` | v3 preliminary scRNA outputs plus archived circular-validation warning |
+| `scrna_validation_independent/` | independent-validation archive for earlier candidate pairs |
+
+## Reproduce and Audit
+
+Install dependencies:
+
+```powershell
 pip install -r requirements.txt
-
-# 2. Run pipeline (in order)
-python3 src/data_download.py
-python3 src/preprocessing.py
-python3 src/differential_expression.py
-python3 src/model_training.py
-python3 src/shap_analysis.py
-python3 src/orthogonality_analysis.py
-python3 src/and_gate_model.py
-python3 src/validation.py
-python3 src/plotting.py
 ```
 
-### Compute Infrastructure
+Run the v3 pipeline:
 
-Executed on **NCHC** (National Center for High-performance Computing) biomedical node `t3-c4.nchc.org.tw`, automated via the Antigravity NCHC Bridge.
+```powershell
+python analysis_v3\pipeline_v3.py
+```
 
-### License
+Regenerate v3 reports from generated tables:
 
-This project is for academic/educational purposes (SynBio Final Project).
+```powershell
+python analysis_v3\generate_reports_v3.py
+```
+
+Run the v3 output audit:
+
+```powershell
+python analysis_v3\audit_v3_outputs.py
+```
+
+The latest audit passed all implemented checks:
+
+```text
+All integrity, row-count, consistency, true-lock, and anti-bias checks passed.
+```
+
+## Data Governance
+
+This repository stores public/cohort-level outputs and pseudonymous sample
+identifiers from public datasets. Raw data folders are ignored by Git. The
+patient-level IDs in generated scRNA tables are public dataset pseudonyms such
+as `P01` or `MET01`, not direct identifiers, but they should still be treated as
+research sample codes rather than clinical identifiers.
+
+## Current Priority
+
+See:
+
+- `reports_v3/AI_COSCIENTIST_REVIEW_2026-06-04.md`
+- `reports_v3/V3_LIMITATIONS.md`
+- `reports_v3/V3_AUDIT_REPORT.md`
+
+The immediate next step is not more cosmetic reporting. It is biological and
+statistical hardening: improve pair-ranking stability, export sample-level
+locked-validation scores for bootstrap/DeLong intervals and calibration, complete
+non-circular scRNA/spatial validation if data and dependencies are available, and
+define the wet-lab feasibility path for promoters or RNA-sensing modules.

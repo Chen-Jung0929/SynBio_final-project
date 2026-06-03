@@ -11,7 +11,18 @@ AUDIT_DIR = PROJECT_DIR / "results_v3/audit"
 
 def to_markdown_table(df):
     """Converts a pandas DataFrame to a clean markdown table string."""
-    return df.to_markdown(index=False)
+    try:
+        return df.to_markdown(index=False)
+    except ImportError:
+        headers = [str(col) for col in df.columns]
+        rows = [[str(value) for value in row] for row in df.values.tolist()]
+        table = [
+            "| " + " | ".join(headers) + " |",
+            "| " + " | ".join(["---"] * len(headers)) + " |",
+        ]
+        for row in rows:
+            table.append("| " + " | ".join(row) + " |")
+        return "\n".join(table)
 
 def main():
     print("[*] Starting compilation of V3 research reports...")
@@ -26,6 +37,7 @@ def main():
     df_pat = pd.read_csv(TABLES_SCRNA_DIR / "v3_scrna_patient_level_prevalence.csv")
     df_overlap = pd.read_csv(TABLES_SCRNA_DIR / "v3_candidate_gene_marker_overlap_audit.csv")
     df_usage = pd.read_csv(TABLES_V3_DIR / "data_source_usage_audit.csv")
+    df_uncertainty = pd.read_csv(TABLES_V3_DIR / "locked_gse28735_uncertainty_intervals.csv")
     df_instab = pd.read_csv(TABLES_V3_DIR / "threshold_instability_audit.csv").head(15)
     df_overlap_topn = pd.read_csv(TABLES_V3_DIR / "top_ranked_pair_overlap_across_topN.csv")
     df_audit_sc = pd.read_csv(TABLES_SCRNA_DIR / "v3_scrna_unbiased_validation_audit.csv")
@@ -59,7 +71,7 @@ where:
 ### Model Ingestion & Scaling
 Elastic Net coefficient sizes are scale-dependent. Therefore, gene expression features are standardized using `StandardScaler` (mean = 0, standard deviation = 1) before model fitting. The tree-based models (Random Forest, XGBoost) are trained on the raw (unscaled) expression values since they are scale-invariant.
 
-### consensus Ranking
+### Consensus Ranking
 The consensus feature importance ranking integrates rankings from three model families trained on the cross-dataset stable gene subset (Stage 2 output):
 1. **Elastic Net Logistic Regression** (SAGA solver, standardized features, CV-optimized `l1_ratio`).
 2. **Random Forest Classifier** (unscaled features, Gini feature importance).
@@ -169,7 +181,17 @@ Performance of the final default selected v3 candidate pair ({best_pair}) on the
 
 ---
 
-## 8. scRNA-seq validation (GSE154778)
+## 8. Locked Validation Uncertainty Intervals
+Approximate 95% confidence intervals for the locked GSE28735 point estimates:
+
+> [!NOTE]
+> Sensitivity, specificity, and accuracy use Wilson score intervals from the locked aggregate confusion matrix. ROC-AUC uses the Hanley-McNeil approximation because sample-level gate scores are not stored in the repository. Prefer bootstrap or DeLong intervals after exporting sample-level scores.
+
+{to_markdown_table(df_uncertainty)}
+
+---
+
+## 9. scRNA-seq validation (GSE154778)
 Expression and co-expression rates of the final v3 selected pair across independently annotated cell types:
 
 > [!NOTE]
@@ -179,7 +201,7 @@ Expression and co-expression rates of the final v3 selected pair across independ
 
 ---
 
-## 9. Patient Prevalence and Co-expression Heterogeneity
+## 10. Patient Prevalence and Co-expression Heterogeneity
 Double-positive prevalence in ductal epithelial and CAF compartments across individual patients:
 
 {to_markdown_table(df_pat)}
@@ -210,7 +232,7 @@ Let's inspect the top-ranked pair across settings:
 { "The final pair is highly stable, remaining the top candidate across all search spaces." if len(df_sweep['top_ranked_pair'].unique()) == 1 else "The final pair is stable at larger search spaces, but changes when the candidate pool shifts." }
 
 ### 3. How much does the top-ranked pair set change when the search space expands?
-As the search space expands, the Jaccard similarity between adjacent sweeps is documented in the results summary table. The number of shared top 20 pairs is {df_overlap_topn[(df_overlap_topn['space_1']=='top_100') & (df_overlap_topn['space_2']=='top_200')]['top20_pairs_shared'].values[0]} out of 20, representing a moderate overlap.
+As the search space expands, the Jaccard similarity between sweeps is documented in the results summary table. The top100-vs-top200 comparison shares {df_overlap_topn[(df_overlap_topn['space_1']=='top_100') & (df_overlap_topn['space_2']=='top_200')]['top20_pairs_shared'].values[0]} of 20 top pairs, so the ranked pair set remains unstable even though the default top-ranked pair is preserved in the larger search spaces.
 
 ### 4. Was GSE28735 kept fully locked?
 Yes. GSE28735 was never used for feature selection, threshold estimation, pair selection, top-N cutoff selection, or Elastic Net tuning. The pipeline evaluates the selected pair on GSE28735 exactly once at the end of the script, as audited in the `locked_validation_access_audit.csv` log.
@@ -266,12 +288,13 @@ To verify that single-cell validation is completely unbiased, we audited the ove
 ---
 
 ## 4. Data Integrity & Verification Files
-* Row count audit: [v3_output_row_count_audit.csv](file://{AUDIT_DIR}/v3_output_row_count_audit.csv)
-* Access sequence audit: [locked_validation_access_audit.csv](file://{AUDIT_DIR}/locked_validation_access_audit.csv)
-* Metadata parsing audit: [gse28735_metadata_parsing_audit.csv](file://{AUDIT_DIR}/gse28735_metadata_parsing_audit.csv)
-* Consensus ranking table: [model_consensus_feature_ranking_v3.csv](file://{TABLES_V3_DIR}/model_consensus_feature_ranking_v3.csv)
-* SAGA EN hyperparameter logs: [elastic_net_hyperparameter_log.csv](file://{TABLES_V3_DIR}/elastic_net_hyperparameter_log.csv)
-* scRNA candidate validation: [v3_scrna_candidate_pair_validation.csv](file://{TABLES_SCRNA_DIR}/v3_scrna_candidate_pair_validation.csv)
+* Row count audit: `results_v3/audit/v3_output_row_count_audit.csv`
+* Access sequence audit: `results_v3/audit/locked_validation_access_audit.csv`
+* Metadata parsing audit: `results_v3/audit/gse28735_metadata_parsing_audit.csv`
+* Consensus ranking table: `results_v3/tables/model_consensus_feature_ranking_v3.csv`
+* SAGA EN hyperparameter logs: `results_v3/tables/elastic_net_hyperparameter_log.csv`
+* Locked validation uncertainty intervals: `results_v3/tables/locked_gse28735_uncertainty_intervals.csv`
+* scRNA candidate validation: `scrna_validation/tables/v3_scrna_candidate_pair_validation.csv`
 """
 
     with open(REPORTS_V3_DIR / "V3_AUDIT_REPORT.md", "w") as f:
@@ -286,7 +309,7 @@ This document lists the technical limitations and caveats of the third-generatio
 
 ## 1. Confounding and Batch Boundaries
 * **Source Confounding**: The discovery cohort combines TCGA primary tumor tissue with GTEx healthy donor pancreas tissue. Although Welch's t-test and Wilcoxon tests are highly robust, residual batch effects due to sequencing platforms, sample processing, and RNA isolation pipelines can still exist.
-* **early Validation Filtering**: We mitigate this by requiring candidate genes to pass validation thresholds in a same-cohort microarray dataset (GSE62452), filtering out batch-specific artifacts early in the pipeline.
+* **Early Validation Filtering**: We mitigate this by requiring candidate genes to pass validation thresholds in a same-cohort microarray dataset (GSE62452), filtering out batch-specific artifacts early in the pipeline.
 
 ## 2. In Silico AND-Gate Kinetic Simulating
 * **Hill Equation Kinetics**: The AND-gate logic is simulated using a mathematical dual-input Hill equation. This assumes standard cooperative binding behavior, which may not represent the complex biochemical kinetics of synthetic promoters or ribocomputing devices in vivo.
@@ -310,7 +333,7 @@ This document lists the technical limitations and caveats of the third-generatio
     final_report_content = f"""# V3 Research Report: Unbiased Ensemble Validation Pipeline for PDAC Biosensor Discovery
 
 ## Abstract
-Pancreatic Ductal Adenocarcinoma (PDAC) suffers from extreme lethality, necessitating cell-intrinsic synthetic logic gates to drive target CAR-T or therapeutic payload expression. We present a third-generation (v3) computational pipeline to prioritize and validate tumor-high, normal-low candidate input gene pairs. Using an ensemble of SAGA Elastic Net Logistic Regression, Random Forest, and XGBoost, we prioritized candidate inputs and derived consensus activation thresholds. Search-space sweeps verify that the final prioritized pair **{best_pair}** is stable. GSE28735 locked external validation (containing {int(ext_row['tumor_sample_count'])} tumor and {int(ext_row['normal_sample_count'])} normal samples) achieved sensitivity of **{ext_row['sensitivity']*100:.1f}%** and specificity of **{ext_row['specificity']*100:.1f}%** (ROC-AUC = **{ext_row['ROC_AUC']:.4f}**, TP={int(ext_row['TP'])}, FP={int(ext_row['FP'])}, TN={int(ext_row['TN'])}, FN={int(ext_row['FN'])}). Downstream single-cell RNA-seq validation on GSE154778 using a preliminary marker-score-based targeted validation confirms high specificity with zero co-expression in Tregs, CD8 T cells, and T cells.
+Pancreatic Ductal Adenocarcinoma (PDAC) suffers from extreme lethality, motivating computational exploration of cell-intrinsic synthetic logic-gate inputs. We present a third-generation (v3) computational pipeline to prioritize tumor-high, normal-low candidate input gene pairs. Using an ensemble of SAGA Elastic Net Logistic Regression, Random Forest, and XGBoost, we prioritized candidate inputs and derived consensus activation thresholds. The default top100/top200 search spaces select **{best_pair}**, while smaller top20/top50 search spaces select a different pair, so current pair selection is promising but not fully search-space invariant. GSE28735 locked external validation (containing {int(ext_row['tumor_sample_count'])} tumor and {int(ext_row['normal_sample_count'])} normal samples) achieved sensitivity of **{ext_row['sensitivity']*100:.1f}%** and specificity of **{ext_row['specificity']*100:.1f}%** (ROC-AUC = **{ext_row['ROC_AUC']:.4f}**, TP={int(ext_row['TP'])}, FP={int(ext_row['FP'])}, TN={int(ext_row['TN'])}, FN={int(ext_row['FN'])}). Downstream single-cell RNA-seq validation on GSE154778 using a preliminary marker-score-based targeted validation suggests low T-cell/Treg co-expression, but tumor-compartment double positivity is low and heterogeneous.
 
 ---
 
@@ -320,7 +343,7 @@ Synthetic biology CAR AND-gate circuits require two input promoter signals to tr
 ---
 
 ## 2. Machine Learning Prioritization & Consensus Ranking
-Our pipeline trained SAGA Elastic Net Logistic Regression on standardized stable features alongside Random Forest and XGBoost. The consensus ranking prioritized **{best_pair}** as the top candidate.
+Our pipeline trained SAGA Elastic Net Logistic Regression on standardized stable features alongside Random Forest and XGBoost. The default top100 consensus-gene search prioritized **{best_pair}** as the top candidate.
 
 ### Consolidated Model Performance (Discovery)
 * **Elastic Net (l1_ratio={best_row.get('l1_ratio', 0.5)})**: ROC-AUC = {df_en_log[df_en_log['best_selected_yes_no'] == 'yes']['ROC_AUC_discovery'].values[0]:.4f}
@@ -333,7 +356,7 @@ Thresholds estimated using TreeSHAP polynomial fit zero-crossings for each model
 * **{best_row['gene_A']}**: $K_A = {best_row['K_final_A']:.4f}$ (instability std = {best_row['threshold_instability_A']:.4f})
 * **{best_row['gene_B']}**: $K_B = {best_row['K_final_B']:.4f}$ (instability std = {best_row['threshold_instability_B']:.4f})
 
-Sweeping the consensus genes from top 20 to top 200 (exact counts verified: top20=190, top50=1225, top100=4950, top200=19900 pairs) confirms that **{best_pair}** consistently achieves the highest overall Pair Score due to its low Spearman redundancy ($r = {best_row['tumor_spearman_r']:.3f}$) and stable ensemble thresholds.
+Sweeping the consensus genes from top 20 to top 200 (exact counts verified: top20=190, top50=1225, top100=4950, top200=19900 pairs) shows that **{best_pair}** is the top pair in the default top100 and expanded top200 spaces. However, top20/top50 select **{df_sweep.iloc[0]['top_ranked_pair']}**, and the top20-pair overlap across expanded search spaces is low. This means v3 improves audit discipline, but pair ranking remains sensitive to the candidate-gene search boundary.
 
 ---
 
@@ -347,6 +370,13 @@ Evaluated once on GSE28735 after final pair freezing, the AND gate achieved:
 * **Confusion Matrix Counts**: TP={int(ext_row['TP'])}, FP={int(ext_row['FP'])}, TN={int(ext_row['TN'])}, FN={int(ext_row['FN'])}
 * **Spearman Correlation in Tumors**: {ext_row['GSE28735_Spearman_r']:.3f} (low-to-moderate correlation / partial independence)
 
+Approximate 95% uncertainty intervals:
+* **Sensitivity CI**: {df_uncertainty[df_uncertainty['metric'] == 'sensitivity']['ci_low'].values[0]*100:.1f}% to {df_uncertainty[df_uncertainty['metric'] == 'sensitivity']['ci_high'].values[0]*100:.1f}%
+* **Specificity CI**: {df_uncertainty[df_uncertainty['metric'] == 'specificity']['ci_low'].values[0]*100:.1f}% to {df_uncertainty[df_uncertainty['metric'] == 'specificity']['ci_high'].values[0]*100:.1f}%
+* **ROC-AUC CI**: {df_uncertainty[df_uncertainty['metric'] == 'ROC_AUC']['ci_low'].values[0]:.3f} to {df_uncertainty[df_uncertainty['metric'] == 'ROC_AUC']['ci_high'].values[0]:.3f}
+
+These intervals are approximate because only aggregate locked-validation outputs are versioned. Future runs should export sample-level gate scores to support bootstrap or DeLong intervals.
+
 ---
 
 ## 5. Preliminary scRNA-seq validation
@@ -354,14 +384,16 @@ We annotated GSE154778 using independent canonical lineage markers via a prelimi
 
 * **Putative Malignant Ductal Cells co-expression**: **{df_scrna[df_scrna['cell_type'].str.contains('putative malignant') & (df_scrna['gene_A'] == best_row['gene_A'])]['coexpression_fraction_gt_0'].values[0]*100:.2f}%**
 * **CAF co-expression**: **{df_scrna[df_scrna['cell_type'].str.contains('CAF') & (df_scrna['gene_A'] == best_row['gene_A'])]['coexpression_fraction_gt_0'].values[0]*100:.2f}%**
-* **Tregs & T-cells co-expression**: **0.00%** (resolving the v1 Treg off-target safety liability).
+* **Tregs co-expression**: **0.00%**.
+* **CD8 T-cell co-expression**: **{df_scrna[(df_scrna['cell_type'] == 'CD8 T cells') & (df_scrna['gene_A'] == best_row['gene_A'])]['coexpression_fraction_gt_0'].values[0]*100:.2f}%**.
+* **T-cell co-expression**: **{df_scrna[(df_scrna['cell_type'] == 'T cells') & (df_scrna['gene_A'] == best_row['gene_A'])]['coexpression_fraction_gt_0'].values[0]*100:.2f}%**.
 
 Patient-level auditing reveals that double-positivity in epithelial tumor cells is present in 9 out of 16 patients (median 0.68%, range 0.0% to 12.43%), representing significant inter-individual variation.
 
 ---
 
 ## 6. Conclusion
-The v3 pipeline establishes **{best_pair}** as a robust, non-redundant CAR AND-gate candidate pair that is platform-stable, patient-validated, and free from off-target T-cell or Treg co-expression risk.
+The v3 pipeline establishes **{best_pair}** as a computationally prioritized, weakly redundant candidate pair with a true locked external-validation audit. It does not yet establish a clinically sensitive PDAC detector or an experimentally validated synthetic-biology circuit. The next required work is pair-ranking robustness, calibration and uncertainty analysis, full non-circular single-cell/spatial validation, and wet-lab feasibility review for implementing the two inputs.
 """
 
     with open(REPORTS_V3_DIR / "V3_FINAL_REPORT.md", "w") as f:

@@ -4,7 +4,7 @@ This document lists the technical limitations and caveats of the third-generatio
 
 ## 1. Confounding and Batch Boundaries
 * **Source Confounding**: The discovery cohort combines TCGA primary tumor tissue with GTEx healthy donor pancreas tissue. Although Welch's t-test and Wilcoxon tests are highly robust, residual batch effects due to sequencing platforms, sample processing, and RNA isolation pipelines can still exist.
-* **early Validation Filtering**: We mitigate this by requiring candidate genes to pass validation thresholds in a same-cohort microarray dataset (GSE62452), filtering out batch-specific artifacts early in the pipeline.
+* **Early Validation Filtering**: We mitigate this by requiring candidate genes to pass validation thresholds in a same-cohort microarray dataset (GSE62452), filtering out batch-specific artifacts early in the pipeline.
 
 ## 2. In Silico AND-Gate Kinetic Simulating
 * **Hill Equation Kinetics**: The AND-gate logic is simulated using a mathematical dual-input Hill equation. This assumes standard cooperative binding behavior, which may not represent the complex biochemical kinetics of synthetic promoters or ribocomputing devices in vivo.

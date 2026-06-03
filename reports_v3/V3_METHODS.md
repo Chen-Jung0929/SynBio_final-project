@@ -17,7 +17,7 @@ where:
 ### Model Ingestion & Scaling
 Elastic Net coefficient sizes are scale-dependent. Therefore, gene expression features are standardized using `StandardScaler` (mean = 0, standard deviation = 1) before model fitting. The tree-based models (Random Forest, XGBoost) are trained on the raw (unscaled) expression values since they are scale-invariant.
 
-### consensus Ranking
+### Consensus Ranking
 The consensus feature importance ranking integrates rankings from three model families trained on the cross-dataset stable gene subset (Stage 2 output):
 1. **Elastic Net Logistic Regression** (SAGA solver, standardized features, CV-optimized `l1_ratio`).
 2. **Random Forest Classifier** (unscaled features, Gini feature importance).
