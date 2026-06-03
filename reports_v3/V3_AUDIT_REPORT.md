@@ -17,10 +17,10 @@ Let's inspect the top-ranked pair across settings:
 The final pair is stable at larger search spaces, but changes when the candidate pool shifts.
 
 ### 3. How much does the top-ranked pair set change when the search space expands?
-As the search space expands from top 20 to top 200, the top 20 ranked pairs shift. The Jaccard similarity between adjacent sweeps is documented in the results summary table. For example, between top 100 and top 200, the number of shared top 20 pairs is 3 out of 20, representing a moderate overlap.
+As the search space expands, the Jaccard similarity between adjacent sweeps is documented in the results summary table. The number of shared top 20 pairs is 3 out of 20, representing a moderate overlap.
 
 ### 4. Was GSE28735 kept fully locked?
-Yes. GSE28735 was never used for feature selection, threshold estimation, pair selection, top-N cutoff selection, or Elastic Net tuning. The pipeline evaluates the selected pair on GSE28735 exactly once at the end of the script, as audited in the `data_source_usage_audit.csv` log.
+Yes. GSE28735 was never used for feature selection, threshold estimation, pair selection, top-N cutoff selection, or Elastic Net tuning. The pipeline evaluates the selected pair on GSE28735 exactly once at the end of the script, as audited in the `locked_validation_access_audit.csv` log.
 
 ### 5. Which results are real-data-derived and which are simulated?
 * **Bulk Transcriptomics Performance**: Real-data derived from TCGA, GTEx, GSE62452, and GSE28735.
@@ -39,25 +39,59 @@ Yes. This report compiler reads the generated tables directly, guaranteeing 100%
 
 ---
 
-## 2. Anti-Bias scRNA-seq Marker Audit
+## 2. Integrity and Row Count Verification
+
+### Output File Row Count Verification
+The audit script verifies the exact counts of all generated files:
+
+| file_name                                 |   row_count |   expected_row_count | status   |
+|:------------------------------------------|------------:|---------------------:|:---------|
+| pair_search_ensemble_threshold_top20.csv  |         190 |                  190 | PASS     |
+| pair_search_ensemble_threshold_top50.csv  |        1225 |                 1225 | PASS     |
+| pair_search_ensemble_threshold_top100.csv |        4950 |                 4950 | PASS     |
+| pair_search_ensemble_threshold_top200.csv |       19900 |                19900 | PASS     |
+| model_specific_thresholds_top20.csv       |          20 |                   20 | PASS     |
+| model_specific_thresholds_top50.csv       |          50 |                   50 | PASS     |
+| model_specific_thresholds_top100.csv      |         100 |                  100 | PASS     |
+| model_specific_thresholds_top200.csv      |         200 |                  200 | PASS     |
+
+* All `top100` and `top200` pair-search files are non-empty, complete, and verified to contain exactly their expected pair counts (4,950 and 19,900 rows).
+
+### GSE28735 Cohort Details
+* **Tumor Sample Count**: 45
+* **Normal Sample Count**: 45 (successfully parsed via the custom `classify_sample` parser).
+* **Final Locked GSE28735 Metrics**:
+  * Sensitivity: 80.0%
+  * Specificity: 82.2%
+  * ROC-AUC: 0.8588
+  * Confusion Matrix: TP=36, FP=8, TN=37, FN=9
+
+### scRNA-seq Validation Level
+* **Validation Type**: **Preliminary marker-score-based targeted validation**, not a full unbiased scRNA-seq annotation workflow.
+
+---
+
+## 3. Anti-Bias scRNA-seq Marker Audit
 
 To verify that single-cell validation is completely unbiased, we audited the overlap between candidate genes and annotation markers:
 
 | candidate_gene   | is_used_as_annotation_marker   |   affected_celltype | action_taken       |   alternative_markers_used |   risk_of_circularity |
 |:-----------------|:-------------------------------|--------------------:|:-------------------|---------------------------:|----------------------:|
-| MMP9             | no                             |                 nan | No action required |                        nan |                   nan |
+| PXDN             | no                             |                 nan | No action required |                        nan |                   nan |
 | PKM              | no                             |                 nan | No action required |                        nan |                   nan |
-| LOXL1            | no                             |                 nan | No action required |                        nan |                   nan |
 | ADAM22           | no                             |                 nan | No action required |                        nan |                   nan |
 | NQO1             | no                             |                 nan | No action required |                        nan |                   nan |
-| PXDN             | no                             |                 nan | No action required |                        nan |                   nan |
+| MMP9             | no                             |                 nan | No action required |                        nan |                   nan |
+| LOXL1            | no                             |                 nan | No action required |                        nan |                   nan |
 
 **Circularity Audit Result**: PASS. Final cell-type labels were assigned prior to evaluating candidate gene expression. No candidate genes were used as markers.
 
 ---
 
-## 3. Data Integrity & Verification Files
-* Dataset usage audit: [data_source_usage_audit.csv](file:///Users/Janet/Documents/Antigravity/SynBio final/results_v3/tables/data_source_usage_audit.csv)
+## 4. Data Integrity & Verification Files
+* Row count audit: [v3_output_row_count_audit.csv](file:///Users/Janet/Documents/Antigravity/SynBio final/results_v3/audit/v3_output_row_count_audit.csv)
+* Access sequence audit: [locked_validation_access_audit.csv](file:///Users/Janet/Documents/Antigravity/SynBio final/results_v3/audit/locked_validation_access_audit.csv)
+* Metadata parsing audit: [gse28735_metadata_parsing_audit.csv](file:///Users/Janet/Documents/Antigravity/SynBio final/results_v3/audit/gse28735_metadata_parsing_audit.csv)
 * Consensus ranking table: [model_consensus_feature_ranking_v3.csv](file:///Users/Janet/Documents/Antigravity/SynBio final/results_v3/tables/model_consensus_feature_ranking_v3.csv)
 * SAGA EN hyperparameter logs: [elastic_net_hyperparameter_log.csv](file:///Users/Janet/Documents/Antigravity/SynBio final/results_v3/tables/elastic_net_hyperparameter_log.csv)
 * scRNA candidate validation: [v3_scrna_candidate_pair_validation.csv](file:///Users/Janet/Documents/Antigravity/SynBio final/scrna_validation/tables/v3_scrna_candidate_pair_validation.csv)

@@ -11,6 +11,7 @@ This document lists the technical limitations and caveats of the third-generatio
 * **SHAP Threshold Translation**: Dynamic thresholds ($K_A, K_B$) are inferred statistically from classifier SHAP attribution inflection points. These are mathematical decision boundaries, not biochemical affinity dissociation constants ($K_d$).
 
 ## 3. scRNA-seq Lineage Annotation
+* **Preliminary Marker-Score Validation**: Due to missing dependencies in this environment, single-cell analysis is a preliminary marker-score-based targeted validation rather than a full unbiased scRNA-seq annotation workflow.
 * **Ductal Compartment Labeling**: In the absence of R-based inferCNV or copyKAT runs, we labeled the ductal compartment conservatively as `tumor-associated epithelial / putative malignant ductal epithelial` cells. While this avoids circular reasoning, it cannot definitively separate normal ductal contamination from malignant tumor cells within the biopsy.
 * **Islet Off-Target Expression**: While the double-positive rate is near-zero in endocrine islets, low-level leakage remains a risk that requires promoter tuning.
 

@@ -17,7 +17,7 @@ where:
 ### Model Ingestion & Scaling
 Elastic Net coefficient sizes are scale-dependent. Therefore, gene expression features are standardized using `StandardScaler` (mean = 0, standard deviation = 1) before model fitting. The tree-based models (Random Forest, XGBoost) are trained on the raw (unscaled) expression values since they are scale-invariant.
 
-###consensus Ranking
+### consensus Ranking
 The consensus feature importance ranking integrates rankings from three model families trained on the cross-dataset stable gene subset (Stage 2 output):
 1. **Elastic Net Logistic Regression** (SAGA solver, standardized features, CV-optimized `l1_ratio`).
 2. **Random Forest Classifier** (unscaled features, Gini feature importance).
@@ -63,10 +63,6 @@ The final selected biosensor pair is the top-ranked pair in the default **top 10
 
 ---
 
-## 4. Unbiased scRNA-seq Validation
+## 4. Single-Cell Validation Disclaimer
 
-To prevent circular validation, we apply a strict anti-bias check:
-1. Candidate genes selected by the bulk pipeline must not be used as markers to annotate cell types in the single-cell dataset (GSE154778).
-2. If any selected gene is present in the canonical lineage marker set (e.g., EPCAM, CD3D), it is automatically removed from that marker set before cell-type scoring.
-3. Cells are annotated using a hierarchical scoring system based on 19 canonical lineage marker panels.
-4. Ductal cells in tumor biopsies are conservatively labeled as `tumor-associated epithelial / putative malignant ductal epithelial` cells.
+Due to lack of standard unsupervised cell clustering dependencies (such as `leidenalg`) in the target execution environment, the single-cell RNA-seq validation (GSE154778) is implemented as a **preliminary marker-score-based targeted validation, not a full unbiased scRNA-seq annotation workflow**. Cell types are scored based on canonical lineage markers after candidate gene overlap removal, but without de novo Leiden clustering or UMAP projections.

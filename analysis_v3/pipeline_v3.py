@@ -86,6 +86,15 @@ def parse_gpl6244(annot_path):
                     probe_to_gene[probe_id] = gene_symbol
     return probe_to_gene
 
+def classify_sample(field):
+    field = field.strip().replace('"', '').lower()
+    if "adjacent" in field or "non-tumor" in field or "normal" in field or field == "tissue: n" or field.endswith(": n") or field == "n":
+        return 0  # Normal
+    elif "tumor" in field or "adenocarcinoma" in field or "cancer" in field or field == "tissue: t" or field.endswith(": t") or field == "t":
+        return 1  # Tumor
+    else:
+        return 1  # Default fallback
+
 def load_geo_matrix(matrix_path, probe_to_gene):
     print(f"[*] Loading and parsing GEO series matrix: {matrix_path}")
     samples = []
@@ -100,11 +109,7 @@ def load_geo_matrix(matrix_path, probe_to_gene):
                 groups = []
                 fields = line.split("\t")[1:]
                 for field in fields:
-                    field = field.strip().replace('"', '').lower()
-                    if "adjacent" in field or "non-tumor" in field or "normal" in field:
-                        groups.append(0)  # Normal
-                    else:
-                        groups.append(1)  # Tumor
+                    groups.append(classify_sample(field))
             elif line.startswith("!Sample_title"):
                 samples = [s.replace('"', '') for s in line.split("\t")[1:]]
             elif line.startswith("!series_matrix_table_begin"):
@@ -278,13 +283,14 @@ def main():
     print(f"[+] Identified {len(df_stable)} cross-dataset stable genes.")
     
     print_section("Stage 3: Locked External Validation Cohort (GSE28735) Load")
-    df_expr_ext, df_meta_ext = load_geo_matrix(RAW_DIR / "GSE28735_series_matrix.txt.gz", probe_to_gene)
-    # Keeping df_expr_ext and df_meta_ext locked for Stage 7 only.
+    print("[*] GSE28735 remains locked and untouched. Loading is deferred strictly to the validation stage.")
     
     print_section("Stage 4: Three-Model Consensus Feature Ranking & Elastic Net grid search")
     # Training features
     y_train = (df_meta["group"] == "PDAC").astype(int).values
     stable_genes = df_stable["gene"].tolist()
+    if len(stable_genes) < 200:
+        raise ValueError(f"Fewer than 200 stable genes identified ({len(stable_genes)}). Cannot run top200 search.")
     X_train = df_expr.loc[stable_genes].T.values
     
     # Features standardized for linear coefficient interpretation
@@ -437,6 +443,10 @@ def main():
     top_200 = df_ranks_out["gene"].head(200).tolist()
     df_thresh_all = te.estimate_thresholds(df_expr, df_meta, top_200)
     
+    # Assert exact threshold row counts to prevent incomplete table writes
+    if len(df_thresh_all) != 200:
+        raise ValueError(f"Incomplete threshold table: model_specific_thresholds_top200.csv has {len(df_thresh_all)} rows, expected 200.")
+        
     # Write threshold instability audit
     df_thresh_all[["gene", "K_std", "K_IQR"]].rename(columns={"K_std": "threshold_std_instability", "K_IQR": "threshold_iqr"}).to_csv(TABLES_V3_DIR / "threshold_instability_audit.csv", index=False)
     
@@ -446,6 +456,12 @@ def main():
     df_thresh_all.head(100).to_csv(TABLES_V3_DIR / "model_specific_thresholds_top100.csv", index=False)
     df_thresh_all.to_csv(TABLES_V3_DIR / "model_specific_thresholds_top200.csv", index=False)
     
+    # Verify file row counts of generated files
+    for n in [20, 50, 100, 200]:
+        df_chk = pd.read_csv(TABLES_V3_DIR / f"model_specific_thresholds_top{n}.csv")
+        if len(df_chk) != n:
+            raise ValueError(f"Threshold table for top {n} has incorrect row count: {len(df_chk)}")
+            
     print_section("Stage 6: Top-N Search-Space Sweeps & Pair Scoring")
     # Run searches for top 20, 50, 100, 200 genes
     space_pairs = {}
@@ -457,7 +473,17 @@ def main():
         
         out_path_n = TABLES_V3_DIR / f"pair_search_ensemble_threshold_top{n}.csv"
         df_p_n = ps.run_pair_search(df_expr, df_meta, df_expr_val, df_meta_val, genes_n, df_thresh_n, alpha=0.2, beta=0.1, out_path=out_path_n)
+        
+        # Verify row counts of pair search files
+        expected_pairs = n * (n - 1) // 2
+        if len(df_p_n) != expected_pairs:
+            raise ValueError(f"Pair search for top {n} has incorrect count: expected {expected_pairs}, got {len(df_p_n)}")
+            
         space_pairs[n] = df_p_n
+        
+    # Record pair freeze timestamp for Locked Validation Sequence audit
+    from datetime import datetime
+    pair_freeze_time = datetime.now().isoformat()
         
     # Generate topN_pair_stability_summary.csv
     stability_records = []
@@ -550,7 +576,37 @@ def main():
     plt.close()
     
     print_section("Stage 7: Locked GSE28735 External Validation & Hill Equation sweeping")
-    # Load GSE28735 expressions
+    # Load GSE28735 expressions (Moved to validation stage only)
+    gse28735_data_loaded_time = datetime.now().isoformat()
+    df_expr_ext, df_meta_ext = load_geo_matrix(RAW_DIR / "GSE28735_series_matrix.txt.gz", probe_to_gene)
+    
+    # Audit GSE28735 metadata counts
+    tumor_sample_count = int(np.sum(df_meta_ext["group"] == "PDAC"))
+    normal_sample_count = int(np.sum(df_meta_ext["group"] == "Normal"))
+    
+    # Save gse28735_metadata_parsing_audit.csv
+    df_meta_audit = pd.DataFrame([{
+        "dataset": "GSE28735",
+        "tumor_sample_count": tumor_sample_count,
+        "normal_sample_count": normal_sample_count,
+        "expected_tumor": 45,
+        "expected_normal": 45,
+        "status": "PASS" if (tumor_sample_count == 45 and normal_sample_count == 45) else "FAIL"
+    }])
+    df_meta_audit.to_csv(AUDIT_V3_DIR / "gse28735_metadata_parsing_audit.csv", index=False)
+    print(f"[+] Audited GSE28735: tumor={tumor_sample_count}, normal={normal_sample_count}")
+    
+    # Stop the pipeline with an error if normal count is zero
+    if normal_sample_count == 0:
+        raise ValueError("GSE28735 metadata parsing failed: 0 normal samples detected. Pipeline execution halted.")
+        
+    # Save locked_validation_access_audit.csv
+    df_lock_audit = pd.DataFrame([
+        {"event": "pair_selection_frozen", "timestamp": pair_freeze_time, "status": "freeze_completed"},
+        {"event": "gse28735_data_loaded", "timestamp": gse28735_data_loaded_time, "status": "loading_completed"}
+    ])
+    df_lock_audit.to_csv(AUDIT_V3_DIR / "locked_validation_access_audit.csv", index=False)
+    
     exp_a_ext = df_expr_ext.loc[gene_a].values
     exp_b_ext = df_expr_ext.loc[gene_b].values
     norm_a_ext = (exp_a_ext - min_a) / (max_a - min_a) if (max_a - min_a) > 0 else np.zeros(len(exp_a_ext))
@@ -558,8 +614,15 @@ def main():
     y_ext = (df_meta_ext["group"] == "PDAC").astype(int).values
     
     and_ext = (norm_a_ext > K_a) & (norm_b_ext > K_b)
-    sens_ext = np.mean(and_ext[y_ext == 1])
-    spec_ext = np.mean(~and_ext[y_ext == 0])
+    
+    # TP, FP, TN, FN calculations
+    TP = int(np.sum((and_ext == True) & (y_ext == 1)))
+    FP = int(np.sum((and_ext == True) & (y_ext == 0)))
+    TN = int(np.sum((and_ext == False) & (y_ext == 0)))
+    FN = int(np.sum((and_ext == False) & (y_ext == 1)))
+    
+    sens_ext = TP / (TP + FN) if (TP + FN) > 0 else 0.0
+    spec_ext = TN / (TN + FP) if (TN + FP) > 0 else 0.0
     
     # Calculate ROC-AUC of AND gate using Hill Equation output
     def hill_eq(x, K, n):
@@ -593,9 +656,15 @@ def main():
         "gene_B": gene_b,
         "K_final_A": K_a,
         "K_final_B": K_b,
-        "GSE28735_sensitivity": sens_ext,
-        "GSE28735_specificity": spec_ext,
-        "GSE28735_ROC_AUC": auc_ext,
+        "tumor_sample_count": tumor_sample_count,
+        "normal_sample_count": normal_sample_count,
+        "sensitivity": sens_ext,
+        "specificity": spec_ext,
+        "ROC_AUC": auc_ext,
+        "TP": TP,
+        "FP": FP,
+        "TN": TN,
+        "FN": FN,
         "GSE28735_Spearman_r": spearmanr(exp_a_ext[y_ext == 1], exp_b_ext[y_ext == 1])[0]
     }])
     df_ext.to_csv(TABLES_V3_DIR / "locked_gse28735_final_validation.csv", index=False)
@@ -700,6 +769,42 @@ def main():
     plt.savefig(FIGURES_V3_DIR / "patient_level_ceacam5_cst1_coexpression.png", dpi=300)
     plt.close()
     
+    # Write results_v3/audit/v3_output_row_count_audit.csv
+    row_count_records = []
+    
+    # Pair search files
+    for n in [20, 50, 100, 200]:
+        path = TABLES_V3_DIR / f"pair_search_ensemble_threshold_top{n}.csv"
+        row_count_records.append({
+            "file_name": f"pair_search_ensemble_threshold_top{n}.csv",
+            "row_count": len(pd.read_csv(path)),
+            "expected_row_count": n * (n - 1) // 2,
+            "status": "PASS" if len(pd.read_csv(path)) == (n * (n - 1) // 2) else "FAIL"
+        })
+        
+    # Threshold files
+    for n in [20, 50, 100, 200]:
+        path = TABLES_V3_DIR / f"model_specific_thresholds_top{n}.csv"
+        row_count_records.append({
+            "file_name": f"model_specific_thresholds_top{n}.csv",
+            "row_count": len(pd.read_csv(path)),
+            "expected_row_count": n,
+            "status": "PASS" if len(pd.read_csv(path)) == n else "FAIL"
+        })
+        
+    pd.DataFrame(row_count_records).to_csv(AUDIT_V3_DIR / "v3_output_row_count_audit.csv", index=False)
+    print("[+] Wrote row count audit to results_v3/audit/v3_output_row_count_audit.csv")
+
+    # Run the audit script and verify all outputs
+    import subprocess
+    print_section("Audit Checks Verification")
+    audit_res = subprocess.run([sys.executable, "analysis_v3/audit_v3_outputs.py"], capture_output=False)
+    if audit_res.returncode != 0:
+        print("[!] Audit checks FAILED. Halting pipeline execution.")
+        sys.exit(1)
+    else:
+        print("[+] Audit checks PASSED.")
+
     print_section("Stage 9: Compile V3 Reports & Final Audit Summary")
     # Trigger generate_reports_v3.py which reads tables/figures and writes REPORTS_V3
     import generate_reports_v3 as gr

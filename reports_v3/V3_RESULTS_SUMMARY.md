@@ -103,14 +103,17 @@ Jaccard similarity and shared top-ranked pairs between search spaces:
 ## 7. Locked Final External Validation (GSE28735)
 Performance of the final default selected v3 candidate pair (PKM + ADAM22) on the locked external validation cohort:
 
-| gene_A   | gene_B   |   K_final_A |   K_final_B |   GSE28735_sensitivity |   GSE28735_specificity |   GSE28735_ROC_AUC |   GSE28735_Spearman_r |
-|:---------|:---------|------------:|------------:|-----------------------:|-----------------------:|-------------------:|----------------------:|
-| PKM      | ADAM22   |    0.804721 |    0.623865 |               0.488889 |                    nan |                nan |               0.60833 |
+| gene_A   | gene_B   |   K_final_A |   K_final_B |   tumor_sample_count |   normal_sample_count |   sensitivity |   specificity |   ROC_AUC |   TP |   FP |   TN |   FN |   GSE28735_Spearman_r |
+|:---------|:---------|------------:|------------:|---------------------:|----------------------:|--------------:|--------------:|----------:|-----:|-----:|-----:|-----:|----------------------:|
+| PKM      | ADAM22   |    0.804721 |    0.623865 |                   45 |                    45 |           0.8 |      0.822222 |  0.858765 |   36 |    8 |   37 |    9 |              0.110804 |
 
 ---
 
-## 8. scRNA-seq Validation (GSE154778)
+## 8. scRNA-seq validation (GSE154778)
 Expression and co-expression rates of the final v3 selected pair across independently annotated cell types:
+
+> [!NOTE]
+> Single-cell validation is a preliminary marker-score-based targeted validation, not a full unbiased scRNA-seq annotation workflow.
 
 | rank               | gene_A   | gene_B   | cell_type                                                          |   n_cells |   mean_expression_A |   mean_expression_B |   coexpression_fraction_gt_0 |   coexpression_fraction_gt_0_5 |
 |:-------------------|:---------|:---------|:-------------------------------------------------------------------|----------:|--------------------:|--------------------:|-----------------------------:|-------------------------------:|
