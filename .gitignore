@@ -27,6 +27,10 @@ temp_workspace.zip
 temp_remote.zip
 
 # Project-local AI scientist run artifacts
+.ai_scientist/README.md
+.ai_scientist/project_manifest.yaml
+.ai_scientist/state.json
+.ai_scientist/research_memory/
 .ai_scientist/runs/
 .ai_scientist/tool_logs/
 .ai_scientist/feedback_box/
