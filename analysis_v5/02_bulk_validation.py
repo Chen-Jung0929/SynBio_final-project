@@ -9,7 +9,7 @@ from sklearn.metrics import roc_auc_score
 PROJECT_DIR = Path(__file__).parent.parent.resolve()
 V5_TABLES_DIR = PROJECT_DIR / "results_v5/tables"
 V5_AUDIT_DIR = PROJECT_DIR / "results_v5/audit"
-BULK_EXPR_FILE = PROJECT_DIR / "data/processed/expression_matrix.csv.gz"
+BULK_EXPR_FILE = PROJECT_DIR / "data/processed/expression_matrix_v5.csv.gz"
 BULK_META_CANDIDATES = [
     PROJECT_DIR / "data/processed/metadata.csv",
     PROJECT_DIR / "results_v1_archive/tables/sample_metadata.csv",

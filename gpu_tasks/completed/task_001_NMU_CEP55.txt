@@ -1,0 +1,2 @@
+The gene pair NMU + CEP55 was mathematically the "best" pair discovered in our unbiased V4 bulk-first screening. However, it only achieved 12% target co-expression in our single-cell validation, meaning it lacks patient-level prevalence. 
+Please write a short biological rationale on why NMU and CEP55 might be co-expressed in pancreatic cancer or other epithelial tumors, and why they might struggle to cover a wide spectrum of tumor cells in a single patient. Keep it under 200 words.

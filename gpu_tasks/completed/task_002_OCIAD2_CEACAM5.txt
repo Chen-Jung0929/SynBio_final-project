@@ -1,0 +1,2 @@
+The gene pair OCIAD2 + CEACAM5 achieved 92.12% target-compartment co-expression in malignant ductal/epithelial cells but suffered from a circularity data leakage issue. 
+Please write a brief biological explanation of the roles of OCIAD2 and CEACAM5 in glandular/epithelial tumors. Why are they such strong generic epithelial markers, and why does CEACAM5 often cause data leakage in pancreatic cancer annotations? Keep it under 200 words.

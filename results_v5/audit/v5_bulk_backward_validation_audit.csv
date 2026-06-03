@@ -1,2 +1,2 @@
-audit_status,note
-UNAVAILABLE_BULK_INPUTS,Missing bulk expression matrix: data/processed/expression_matrix.csv.gz
+audit_status,evaluated_pairs,missing_pairs,bulk_auc_pass_pairs,default_pair
+PASS,13,21,13,S100A14+GPX1

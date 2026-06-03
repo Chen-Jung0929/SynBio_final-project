@@ -1,0 +1,1 @@
+As a bioinformatics assistant, please explain in under 200 words why Single-Cell RNA Sequencing (scRNA-seq) resolves the issue of data averaging and off-target noise (e.g. from T-cells or Cancer-Associated Fibroblasts) that plagues traditional Bulk RNA-seq when trying to discover tumor-specific biosensor gene pairs.

@@ -1,0 +1,2 @@
+gene_A,gene_B,target_coexpr,pooled_off_target_coexpr,max_off_target_coexpr,max_off_target_compartment,patient_positive_rate,correlation,annotation_version,threshold_profile,bulk_auc,threshold_instability,final_score
+S100A14,GPX1,0.6060649000991923,0.0922607701105604,0.247787610619469,mast cells,1.0,0.0929566181420156,v5_heuristic_marker_metadata,exploratory_relaxed_v5_0p60_target_0p10_pooled_offtarget,0.9628607952634057,0.047610623051078924,1.5733736294707712

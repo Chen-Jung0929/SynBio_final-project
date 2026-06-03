@@ -1,0 +1,7 @@
+The co-expression of NMU (Neural Cell Adhesion Molecule) and CEP55 (C Centrosomal Protein P39) in pancreatic cancer and other epithelial tumors may be mediated by their roles in cellular processes relevant to tumorigenesis.
+
+NMU, involved in cell adhesion and migration, might be upregulated in pancreatic ductal adenocarcinoma (PDAC) cells as they undergo epithelial-to-mesenchymal transition (EMT), a process that facilitates tumor cell invasion. Conversely, CEP55, associated with microtubule dynamics and centrosome separation, may play a role in the regulation of mitotic spindle assembly and cytokinesis.
+
+Despite these functional roles, NMU and CEP55 expression may be limited to specific subpopulations within a single patient's tumor, potentially resulting from clonal selection or differential gene expression. This could contribute to a narrow spectrum of co-expression, where only certain cells or cell types are co-expressing both genes, leading to reduced correlation with functional phenotypes observed in bulk assays.
+
+This limited correlation might also hinder the pair's utility as biomarkers for patient stratification and tumor monitoring, underscoring the need for validation at multiple scales.
