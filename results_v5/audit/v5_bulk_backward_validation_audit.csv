@@ -1,2 +1,2 @@
 audit_status,note
-UNAVAILABLE_BULK_INPUTS,Missing bulk expression matrix: C:\合成生物學期末專題\data\processed\expression_matrix.csv.gz
+UNAVAILABLE_BULK_INPUTS,Missing bulk expression matrix: data/processed/expression_matrix.csv.gz

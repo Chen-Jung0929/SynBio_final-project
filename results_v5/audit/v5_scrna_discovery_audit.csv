@@ -1,2 +1,2 @@
-audit_status,n_target_cells,n_off_target_cells,candidate_genes,candidate_pairs,annotation_version,note
-PASS,7057,7869,4734,34,v5_heuristic_marker_metadata,scRNA-first discovery uses heuristic marker and metadata labels; downstream validation is still required.
+audit_status,n_target_cells,n_off_target_cells,candidate_genes,candidate_pairs,annotation_version,threshold_profile,target_pair_min,pooled_off_target_max,patient_positive_min,note
+PASS,7057,7869,4734,34,v5_heuristic_marker_metadata,exploratory_relaxed_v5_0p60_target_0p10_pooled_offtarget,0.6,0.1,0.05,scRNA-first discovery uses heuristic marker and metadata labels; downstream validation is still required.

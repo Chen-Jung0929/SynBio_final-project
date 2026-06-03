@@ -162,3 +162,33 @@ after circularity correction. The next scientific push is V5: discover candidate
 pairs directly from malignant epithelial single cells, reject off-target
 activation in stromal/immune/normal compartments, and only then validate the
 surviving pairs backward in bulk cohorts.
+
+## Current V5 Status
+
+The first V5 scRNA-first run has been executed with an exploratory relaxed
+threshold profile:
+
+```text
+target >= 60%
+pooled off-target <= 10%
+```
+
+This produced 34 Phase-1 candidate hypotheses. The current top Phase-1 pair is:
+
+```text
+S100A14 AND OCIAD2
+```
+
+This is not yet a final biosensor candidate. The top pair has 65.8% target
+co-expression and 100.0% patient-positive rate, but also 25.7% max compartment
+off-target co-expression in mast cells. No pair passes the stricter
+max-compartment off-target profiles currently summarized in
+`results_v5/audit/v5_threshold_profile_summary.csv`.
+
+Bulk backward validation has not run locally because
+`data/processed/expression_matrix.csv.gz` is missing in this worktree. See:
+
+- `reports_v5/V5_FINAL_REPORT.md`
+- `reports_v5/V5_AUDIT_REPORT.md`
+- `results_v5/tables/v5_scrna_candidates.csv`
+- `results_v5/audit/v5_threshold_profile_summary.csv`

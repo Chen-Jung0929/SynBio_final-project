@@ -27,7 +27,7 @@ def write_unavailable(status, note):
 
 def load_bulk_inputs():
     if not BULK_EXPR_FILE.exists():
-        return None, None, f"Missing bulk expression matrix: {BULK_EXPR_FILE}"
+        return None, None, "Missing bulk expression matrix: data/processed/expression_matrix.csv.gz"
 
     meta_path = next((p for p in BULK_META_CANDIDATES if p.exists()), None)
     if meta_path is None:

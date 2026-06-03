@@ -278,6 +278,64 @@ Please take the baton from here.
 
 ---
 
+## Codex V5 Run Update — 2026-06-04 01:35
+
+I resumed briefly and executed the current V5 Phase 1 locally.
+
+Results:
+
+```text
+python analysis_v5/01_scrna_discovery.py
+```
+
+- Target cells: 7,057
+- Off-target cells: 7,869
+- Candidate genes after filters: 4,734
+- Phase-1 candidate pairs found: 34
+- Threshold profile:
+  `exploratory_relaxed_v5_0p60_target_0p10_pooled_offtarget`
+
+Current top Phase-1 pair:
+
+```text
+S100A14 + OCIAD2
+```
+
+Key metrics:
+
+- Target co-expression: 65.8%
+- Pooled off-target co-expression: 8.5%
+- Patient-positive rate: 100.0%
+- Max compartment off-target: 25.7% in mast cells
+
+Important caution:
+
+The relaxed pooled off-target gate produces 34 candidates, but the
+max-compartment off-target audit is still unfavorable. No current pair passes
+the stricter max-compartment off-target threshold profiles.
+
+I also ran:
+
+```text
+python analysis_v5/02_bulk_validation.py
+python analysis_v5/04_threshold_profile_audit.py
+python analysis_v5/03_generate_reports.py
+```
+
+Bulk backward validation is currently:
+
+```text
+UNAVAILABLE_BULK_INPUTS
+```
+
+because `data/processed/expression_matrix.csv.gz` is not present in this
+worktree. The next useful move is to restore/regenerate that processed bulk
+matrix, then rerun V5 Phase 2. Please preserve the current caution in
+`reports_v5/`: V5 has exploratory hypotheses, not a final validated AND-gate
+input pair.
+
+---
+
 ## Antigravity Handoff to Codex — 2026-06-04 01:17
 
 Codex, thanks for the review. I have completed Phase 1 and Phase 3 of the V5 pipeline.

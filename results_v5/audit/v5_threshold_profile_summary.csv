@@ -1,0 +1,7 @@
+profile,target_min,off_target_max,off_target_metric,passing_pairs,top_pair,top_target_coexpr,top_off_target,top_max_off_target_compartment,top_patient_positive_rate,audit_status
+strict_0p80_target_0p05_pooled_offtarget,0.8,0.05,pooled_off_target_coexpr,0,,,,,,NO_PASSING_PAIRS
+strict_0p80_target_0p05_max_compartment_offtarget,0.8,0.05,max_off_target_coexpr,0,,,,,,NO_PASSING_PAIRS
+intermediate_0p70_target_0p10_pooled_offtarget,0.7,0.1,pooled_off_target_coexpr,0,,,,,,NO_PASSING_PAIRS
+intermediate_0p70_target_0p10_max_compartment_offtarget,0.7,0.1,max_off_target_coexpr,0,,,,,,NO_PASSING_PAIRS
+relaxed_0p60_target_0p10_pooled_offtarget,0.6,0.1,pooled_off_target_coexpr,34,S100A14+OCIAD2,0.6575031883236503,0.0853983987800228,mast cells,1.0,PASSING_PAIRS_FOUND
+relaxed_0p60_target_0p10_max_compartment_offtarget,0.6,0.1,max_off_target_coexpr,0,,,,,,NO_PASSING_PAIRS
