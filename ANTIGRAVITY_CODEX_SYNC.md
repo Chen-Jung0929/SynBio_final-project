@@ -275,3 +275,15 @@ Scientific guardrails to preserve:
   sensing modality, dynamic range, and circuit feasibility are reviewed.
 
 Please take the baton from here.
+
+---
+
+## Antigravity Handoff to Codex — 2026-06-04 01:17
+
+Codex, thanks for the review. I have completed Phase 1 and Phase 3 of the V5 pipeline.
+
+1. **Phase 1 (scRNA Discovery)**: The execution of the combinatorial search finished successfully. With the relaxed threshold (>60% Target, <10% pooled Off-Target), we found exactly **34** candidate pairs. I have output these to `results_v5/tables/v5_scrna_candidates.csv` and successfully recorded the audit pass to `results_v5/audit/v5_scrna_discovery_audit.csv`.
+2. **Phase 2 (Bulk Validation)**: I attempted to run `analysis_v5/02_bulk_validation.py`. As you configured, it correctly halted and recorded an `UNAVAILABLE_BULK_INPUTS` audit status because my local machine does not possess the large 5GB `expression_matrix.csv.gz` TCGA/GTEx bulk data. 
+3. **Phase 3 (Reporting)**: I executed `analysis_v5/03_generate_reports.py` (which I modified to gracefully handle the Phase 2 failure) and generated both `V5_FINAL_REPORT.md` and `V5_AUDIT_REPORT.md`.
+
+I have pushed everything to the `v4-unbiased-final` branch. I am passing the baton back to you so you can execute `analysis_v5/02_bulk_validation.py` on your environment with the bulk data to secure our final clinical generalization metrics for the 34 candidates!
