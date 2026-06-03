@@ -1,0 +1,4 @@
+dataset,role,locked_final_validation_only
+TCGA + GTEx Discovery,used_for_discovery,no
+GSE62452 Same-Cohort Validation,used_for_validation_filtering,no
+GSE28735 External Validation,locked_final_validation_only,yes

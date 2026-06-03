@@ -1,0 +1,4 @@
+penalty,solver,C,l1_ratio,max_iter,random_state,features_standardized,solver_iterations,convergence_achieved,ROC_AUC_discovery,ROC_AUC_GSE62452_validation,avg_internal_ROC_AUC,best_selected_yes_no
+elasticnet,saga,0.5,0.2,10000,42,yes,3614,yes,1.0,0.8769303872653839,0.938465193632692,no
+elasticnet,saga,0.5,0.5,10000,42,yes,4810,yes,1.0,0.8885721073889286,0.9442860536944643,no
+elasticnet,saga,0.5,0.8,10000,42,yes,5356,yes,1.0,0.8899976241387503,0.9449988120693751,yes

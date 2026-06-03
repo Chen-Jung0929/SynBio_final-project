@@ -1,0 +1,21 @@
+gene_A,gene_B,tumor_spearman_r,redundancy_category
+PKM,ADAM22,0.06344286966477694,weak correlation / high independence
+MMP9,NQO1,0.03397824294508889,weak correlation / high independence
+LOXL1,NQO1,0.03820292618157986,weak correlation / high independence
+PXDN,NQO1,0.027211702191642186,weak correlation / high independence
+EDIL3,NQO1,-0.06425286219039796,weak correlation / high independence
+ETV1,NQO1,0.07124440049310798,weak correlation / high independence
+OLFML2B,NQO1,-0.0529912929500983,weak correlation / high independence
+SEMA3C,NQO1,0.06788999122304974,weak correlation / high independence
+TIMP2,NQO1,-0.05632449702291983,weak correlation / high independence
+OCIAD2,EDIL3,0.012073271608729879,weak correlation / high independence
+PKM,TFF1,0.11147656444082164,weak correlation / high independence
+OCIAD2,TIMP2,-0.001045823673915796,weak correlation / high independence
+PTK7,NQO1,0.01753218462893968,weak correlation / high independence
+OCIAD2,PXDN,0.003474737931783419,weak correlation / high independence
+ETV1,PKM,0.22858796481055058,low-to-moderate correlation / partial independence
+RCN1,NQO1,0.056444748959494764,weak correlation / high independence
+OCIAD2,OLFML2B,-0.01613633377432661,weak correlation / high independence
+OLFML2B,LGALS3BP,0.0074643975579004075,weak correlation / high independence
+MMP12,PKM,0.2367919891290684,low-to-moderate correlation / partial independence
+PKM,OLFML2B,0.20780410424838447,low-to-moderate correlation / partial independence

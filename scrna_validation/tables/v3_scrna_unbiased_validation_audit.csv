@@ -1,0 +1,2 @@
+pipeline_stage,unbiased_finalized_labels_before_eval,overlap_markers_removed,overlap_genes_list,number_of_cells_QC,number_of_patients,audit_pass_status,comments
+scRNA-seq Downstream Validation,yes,no,,14924,16,PASS,Cell type definitions finalized strictly before target gene expression was audited. No target genes used in classification.
