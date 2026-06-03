@@ -12,6 +12,11 @@ GSE154778_FILE = V4_DIR / "GSE154778_dgeMtx.csv.gz"
 V5_TABLES_DIR = PROJECT_DIR / "results_v5/tables"
 V5_AUDIT_DIR = PROJECT_DIR / "results_v5/audit"
 
+TARGET_PAIR_MIN = 0.60
+POOLED_OFF_TARGET_MAX = 0.10
+PATIENT_POSITIVE_MIN = 0.05
+THRESHOLD_PROFILE = "exploratory_relaxed_v5_0p60_target_0p10_pooled_offtarget"
+
 MARKER_GENES = {
     "ductal": ["EPCAM", "KRT19", "SOX9", "CFTR"],
     "acinar": ["PRSS1", "CPA1", "REG1A", "AMY2A"],
@@ -143,7 +148,7 @@ def main():
             continue
 
         target_pcts = np.sum(a_target & b_target, axis=0) / n_target
-        target_pass = np.where(target_pcts >= 0.80)[0]
+        target_pass = np.where(target_pcts >= TARGET_PAIR_MIN)[0]
         if len(target_pass) == 0:
             continue
 
@@ -153,7 +158,7 @@ def main():
         pooled_off_pcts = np.sum(a_off & b_off, axis=0) / n_off_target
 
         for local_idx, off_pct in enumerate(pooled_off_pcts):
-            if off_pct > 0.05:
+            if off_pct > POOLED_OFF_TARGET_MAX:
                 continue
             j = global_j[local_idx]
             pair_expr = filtered_bool[:, i] & filtered_bool[:, j]
@@ -165,7 +170,7 @@ def main():
                 if np.sum(patient_mask) == 0:
                     continue
                 patient_rates.append(np.mean(target_pair_expr[patient_mask] > 0))
-            patient_positive_rate = float(np.mean(np.array(patient_rates) >= 0.05)) if patient_rates else 0.0
+            patient_positive_rate = float(np.mean(np.array(patient_rates) >= PATIENT_POSITIVE_MIN)) if patient_rates else 0.0
 
             max_off_pct = 0.0
             max_off_ct = "None"
@@ -190,6 +195,7 @@ def main():
                 "patient_positive_rate": patient_positive_rate,
                 "correlation": safe_corr(filtered_bool[:, i].astype(float), filtered_bool[:, j].astype(float)),
                 "annotation_version": "v5_heuristic_marker_metadata",
+                "threshold_profile": THRESHOLD_PROFILE,
             })
 
     df_results = pd.DataFrame(records)
@@ -208,6 +214,10 @@ def main():
         "candidate_genes": len(candidate_indices),
         "candidate_pairs": len(df_results),
         "annotation_version": "v5_heuristic_marker_metadata",
+        "threshold_profile": THRESHOLD_PROFILE,
+        "target_pair_min": TARGET_PAIR_MIN,
+        "pooled_off_target_max": POOLED_OFF_TARGET_MAX,
+        "patient_positive_min": PATIENT_POSITIVE_MIN,
         "note": "scRNA-first discovery uses heuristic marker and metadata labels; downstream validation is still required."
     }]).to_csv(V5_AUDIT_DIR / "v5_scrna_discovery_audit.csv", index=False)
     print(f"[+] Saved {len(df_results)} scRNA-first candidates to {out_path}")

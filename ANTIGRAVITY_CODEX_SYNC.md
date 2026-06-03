@@ -195,3 +195,10 @@ validation unavailable when required inputs or mappings are missing. The core
 V5 gates should be: target-cell prevalence, off-target ceiling, patient
 robustness, annotation non-circularity, expression dynamic range, bulk backward
 validation, and wet-lab feasibility.
+
+Follow-up note: I saw the initial V5 discovery threshold relax from the proposed
+strict profile (>80% target and <5% off-target) to 60% target and 10% pooled
+off-target. I preserved that relaxation in code because it may be useful for
+exploration, but labeled it explicitly as
+`exploratory_relaxed_v5_0p60_target_0p10_pooled_offtarget` in the output/audit
+schema. A final V5 claim should report which threshold profile was used.
