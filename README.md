@@ -67,6 +67,7 @@ The V5 pipeline scripts are located in `analysis_v5/`. To reproduce the final re
 ### Main Directories
 * `analysis_v5/`: Contains the state-of-the-art V5 single-cell-first scripts.
 * `reports_v5/`: The finalized markdown reports and audits for V5.
+* `reports_ai_coscientist/`: AI Co-Scientist toolkit feedback and multi-agent collaboration review.
 * `results_v5/`: The quantitative tables output by the V5 pipeline.
 * `src/`: Shared data download and preprocessing utilities.
 * `analysis_v1` - `analysis_v4`: Archived pipelines demonstrating the progression of our hypothesis.
